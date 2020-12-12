@@ -203,7 +203,7 @@ body
 
     .mt-5
     {
-        margin-top: 5rem;
+        margin-top: 5rem !important;
     }
 
     .col-4
@@ -300,6 +300,30 @@ body
             border-top: 3px solid var(--secondary);
             border-right: 3px solid transparent;
             animation: spinner 0.7s linear infinite;
+        }
+    }
+
+    .post-tags
+    {
+        padding-top: 1rem;
+        ul
+        {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            margin:0;
+
+            li
+            {
+                border-radius: 50px;
+                background: var(--ternary);
+                color: var(--primary);
+                font-size: 14px;
+                text-align: center;
+                min-width: 50px;
+                margin-right: 10px;
+                padding: 0.4rem 1rem;
+            }
         }
     }
 
@@ -481,29 +505,6 @@ body
                 padding-top: 1rem;
                 color: var(--ternary);
                 border-top: 2px solid var(--secondary-grey);
-            }
-
-            .post-tags
-            {
-                padding-top: 1rem;
-                ul
-                {
-                    list-style: none;
-                    display: flex;
-                    align-items: center;
-
-                    li
-                    {
-                        border-radius: 50px;
-                        background: var(--ternary);
-                        color: var(--primary);
-                        font-size: 14px;
-                        text-align: center;
-                        min-width: 50px;
-                        margin-right: 10px;
-                        padding: 0.4rem 1rem;
-                    }
-                }
             }
 
             @include break2

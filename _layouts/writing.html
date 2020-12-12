@@ -10,9 +10,32 @@ layout: base
 
 <section class="writing-body">
 	<div class="container">
+		<div class="post-tags">
+			<ul>
+				{% for tag in page.tags %}
+					<li>{{tag}}</li>
+				{% endfor %}
+			</ul>
+		</div>
     	<div class="markdown-html">
-            <h1 class="headline">{{ page.title }}</h1>
+			<h1 class="headline mt-5">{{ page.title }}</h1>
             {{ content }}
-        </div>
+		</div>
+		{% if page.urls %}
+		<div class="col-4 mt-5">
+			{% if page.urls.download %}
+				<a class="link-button" href="{{ page.urls.download }}">Download Now <i class="fas fa-download"></i></a>
+			{% endif %}
+			{% if page.urls.live %}
+				<a class="link-button" href="{{ page.urls.live }}">Live Demo <i class="fas fa-globe-asia"></i></a>
+			{% endif %}
+			{% if page.urls.github %}
+				<a class="link-button" href="{{ page.urls.github }}">Github Source <i class="fab fa-github"></i></a>
+			{% endif %}
+			{% if page.urls.youtube %}
+				<a class="link-button" href="{{ page.urls.youtube }}">Youtube Video <i class="fab fa-youtube"></i></a>
+			{% endif %}
+		</div>
+		{% endif %}
 	</div>
 </section>

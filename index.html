@@ -132,7 +132,7 @@ title: Home
 <section class="latest-blogs">
 	<div class="container">
 		<h3 class="headline">Latest Blogs</h3>
-		{% for post in site.posts limit: 1 %}
+		{% for post in site.posts limit: 6 %}
 			<div class="blog-card" animation="fade-left" animation-time="0.5s">
 				<a class="card-link" href="{{ post.url }}">
 					<article class="card-body">
@@ -169,7 +169,7 @@ title: Home
 	    </div>
 	    <div class="col-3">
 			{% assign projects = site.projects | reverse %}
-	        {% for project in projects limit:1 %}
+	        {% for project in projects limit:6 %}
 	            <div class="card" animation="fade-down" animation-time="0.5s" category="{{ project.category }}">
 	                <img src="{% link {{site.blob_image}} %}" data-src="{{ project.icon }}" alt="{{ project.title }}">
 	                <div class="card-text">
