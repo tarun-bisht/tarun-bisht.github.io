@@ -1,0 +1,206 @@
+// buttons and links as buttons styling
+.button, .link-button
+{
+    border-radius: 40px;
+    padding: 10px 30px;
+    font-size: 17px;
+    font-weight: 500;
+    border-radius: 40px;
+    border: 1px solid var(--ternary);
+    background: var(--ternary);
+    color: var(--primary);
+    cursor: pointer;
+    transition: all .3s ease 0s;
+
+    &:hover
+    {
+        box-shadow: 5px 5px 10px var(--secondary-grey);
+    }
+}
+.link-button
+{
+    text-decoration: none;
+    writing-mode: horizontal-tb;
+    display: inline-block;
+    text-align: center;
+}
+
+// header-headline: simple headline without bottom border
+// headline: headline with border
+.headline,.header-headline
+{
+    font-size: 60px;
+    font-weight: 700;
+    line-height: 66px;
+    margin-bottom: 1rem;
+
+    @include break2
+    {
+        font-size: 50px;
+    }
+    @include break3
+    {
+        font-size: 40px;
+    }
+}
+.headline
+{
+    margin-bottom: 5rem;
+    position: relative;
+    z-index: 0;
+
+    &::before
+    {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -25px;
+        width: 10px;
+        height: 10px;
+        background: var(--ternary);
+        border-radius: 7px;
+    }
+
+    &::after
+    {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -21px;
+        width: 150px;
+        height: 2px;
+        background: var(--ternary);
+    }
+    @include break2
+    {
+        margin-bottom: 3rem;
+    }
+}
+
+// loading spinner
+.spinner
+{
+    position: relative;
+    margin: 2rem;
+    height: 40px;
+
+    &::before
+    {
+        position: absolute;
+        left: 50%;
+        content: "";
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        border-top: 3px solid var(--secondary);
+        border-right: 3px solid transparent;
+        animation: spinner 0.7s linear infinite;
+    }
+}
+@keyframes spinner
+{
+    to
+    {
+        transform: rotate(360deg);
+    }
+}
+
+// on/off switch
+.switch
+{
+    display: flex;
+    align-items: center;
+    span
+    {
+        font-size: 24px;
+        margin-right: 10px;
+
+        &::before
+        {
+            content: "Dark Mode";
+        }
+        &::before
+        {
+            font-family: "Font Awesome 5 Free";
+            content: var(--bulb-content);
+        }
+    }
+    input[type=checkbox]
+    {
+        height: 0;
+        width: 0;
+        display: none;
+    }
+    label 
+    {
+        cursor: pointer;
+        text-indent: -9999px;
+        width: 50px;
+        height: 30px;
+        background: var(--ternary);
+        display: block;
+        border-radius: 100px;
+        position: relative;
+
+        &::after
+        {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 20px;
+            height: 20px;
+            background:var(--primary);
+            border-radius: 80px;
+            transition: 0.3s;
+        }
+
+        &:active::after
+        {
+            width: 20px;
+        }
+    }
+
+    input:checked + label 
+    {
+        background: var(--ternary);
+    }
+    
+    input:checked + label:after 
+    {
+        left: calc(100% - 5px);
+        transform: translateX(-100%);
+    }
+}
+
+// scroll down arrow
+.scroll-down-button
+{
+    position: absolute;
+    bottom:20%;
+    left: 50%;
+    width: 28px;
+    height: 28px;
+    border-left: 5px solid var(--ternary);
+    border-bottom: 5px solid var(--ternary);
+    transform: rotateZ(-45deg);
+    animation: scroll-down-button-animation 1.5s infinite;
+}
+@keyframes scroll-down-button-animation
+{
+    0% 
+    {
+      transform: rotate(-45deg) translate(0, 0);
+      opacity: 0;
+    }
+    50% 
+    {
+      opacity: 1;
+    }
+    100% 
+    {
+      transform: rotate(-45deg) translate(-20px, 20px);
+      opacity: 0;
+    }
+}
+    

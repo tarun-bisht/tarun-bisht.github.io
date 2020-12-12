@@ -1,0 +1,41 @@
+//dark mode and light mode color settings
+html
+{
+    --primary: #fff;
+    --secondary: #021017;
+    --ternary: #D3165A;
+    --primary-grey: #eee;
+    --secondary-grey: #555;
+    --code-bg: #ffffff;
+    --code-color: #212529;
+    --code-linenos-bg: #dfefff;
+    --code-linenos-color: #5499de;
+    --bulb-content: "\f185";
+    --bg:url(../images/landing_light.svg);
+    --icon:url(../images/logo_primary.svg);
+    --pattern:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2O8JBJlrPdm2VkGJMCIzIGxKRQEAJF/BAa18plXAAAAAElFTkSuQmCC);
+    @import "highlight_light";
+}
+html[data-theme='dark']
+{
+    --primary: #021017;
+    --secondary: #ffffff;
+    --ternary: #6FECFD;
+    --primary-grey: #031b27;
+    --secondary-grey: #bbb;
+    --code-bg: #1b1d1e;
+    --code-color: #f8f8f2;
+    --code-linenos-bg: #021017;
+    --code-linenos-color: #88b3de;
+    --bulb-content: "\f0eb";
+    --bg:url(../images/landing_dark.svg);
+    --icon:url(../images/logo_dark.svg);
+    --pattern:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2PMe/3feJIo41kGJMCIzIGxKRQEAJXfBAbFZIeGAAAAAElFTkSuQmCC);
+    @import "highlight_dark";
+}
+
+html .transition,html.transition *,html.transition *:before,html.transition *:after
+{
+    transition: all 500ms !important;
+    transition-delay: 0 !important;
+}

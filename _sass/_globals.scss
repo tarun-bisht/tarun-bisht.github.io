@@ -1,0 +1,30 @@
+// Globals
+*
+{
+    padding: 0;
+    margin: 0;
+    outline: none;
+    box-sizing: border-box;
+}
+
+// Hide scrollbar
+body
+{
+    -ms-overflow-style:none; //IE Hide scrollbar
+    &::-webkit-scrollbar
+    {
+        display:none;
+    }
+}
+
+// text selection color
+::-moz-selection 
+{   /* Code for Firefox */
+    color: var(--primary);
+    background:var(--secondary);
+}
+::selection 
+{
+    color: var(--primary);
+    background:var(--secondary);
+}

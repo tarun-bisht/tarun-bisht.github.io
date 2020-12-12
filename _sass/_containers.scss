@@ -1,0 +1,219 @@
+// container tag
+.container
+{
+    width: 100%;
+    max-width: 1140px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 15px;
+    padding-left: 15px;
+    padding-bottom: 130px;
+    padding-top: 150px;
+
+    @include break1
+    {
+        max-width: 960px;
+        padding-bottom: 30px;
+        padding-top: 60px;
+    }
+    @include break2
+    {
+        max-width: 720px;
+    }
+    @include break3
+    {
+        max-width: 540px;
+    }
+}
+
+// meta tags container
+.post-tags
+{
+    padding-top: 1rem;
+    ul
+    {
+        list-style: none;
+        display: grid;
+        gap:10px;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        align-items: center;
+
+        li
+        {
+            border-radius: 50px;
+            background: var(--primary-grey);
+            padding: 0.2rem;
+            font-size: 11px;
+            text-align: center;
+        }
+    }
+}
+
+// grid columns
+.col-4
+{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 20px;
+
+    @include break1
+    {
+        grid-template-columns: repeat(2,1fr);
+    }
+    @include break2
+    {
+        grid-template-columns: repeat(1,1fr);
+    }
+}
+.col-3
+{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 20px;
+
+    @include break2
+    {
+        grid-template-columns: repeat(2,1fr);
+    }
+    @include break3
+    {
+        grid-template-columns: repeat(1,1fr);
+    }
+}
+.col-2
+{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 20px;
+
+    @include break2
+    {
+        grid-template-columns: repeat(1,1fr);
+    }
+}
+
+
+// social media container
+.social
+{
+    background: var(--ternary);
+    padding: 10px;
+
+    ul
+    {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 5rem 0;
+
+        li
+        {
+            a
+            {
+                color:var(--primary);
+                font-size: 40px;
+                text-decoration: none;
+                margin-right: 3rem;
+
+                @include break1
+                {
+                    margin-right: 2rem;
+                    font-size: 36px;
+                }
+                @include break2
+                {
+                    margin-right: 2rem;
+                    font-size: 28px;
+                }
+                @include break3
+                {
+                    margin-right: 1rem;
+                    font-size: 24px;
+                }
+
+                &:hover
+                {
+                    text-shadow: 3px 3px var(--secondary);
+                }
+            }
+        }
+    }
+}
+
+// pagination container
+.pagination
+{
+    margin-top: 5rem;
+
+    ul
+    {
+        display: flex;
+        padding: 0;
+        list-style: none;
+        justify-content: center;
+
+        li
+        {
+            background-color: var(--primary-grey);
+            color: var(--secondary-grey);
+            margin-right: 5px;
+            padding: 12px 17px;
+            line-height: 1;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            
+            a
+            {
+                color: var(--secondary);
+                text-decoration: none;
+                cursor: pointer;
+            }
+        }
+
+        .active
+        {
+            background-color: var(--ternary);
+            color: var(--primary);
+            a
+            {
+                color: var(--primary);
+            }
+        }
+
+        .change-control
+        {
+            margin: 0 2rem;
+        }
+    }
+}
+
+
+// card container
+.card
+{
+    padding: 3rem 1rem;
+    border-radius: 10px;
+    background: var(--primary);
+    transition: all .3s ease 0s;
+    box-shadow: var(--secondary-grey) 3px 3px 5px;
+
+    .card-heading
+    {
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .card-body
+    {
+        margin: 1rem 0;
+        font-size: 15px;
+    }
+
+    &:hover
+    {
+        transform: translateY(-10px);
+    }
+}

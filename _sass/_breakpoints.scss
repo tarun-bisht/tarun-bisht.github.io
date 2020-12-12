@@ -1,0 +1,26 @@
+// large screen breakpoints
+@mixin break1
+{
+    @media only screen and (max-width:#{$break1})
+    {
+        @content;
+    }
+}
+
+// medium screen breakpoints
+@mixin break2
+{
+    @media only screen and (max-width:#{$break2})
+    {
+        @content;
+    }
+}
+
+// small screen breakpoints
+@mixin break3
+{
+    @media only screen and (max-width:#{$break3})
+    {
+        @content;
+    }
+}
