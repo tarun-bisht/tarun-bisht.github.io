@@ -1,0 +1,28 @@
+---
+layout: template
+title: Projects
+permalink: /projects/
+---
+
+<div class="portfolio">
+    <div class="filters">
+        <ul>
+            <li data-category="all">All Categories</li>
+            {% for category in site.projects_categories %}
+                <li data-category="{{ category }}">{{ category }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-3">
+        {% for project in site.projects reversed %}
+            <div class="card" animation="fade-down" animation-time="0.5s" category="{{ project.category }}">
+                <img src="{% link {{site.blob_image}} %}" data-src="{{ project.icon }}" alt="{{ project.title }}">
+                <div class="card-text">
+                    <h3>{{ project.title }}</h3>
+                    <p>{{ project.category }}</p>
+                </div>
+                <a href="{{project.url }}"></a>
+            </div>
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,184 @@
+---
+layout: base
+title: Home
+---
+<section class="header">
+	{% include nav.html %}
+	<div class="landing container">
+		<div class="landing-text" animation="fade-left" animation-time="1s">
+			<h3 class="header-headline">{{ site.website.headline }}</h3>
+			<p>{{ site.website.tagline }}</p>
+			<div class="landing-button">
+				<a href="{% link projects.html %}" class="link-button" animation="fade-right" animation-time="1.6s">Projects</a>
+				<a href="{% link blogs/index.html %}" class="link-button" animation="fade-down" animation-time="1.5s">Blogs</a>
+                <a href="https://tarun-bisht.github.io/portfolio" class="link-button" animation="fade-right" animation-time="1.7s">Resume</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="about">
+	<div class="container">
+		<h3 class="headline">About Me</h3>
+		<div class="about-panel col-2">
+			<div class="about-image" animation="fade-left" animation-time="1s">
+				<img src="{% link {{site.blob_image}} %}" data-src="{% link assets/images/profile.jpg %}" alt="Tarun Bisht">
+			</div>
+			<div class="about-text" animation="fade-right" animation-time="1.1s">
+				<h6>Hello Everyone, I am</h6>
+				<h1>{{ site.author }}</h1>
+				<h4>{{ site.about.tagline }}</h4>
+				<p>{{ site.about.description }}</p>
+				<div>
+					<a href="{% link about.md %}" class="link-button">More Info</a>
+					<a href="https://tarun-bisht.github.io/portfolio/" class="link-button">Resume</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="services">
+	<div class="container">
+		<h3 class="headline">Topics Of Interest</h3>
+		<div class="card" animation="fade-down" animation-time="1s">
+			<div class="icon"><i class="fas fa-robot"></i></div>
+			<div class="text">
+				<h3 class="card-heading">Artificial Intelligence and Machine Learning</h3>
+				<p class="card-body">Integrating AI and Machine Learning to projects</p>
+				<ul>
+					<li>Keras</li>
+					<li>Tensorflow</li>
+					<li>PyTorch</li>
+					<li>Scikit Learn</li>
+					<li>TensorflowJS</li>
+					<li>ml5JS</li>
+					<li>Numpy</li>
+					<li>Pandas</li>
+					<li>Matplotlib</li>
+					<li>Flask API</li>
+				</ul>
+			</div>
+		</div>
+		<div class="card" animation="fade-down" animation-time="1s">
+			<div class="icon"><i class="far fa-file-code"></i></div>
+			<div class="text">
+				<h3 class="card-heading">Full Stack Web Developement</h3>
+				<p class="card-body">Develop high quality dynamic websites for business</p>
+				<ul>
+					<li>HTML</li>
+					<li>CSS3</li>
+					<li>SCSS</li>
+					<li>JavaScript</li>
+					<li>Bootstrap</li>
+					<li>JQuery</li>
+					<li>Flask</li>
+					<li>Django</li>
+					<li>PHP</li>
+					<li>Configure Server</li>
+					<li>Deploy to Server</li>
+					<li>Installing SSL</li>
+				</ul>
+			</div>
+		</div>
+		<div class="card" animation="fade-down" animation-time="1s">
+			<div class="icon"><i class="fas fa-gamepad"></i></div>
+			<div class="text">
+				<h3 class="card-heading">Game Developement</h3>
+				<p class="card-body">Develop small Indie games based on imaginations</p>
+				<ul>
+					<li>Unity3D</li>
+					<li>C#</li>
+					<li>Inkscape</li>
+					<li>Photoshop</li>
+					<li>Blender</li>
+					<li>Bosca-Ceol</li>
+					<li>Audacity</li>
+				</ul>
+			</div>
+		</div>
+		<div class="card" animation="fade-down" animation-time="1s">
+			<div class="icon"><i class="fas fa-laptop-code"></i></div>
+			<div class="text">
+				<h3 class="card-heading">Software Developement</h3>
+				<p class="card-body">Develop quality softwares to reduce workloads</p>
+				<ul>
+					<li>Python</li>
+					<li>C#</li>
+					<li>JavaScript</li>
+					<li>JAVA</li>
+					<li>Git</li>
+				</ul>
+			</div>
+		</div>
+		<div class="card" animation="fade-down" animation-time="1s">
+			<div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
+			<div class="text">
+				<h3 class="card-heading">Computer Science</h3>
+				<p class="card-body">Good quality computer science articles for students</p>
+				<ul>
+					<li>Automata</li>
+					<li>Operating System</li>
+					<li>DBMS</li>
+					<li>Data Structures</li>
+					<li>Algorithms</li>
+					<li>Programming</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="latest-blogs">
+	<div class="container">
+		<h3 class="headline">Latest Blogs</h3>
+		{% for post in site.posts limit: 1 %}
+			<div class="blog-card" animation="fade-left" animation-time="0.5s">
+				<a class="card-link" href="{{ post.url }}">
+					<article class="card-body">
+						<div class="article-details">
+							<h4 class="post-category">{{ post.category }}</h4>
+							<h3 class="post-title">{{ post.title }}</h3>
+							<p class="post-description">{{ post.excerpt }}</p>
+							<p class="post-author">By <b>{{site.author}}</b> on {{ post.date | date: "%B %-d, %Y" }}</p>
+							<div class="post-tags">
+								<ul>
+									{% for tag in post.tags %}
+										<li>{{tag}}</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+					</article>
+				</a>
+			</div>
+		{% endfor %}
+	</div>
+</section>
+
+<section class="latest-works portfolio">
+	<div class="container">
+		<h3 class="headline">Latest Works</h3>	
+	    <div class="filters">
+	        <ul>
+	            <li data-category="all">All Categories</li>
+	            {% for category in site.projects_categories %}
+	                <li data-category="{{ category }}">{{ category }}</li>
+	            {% endfor %}
+	        </ul>
+	    </div>
+	    <div class="col-3">
+			{% assign projects = site.projects | reverse %}
+	        {% for project in projects limit:1 %}
+	            <div class="card" animation="fade-down" animation-time="0.5s" category="{{ project.category }}">
+	                <img src="{% link {{site.blob_image}} %}" data-src="{{ project.icon }}" alt="{{ project.title }}">
+	                <div class="card-text">
+	                    <h3>{{ project.title }}</h3>
+	                    <p>{{ project.category }}</p>
+	                </div>
+	                <a href="{{project.url }}"></a>
+	            </div>
+	        {% endfor %}
+	    </div>
+	</div>
+</section>

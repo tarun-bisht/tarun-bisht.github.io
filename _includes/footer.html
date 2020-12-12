@@ -1,0 +1,17 @@
+<footer>
+    <div class="image"></div>
+    <nav>
+        <ul>
+            <li><a href="{% link index.html %}">Home</a></li>
+            <li><a href="{% link about.md %}">About</a></li>
+            <li><a href="{% link blogs/index.html %}"> Blogs</a></li>
+            <li><a href="{% link projects.html %}">Projects</a></li>
+            <li><a href="{% link contact.html %}">Contact</a></li>
+            <li><a href="{% link privacy.md %}">Privacy Policy</a></li>
+            <li><a href="{% link terms.md %}">Terms and Conditions</a></li>
+        </ul>
+    </nav>
+    <div class="copyright">
+        Copyright © {{ "now" | date: "%Y" }} All rights reserved
+    </div>
+</footer>

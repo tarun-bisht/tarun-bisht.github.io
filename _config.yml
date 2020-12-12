@@ -1,0 +1,133 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+#
+# If you need help with YAML syntax, here are some quick references for you: 
+# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
+# https://learnxinyminutes.com/docs/yaml/
+#
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+encoding: utf-8
+title: Tarun Bisht
+author: Tarun Bisht
+tagline: Hello World I am Tarun and this is my personal, blogging and portfolio website.
+description: >- # this means to ignore newlines until "baseurl:"
+  Hello World I am Tarun and this is my personal, blogging and portfolio website. Here I write contents about artificial intelligent (AI),
+  programming, python, c#, machine learning (ML), deep learning (DL), game developemnt, my experiences and basic web developement.
+  Also I create projects revolving around these topics. Visit website for more details.
+
+twitter:
+  card: summary
+  username: tarun_bisht11
+
+logo: /assets/images/logo_primary.svg
+  
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://tarunbisht.com" # the base hostname & protocol for your site, e.g. http://example.com
+
+contact:
+  address: Joshi Bhawan Near Thana Kotwali Pithoragarh 262501
+  email: tarunbishttarun.11@gmail.com
+
+# default blur image for lazy loading
+blob_image: assets/images/blur.jpg
+
+# blog pagination
+paginate: 10
+paginate_path: "/blogs/page:num/"
+
+# website settings
+website:
+  headline: I Build Tech
+  tagline: The Power on your Side
+
+# about section settings
+about:
+  tagline: Developer, Educator and AI Enthusiast
+  description: I am a Programmer, Developer, Educator and AI enthusiast. Skilled on developing applications, games and educating about Computer Science and Physics.<br><br>Besides a programmer, I am Physics enthusiasts highly interested in Astronomy, Quantum Physics and Modern Physics.
+
+# social media usernames
+social:
+  name: Tarun Bisht
+  links:
+    - https://twitter.com/tarun_bisht11
+    - https://www.instagram.com/tarunbisht_11
+    - https://www.linkedin.com/in/tarun-bisht11/
+    - https://github.com/tarun-bisht
+    - https://medium.com/@tarunbishttarun11
+    - https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA
+    - https://www.kaggle.com/tarunbisht11
+  youtube: https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA
+  usernames:
+    twitter: tarun_bisht11
+    github:  tarun-bisht
+    instagram: tarunbisht_11
+    linkedin: tarun-bisht11
+    kaggle: tarunbisht11
+    medium_usernam: tarunbishttarun11
+
+# project categories worked
+projects_categories:
+  - Game
+  - App
+  - Web
+  - Graphics
+
+# define collections
+collections:
+  projects:
+    output: true
+    permalink: /:collection/:title/
+
+# Build settings for scss
+sass:
+  style: compressed
+
+
+permalink: pretty
+
+# define used plugins
+plugins:
+  - jekyll-feed
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# syntax highlighting and define markdown
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter_opts:
+    default_lang: html
+    css_class: 'syntax'
+
+# Exclude from processing.
+# The following items will not be processed, by default.
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+#
+# Excluded items can be processed by explicitly listing the directories or
+# their entries' file path in the `include:` list.
+#
+# exclude:
+#   - .sass-cache/
+#   - .jekyll-cache/
+#   - gemfiles/
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules/
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/

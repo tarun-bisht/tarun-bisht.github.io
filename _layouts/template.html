@@ -1,0 +1,17 @@
+---
+layout: base
+---
+
+<section class="header template-header">
+	{% include nav.html %}
+	<div class="landing">
+        <div class="headline" animation="fade-up" animation-time="1s">{{ page.title }}</div>
+    </div>
+    <span class="scroll-down-button"></span>
+</section>
+
+<section class="template-body">
+	<div class="container ">
+	    <div class="markdown-html">{{ content }}</div>
+	</div>
+</section>
