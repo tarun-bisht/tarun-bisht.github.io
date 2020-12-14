@@ -5,8 +5,8 @@ category: Web
 icon: https://storage.googleapis.com/tarun-bisht.appspot.com/project/logo_inf8788f1ec01738a37
 tags: theme basic-theme minimilistic-theme website-theme
 urls:
-    live: https://github.com/tarun-bisht/infinite-theme
     github: https://github.com/tarun-bisht/infinite-theme
+    live: https:/tarun-bisht.github.io/infinite-theme
 ---
 
 Minimilistic Website Theme created with HTML, CSS and JS
