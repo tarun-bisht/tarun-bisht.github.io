@@ -149,7 +149,13 @@ title: Home
 						<div class="article-details">
 							<h4 class="post-category">{{ post.category }}</h4>
 							<h3 class="post-title">{{ post.title }}</h3>
-							<p class="post-description">{{ post.excerpt }}</p>
+							<p class="post-description">
+								{% if post.description %}
+									{{ post.description }}
+								{% else %}
+									{{ post.excerpt }}
+								{% endif %}
+							</p>
 							<p class="post-author">By <b>{{site.author}}</b> on {{ post.date | date: "%B %-d, %Y" }}</p>
 							<div class="post-tags">
 								<ul>
