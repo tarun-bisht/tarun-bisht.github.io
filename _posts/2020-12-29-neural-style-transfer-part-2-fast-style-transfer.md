@@ -4,44 +4,44 @@ title:  "Neural Style Transfer Part 2 : Fast Style Transfer"
 date:   2020-12-29 22:16:50 +0530
 category: Deep Learning
 tags: python art intermediate tensorflow vgg style-transfer
-description: Fast style transfer is style transfer technique which is 100 times faster than Gatys optimization based style transfer technique. This technique can generate styled images in seconds and can be used to style videos too. It can handle even realtime webcam videos with descent frame rate. Fast style transfer let us to train once and generate infinite images. We train a model that converts input content image to styled image using perceptual loss. After training we can use this model to generate style images in one pass of network. This is second part of neural style transfer series, In this part we will cover both theory and its implementation in TensorFlow.
+description: Fast style transfer is style transfer technique which is 100 times faster than Gatys optimization-based style transfer technique. This technique can generate styled images in seconds and can be used to style videos too. It can handle even realtime webcam videos with a decent frame rate. Fast style transfer let us train once and generate infinite images. We train a model that converts input content image to styled image using perceptual loss. After training, we can use this model to generate style images in one pass of the network. This is the second part of neural style transfer series, In this part, we will cover both theory and its implementation in TensorFlow.
 ---
-This is second part of neural style transfer in this part we are dealing with another technique of style transfer which we can call Fast Style Transfer. This is follow up from previous post if you are directly reading its second part then I recommend you to read previous part first as many topics are followed up from that post.
+This is the second part of neural style transfer in this part we are dealing with another technique of style transfer which we can call Fast Style Transfer. This is follow up from the previous post if you are directly reading its second part then I recommend you to read the previous part first as many topics are followed up from that post.
 
-In gatys style transfer we are not training any network, we are just optimizing output image with respect to loss function(style_loss + content_loss) and optimization takes some number of rounds because of this it is very slow process to generate styled image. Using that technique for realtime videos 😭 forget about it. 
+In gatys style transfer, we are not training any network, we are just optimizing output image with respect to loss function(style_loss + content_loss) and optimization takes some number of rounds because of this it is a very slow process to generate the styled image. Using that technique for realtime videos 😭 forget about it. 
 
-This seems to be iterative process if we want to generate multiple images of same style as we are optimizing output image for same style image everytime. If there is a way to learn this input output mapping for an style image then we can generate images of that style in one go. 🤔 Yes we have we can use an autoencoder to learn mapping between input image and styled output image by using previously defined loss function to train it.  
+This seems to be an iterative process if we want to generate multiple images of the same style as we are optimizing output image for the same style image every time. If there is a way to learn this input-output mapping for a style image then we can generate images of that style in one go. 🤔 Yes, we have we can use an autoencoder to learn the mapping between the input image and styled output image by using the previously defined loss function to train it.  
 
-Fast style transfer let us to train once and generate infinite images and yes we can even use this for styling videos even realtime webcam videos too.
+Fast style transfer let us train once and generate infinite images and yes we can use this for styling videos, even realtime webcam videos too.
 
 ### Important Points
 
-Fast style transfer let us to train once and generate infinite images. Most of the points that we discussed regarding theory of loss functions is same, the main difference in which we will focus more is training model.
+Fast style transfer let us train once and generate infinite images. Most of the points that we discussed regarding the theory of loss function is same, the main difference here is we will focus more is training model and learning mapping using that loss function.
 
-Before reading this post brushup your knowlege about autoencoder especially convolutional autoencoders and resiudal layers (skip connections) in deep learning because I will not be explaining them but we will be implementing them here so cover up some basic knowlege about convolutional autoencoders and residual layers first this will help to understand implementation easily 
+Before reading this post brushup your knowledge about autoencoder especially convolutional autoencoders and residual layers (skip connections) in deep learning because I will not be explaining them but we will be implementing them here so cover up some basic knowledge about convolutional autoencoders and residual layers first this will help to understand implementation easily 
 
-- We train a feedforward network that apply artistic styles to images using loss function defined in [Gatys et al](https://arxiv.org/abs/1508.06576) paper, for more explaination refer previous post.
+- We train a feedforward network that applies artistic styles to images using loss function defined in [Gatys et al](https://arxiv.org/abs/1508.06576) paper, for more explanation refer to the previous post.
 
-- Feed forward network which we will use is a residual autoencoder network that takes content image as input and spits out stylized image this is same network that was used in [original implementation](https://arxiv.org/abs/1603.08155)
+- Feedforward network which we will use is a residual autoencoder network that takes the content image as input and spits out a stylized image this is the same network that was used in [original implementation](https://arxiv.org/abs/1603.08155)
 
-- Model also uses instance normalization instead of batch normalization based on the paper [Instance Normalization: The Missing Ingredient for Fast Stylization](https://arxiv.org/abs/1607.08022) as this provide better results.
+- Model also uses instance normalization instead of batch normalization based on the paper [Instance Normalization: The Missing Ingredient for Fast Stylization](https://arxiv.org/abs/1607.08022) as this provides better results.
 
 - We will be using vgg19 to calculate perceptual loss more working described on paper. 
 
-If someone want to try style transfer in video and images right now, I have created a [github repository](https://github.com/tarun-bisht/fast-style-transfer) for same purpose with instructions.
+If someone wants to try style transfer in video and images right now, I have created a [github repository](https://github.com/tarun-bisht/fast-style-transfer) for the same purpose with instructions.
 
 ### Importing Necessary Modules
 
-Lets start by importing all necessary modules:
+Let's start by importing all necessary modules:
 
-- `numpy` : for arrays manipulation
-- `tensorflow` : for tensor operations
-- `tensorflow.keras` : high level neural network library for tensorflow for creating neural networks
-- `pillow` : for converting an image to numpy array and numpy array to image, saving out output image.
-- `time` : for calculating time of each iteration
-- `matplotlib` : for displaying images and graphs in notebook
-- `request`, `base64`, `io` : for downloading and loading image from url
-- `os` : operating system level commands
+- `numpy`: for arrays manipulation
+- `tensorflow`: for tensor operations
+- `tensorflow.keras`: high-level neural network library for tensorflow for creating neural networks
+- `pillow`: for converting an image to numpy array and numpy array to image, saving out output image.
+- `time`: for calculating the time of each iteration
+- `matplotlib`: for displaying images and graphs in notebook
+- `request`, `base64`, `io`: for downloading and loading image from URL
+- `os`: operating system level commands
 
 
 {% highlight python linenos %}
@@ -77,7 +77,7 @@ def load_image(image_path, dim=None, resize=False):
     return np.array(img)
 {% endhighlight %}
 
-The above function is used to load image from path specified and convert it into numpy array
+The above function is used to load image from the path specified and convert it into numpy array
 
 
 {% highlight python linenos %}
@@ -93,7 +93,7 @@ def load_url_image(url,dim=None,resize=False):
     return np.array(img)
 {% endhighlight %}
 
-This function loads image from url and convert it into numpy array
+This function loads the image from URL and converts it into numpy array
 
 
 {% highlight python linenos %}
@@ -138,27 +138,27 @@ Above three functions are used for converting and plotting images:
 
 ### Steps for fast style transfer
 
-The training model is an encoder-decoder architecture with residual layers. Input images are passed to encoder part and it propogates to decoder part. Output is same size as input and spits generated image. 
+The training model is an encoder-decoder architecture with residual layers. Input images are passed to encoder part and it propagates to decoder part. The output is the same size as input and spits generated image. 
 
-This model is train on a loss which is called perceptual loss, the loss is calculated in same way as we calculate in gatys style transfer. Using a pretrained model to extract feature maps from style and content layers defined and using them to calculate style loss and content loss. (For more detail read previous post it was explained there)
+This model is trained on a loss which is called perceptual loss, the loss is calculated in the same way as we calculate in gatys style transfer. Using a pre-trained model to extract feature maps from style and content layers defined and using them to calculate style loss and content loss. (For more detail read the previous post it was explained there)
 
-As part of training the model we need training data, For training model we need a dataset of different images(can be anything like person, dog, car etc..) in bulk. In this post we are using [coco dataset](http://images.cocodataset.org/zips/train2014.zip) which have lots of images. I have also used [kaggle challenge dataset](https://www.kaggle.com/c/gan-getting-started) which has image of different landscapes, you can check code kernel [here](https://www.kaggle.com/tarunbisht11/generate-art-using-fast-style-transfer-in-a-second). We also need a style image whose style we want to learn using autoencoder. We can use any painting or sketch (select one from internet)
+As part of training the model we need training data, For training model, we need a dataset of different images(can be anything like a person, dog, car etc..) in bulk. In this post, we are using [coco dataset](http://images.cocodataset.org/zips/train2014.zip) which have lots of images. I have also used [kaggle challenge dataset](https://www.kaggle.com/c/gan-getting-started) which has images of different landscapes, you can check code kernel [here](https://www.kaggle.com/tarunbisht11/generate-art-using-fast-style-transfer-in-a-second). We also need a style image whose style we want to learn using autoencoder. We can use any painting or sketch (select one from the internet)
 
-For training this model we send batch of input training images of various contents into autoencoder which provides us output this output has to be our styled image, while training we pass these output images batches into our loss model (vgg19) in our case and features from different layers were extracted (content layers and style layers) these features are then used to calculate style loss and content loss, whose weighted sum produce perceptual loss that trains the network. The below image from paper describe it well.
+For training, this model we send a batch of input training images of various contents into autoencoder which provides us output this output has to be our styled image, while training we pass these output images batches into our loss model (vgg19) in our case and features from different layers were extracted (content layers and style layers) these features are then used to calculate style loss and content loss, whose weighted sum produce perceptual loss that trains the network. The below image from paper describes it well.
 
 ![https://arxiv.org/abs/1603.08155](https://miro.medium.com/max/1574/1*Um82GJ99gauIOh0U-S11hQ.png)
 
-After training we can use that network for styling any image in one pass without need of optimization
+After training, we can use that network for styling any image in one pass without the need of optimization
 
-The main highlights of network:
+The main highlights of the network:
 - Residual Layers
-- Encoder Decoder Model
-- output from decoder is passed to loss model(VGG) to calculate loss
+- Encoder-Decoder Model
+- output from decoder is passed to loss model(VGG) to calculate the loss
 - training needs compute as we are passing these images to two networks on every step
 
 ### Define loss 
 
-For calculating style loss and content loss we need a pretrained model, we are using vgg19 the original implementation uses vgg16.
+For calculating style loss and content loss we need a pre-trained model, we are using vgg19 the original implementation uses vgg16.
 
 
 {% highlight python linenos %}
@@ -220,7 +220,7 @@ vgg.summary()
     _________________________________________________________________
     
 
-Here we define layers that we will use to calculate loss.
+Here we define layers that we will use to calculate the loss.
 
 
 {% highlight python linenos %}
@@ -233,7 +233,7 @@ style_layers=['block1_conv1',
             'block5_conv1']
 {% endhighlight %}
 
-Lets define a class that creates loss model with some additional methods for accessing feature maps from network. We have also used these functions in previous post, here we just encapsulated them inside a class.
+Let's define a class that creates a loss model with some additional methods for accessing feature maps from the network. We have also used these functions in the previous post, here we just encapsulated them inside a class.
 
 
 {% highlight python linenos %}
@@ -261,14 +261,14 @@ class LossModel:
         return {'content':content_dict,'style':style_dict}
 {% endhighlight %}
 
-Now we create our loss model using above class
+Now we create our loss model using the above class
 
 
 {% highlight python linenos %}
 loss_model = LossModel(vgg, content_layers, style_layers)
 {% endhighlight %}
 
-Lets define loss function for calculating content and style loss, below methods `content_loss` and `style _loss` calculates content and style loss respectively. With weighted averaging of these losses we derive perceptual loss defined in `preceptual_loss` function. The details of these loss functions are covered in previous post.
+Let us define loss function for calculating content and style loss, below methods `content_loss` and `style _loss` calculates content and style loss respectively. With weighted averaging of these losses, we derive perceptual loss defined in `preceptual_loss` function. The details of these loss functions are covered in the previous post.
 
 
 {% highlight python linenos %}
@@ -313,11 +313,11 @@ def preceptual_loss(predicted_activations,content_activations,
 
 Here we first defined all necessary layers for our network:
 
-- `ReflectionPadding2D` : for applying reflection padding to images in conv nets
-- `InstanceNormalization` : We are using instance normalization instead of batch normalization as it gives better result. It normalize inputs across channel.
-- `ConvLayer` : Block of conv layer with padding-> conv_layer-> instance_normalization combined
-- `ResidualLayer` : Residual layer with two ConvLayer block
-- `UpsampleLayer` : upsample the bottleneck representation (if you have read about autoencoders you know what I mean) in autoencoder. It can be considered as deconvolutional layers.
+- `ReflectionPadding2D`: for applying reflection padding to images in conv nets
+- `InstanceNormalization`: We are using instance normalization instead of batch normalization as it gives a better result. It normalizes inputs across the channel.
+- `ConvLayer`: Block of conv layer with padding-> conv_layer-> instance_normalization combined
+- `ResidualLayer`: Residual layer with two ConvLayer block
+- `UpsampleLayer`: upsample the bottleneck representation (if you have read about autoencoders you know what I mean) in autoencoder. It can be considered as deconvolutional layers.
 
 
 {% highlight python linenos %}
@@ -395,7 +395,7 @@ class UpsampleLayer(tf.keras.layers.Layer):
         return self.bn(x)
 {% endhighlight %}
 
-Using these layers defined above lets create an convolutional autoencoder.
+Using these layers defined above let's create a convolutional autoencoder.
 
 Architecture:
 
@@ -488,7 +488,7 @@ Create style model using `StyleTransferModel` class
 style_model = StyleTransferModel()
 {% endhighlight %}
 
-Here we check shape of all layers and verify input shape and output shape
+Here we check the shape of all layers and verify input shape and output shape
 
 
 {% highlight python linenos %}
@@ -549,21 +549,21 @@ def train_step(dataset,style_activations,steps_per_epoch,style_model,loss_model,
     return tf.reduce_mean(batch_losses)
 {% endhighlight %}
 
-In above function we have defined single training step. Inside the function:
+In the above function, we have defined a single training step. Inside the function:
 
-- first we defined save_path for model checkpointing
+- first, we defined save_path for model checkpointing
 - for number of steps_per_epoch we run a training loop
-- for every step we forward pass batch of image pass it to our loss model 
+- for every step, we forward pass a batch of image pass it to our loss model 
 - get content_layer activations for the batch of images
-- together with style activations from style image and content activations we calculate perceptual loss
+- together with style activations from style image and content activations we calculate the perceptual loss
 - we add some total variation loss to image for smoothening
-- calculate gradients of loss function with respect to model trainable parameters
-- finally backpropogates to optimize
+- calculate gradients of the loss function with respect to the model's trainable parameters
+- finally backpropagates to optimize
 - at every 1000 steps saving checkpoints
 
 ### Configure Dataset for training
     
-Downloading coco dataset for training,  we can use any other image dataset with images in bulk. Below line downloads coco dataset using wget in zip format. Further we create a directory where we unzip that downloaded zip file.
+Downloading coco dataset for training,  we can use any other image dataset with images in bulk. Below line downloads coco dataset using wget in zip format. Further, we create a directory where we unzip that downloaded zip file.
 
 
 {% highlight bash linenos %}
@@ -587,9 +587,9 @@ unzip -qq train2014.zip -d coco
 {% endhighlight %}
     
 
-For training model lets create tensorflow dataset which loads all images from path specified resize them to be of same size for efficient batch training and implements batching and prefetching. Below class creates tfdataset for training. 
+For training, the model lets create tensorflow dataset which loads all images from the path specified resize them to be of the same size for efficient batch training and implements batching and prefetching. Below class creates tfdataset for training. 
 
-Note we are training model with fixed size images but we can generate image of any size because all layers in model are convolutional layers. 
+Note we are training model with fixed-size images but we can generate images of any size because all layers in model are convolutional layers. 
 
 
 {% highlight python linenos %}
@@ -618,7 +618,7 @@ class TensorflowDatasetLoader:
         return image
 {% endhighlight %}
 
-using above class lets create tfdataset from coco dataset images. We specify path to images folder (where all images resides) and batch size
+using the above class lets create tfdataset from coco dataset images. We specify the path to images folder (where all images reside) and batch size
 
 
 {% highlight python linenos %}
@@ -650,7 +650,7 @@ plot_images_grid(next(iter(loader.dataset.take(1))))
     
 
 
-Now lets load style image from url using `load_url_image` and plot it.
+Now lets load style image from URL using `load_url_image` and plot it.
 
 
 {% highlight python linenos %}
@@ -671,7 +671,7 @@ show_image(style_image)
     
 
 
-Next we extract style layers feature maps of style image using loss model
+Next, we extract style layers feature maps of style image using loss model
 
 
 {% highlight python linenos %}
@@ -682,7 +682,7 @@ style_activations=loss_model.get_activations(style_image_batch)["style"]
 
 ### Training model
 
-define content weight, style weight and total variation weight these are hyperparmeters which we can tune to change strength of style and content in output image
+define content weight, style weight and total variation weight these are hyperparameters which we can tune to change the strength of style and content in the output image
 
 
 {% highlight python linenos %}
@@ -691,7 +691,7 @@ style_weight=1e2
 total_variation_weight=0.004
 {% endhighlight %}
 
-Now define number of epochs to train, steps per epochs and model checkpoint path
+Now define the number of epochs to train, steps per epochs and model checkpoint path
 
 
 {% highlight python linenos %}
@@ -717,7 +717,7 @@ save_path = "./scream"
 os.makedirs(save_path, exist_ok=True)
 {% endhighlight %}
 
-Enable mixed precision training it offers significant computational speedup by performing operations in half-precision format.
+Enable mixed-precision training it offers significant computational speedup by performing operations in half-precision format.
 
 
 {% highlight python linenos %}
@@ -728,7 +728,7 @@ except:
     pass
 {% endhighlight %}
 
-if previous checkpoint exist at that path load that checkpoint and continue further training else we train from scratch
+if the previous checkpoint exists at that path load that checkpoint and continue further training else we train from scratch
 
 
 {% highlight python linenos %}
@@ -742,7 +742,7 @@ else:
     training scratch ...
     
 
-Finally we start training model. At each epoch we are calling `train_step` function which runs till number of steps er epochs defined and after every epoch save model checkpoint for further inferencing and training
+Finally, we start training the model. At each epoch, we are calling `train_step` function which runs till number of steps per epochs defined and after every epoch save model checkpoint for further inferencing and training.
 
 
 {% highlight python linenos %}
@@ -809,7 +809,7 @@ for epoch in range(1,epochs+1):
     loss: 5442546.5
     
 
-After training model lets plot loss with respect to epochs and check loss summary
+After training model lets plot loss concerning epochs and check loss summary
 
 
 {% highlight python linenos %}
@@ -826,7 +826,7 @@ plt.show()
     
 
 
-Now its time to generate some style images. We start first by loading saved model checkpoint into autoencoder.
+Now its time to generate some style images. We start first by loading the saved model checkpoint into autoencoder.
 
 
 {% highlight python linenos %}
@@ -858,7 +858,7 @@ test_image=np.expand_dims(test_image,axis=0)
 test_image=test_image.astype(np.float32)
 {% endhighlight %}
 
-In one forward pass of model we get generated styled image 
+In one forward pass of the model, we get generated styled image 
 
 
 {% highlight python linenos %}
@@ -891,7 +891,7 @@ plot_images_grid([test_output,predicted_output])
     
 
 
-If you do not have enough compute power use colab or kaggle kernels they provide free gpu even tpu for training these models, Once trained we can use trained checkpoints to do style transfer in any system with gpu or cpu.
+If you do not have enough compute power use colab or kaggle kernels they provide free GPU even TPU for training these models, Once trained we can use trained checkpoints to do style transfer in any system with GPU or CPU.
 
 Using `opencv` we can easily create styled videos too.
 
@@ -910,7 +910,7 @@ Here we have realtime video stylization in action
 
 <img src='https://github.com/tarun-bisht/fast-style-transfer/raw/master/output/webcam.gif' alt="webcam output">
 
-Below is youtube video for video stylization in action
+Below is a youtube video which shows video stylization in action
 
 <div style="margin:1rem 0;">
   <a href="http://www.youtube.com/watch?v=GrS4rWifdko"><img src='https://github.com/tarun-bisht/fast-style-transfer/raw/master/output/video.gif' alt="Pithoragarh style transfer"></a>
@@ -918,9 +918,9 @@ Below is youtube video for video stylization in action
 
 Now generate different images and videos, play with it and share exciting results.
 
-If someone want to try style transfer in video and images right now, I have created a [github repository](https://github.com/tarun-bisht/fast-style-transfer) for same purpose with instructions.
+If someone wants to try style transfer in video and images right now, I have created a [github repository](https://github.com/tarun-bisht/fast-style-transfer) for the same purpose with instructions.
 
-Thanks for reading till last. ✌✌✌
+Thanks for reading. ✌✌✌
 
 ### References
 

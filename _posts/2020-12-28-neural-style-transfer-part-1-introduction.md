@@ -4,9 +4,9 @@ title:  "Neural Style Transfer Part 1 : Introduction"
 date:   2020-12-28 22:16:50 +0530
 category: Deep Learning
 tags: python art intermediate tensorflow vgg style-transfer
-description: Neural Style Transfer was first published in the paper "A Neural Algorithm of Artistic Style" by Gatys et al., originally released in 2015. It is a image transformation technique which modify one image in style of another image. We take two images content image and style image, using these two images we generate a third image which has contents from content image while style(textures) from style image. If we take any painting as style image then output generated image has contents painted like style image. This is first part of neural style transfer series, in this part we will cover optimization-based style transfer technique proposed by Gatys and its implementation in TensorFlow. 
+description: Neural Style Transfer was first published in the paper "A Neural Algorithm of Artistic Style" by Gatys et al., originally released in 2015. It is an image transformation technique which modifies one image in the style of another image. We take two images of content image and style image, using these two images we generate a third image which has contents from the content image while styling (textures) from style image. If we take any painting as a style image then output generated image has contents painted like style image. This is the first part of neural style transfer series, in this part we will cover the optimization-based style transfer technique proposed by Gatys and its implementation in TensorFlow.  
 ---
-Neural Style Transfer was first published in the paper "A Neural Algorithm of Artistic Style" by Gatys et al., originally released in 2015. It is an image transformation technique which modify one image in style of another image.
+Neural Style Transfer was first published in the paper "A Neural Algorithm of Artistic Style" by Gatys et al., originally released in 2015. It is an image transformation technique which modifies one image in the style of another image.
 
 If these line do not convince you then see the images below,
 
@@ -16,28 +16,28 @@ If these line do not convince you then see the images below,
   <img src='https://github.com/tarun-bisht/fast-style-transfer/raw/master/output/styled.jpg' alt="styled friendship image" width="346px" height="346px">
 </div>
 
-here we have two images one shows cute friendship of cat and dog while other is udnie painting by Francis Picabia. Using style transfer technique we have modified friendship image in style of udnie painting, now it looks like an impressive artwork. If this motivates you and want to know how this works and how to do this with your own images then continue reading I am going to explain this. 
+here we have two images one shows the cute friendship of cat and dog while other is udnie painting by Francis Picabia. Using style transfer technique we have modified friendship image in the style of udnie painting, now it looks like an impressive artwork. If this motivates you and wants to know how this works and how to do this with your images then continue reading I am going to explain this. 
 
 I am dividing this tutorial into two parts:
 
-- In first part we are tackling some theory and implementing Gatys style transfer which was originally released in 2015 by [Gatys et al](https://arxiv.org/abs/1508.06576). But generating image using this technique takes time which depends on compute power provided. In my system it takes about 10 min for an image because of this we would not like to use this for styling videos.
+- In the first part, we are tackling some theory and implementing Gatys style transfer which was originally released in 2015 by [Gatys et al](https://arxiv.org/abs/1508.06576). But generating an image using this technique takes time which depends on compute power provided. In my system it takes about 10 min for an image because of this we would not like to use this for styling videos.
 
-- In second part we will implement another variant of style transfer which we can call fast style transfer. It was proposed in [this paper](https://arxiv.org/abs/1603.08155) by Justin Johnson. This is hundreds of times faster than gatys style transfer. It is so fast that we can use this in realtime videos too.
+- In the second part, we will implement another variant of style transfer which we can call fast style transfer. It was proposed in [this paper](https://arxiv.org/abs/1603.08155) by Justin Johnson. This is hundreds of times faster than gatys style transfer. It is so fast that we can use this in realtime videos too.
 
 We have used convolutional networks for image classifications and detection problems in machine learning many times but this time we are using them for style transfer. Implementing this on my own helps me to evolve in deep learning. I was using keras before and trapped inside using fit method and sequential model for all image tasks. But implementing this helps me to break that trap and deep dive inside model architecture, loss function and training loop. This skill also helps to understand and implement different model architectures on my own from research papers. I hope it will help you too.
 
-Before starting tutorial note:
+Before starting the tutorial note:
 
-- Content Image: The image which we want to stylize.
-- Style Image: The image whose style we want to embed in our content image.
-- Output Image: The output styled image, we will be optimizing this image(more details later) to create styled image.
+- `Content Image` : The image which we want to stylize.
+- `Style Image` : The image whose style we want to embed in our content image.
+- `Output Image` : The output styled image, we will be optimizing this image(more details later) to create a styled image.
 
 ### Steps to create style transfer
 
-- first we will define our content image and style image using which we will generate output image
-- we are using a pre-trained model which will provide us feature maps at different layers. Now question may arise why need of these activations? In style transfer we want content of content image and style(textures) of style image in our output image. There is no direct way to calculate content and style of an image, Since convolutional feature maps captures a good representation of features of images we will use these feature maps from conv net to calculate them(process of calculation explained later).
+- first, we will define our content image and style image using which we will generate an output image
+- we are using a pre-trained model which will provide us feature maps at different layers. Now the question may arise why the need of these activations? In style transfer, we want the content of content image and style(textures) of style image in our output image. There is no direct way to calculate content and style of an image, Since convolutional feature maps capture a good representation of features of images we will use these feature maps from Conv net to calculate them(the process of calculating this is explained later in the post).
 - we extract feature maps for style, content and output image, and use these maps to calculate a loss value(loss function explained later) 
-- The loss we calculated is then used to optimize our output image and create styled image.
+- The loss we calculated is then used to optimize our output image and create the styled image.
 
 
 {% highlight python linenos %}
@@ -45,7 +45,7 @@ content_img_path = "starry_nights.jpg"
 style_img_path = "vassily_kandinsky.jpg"
 {% endhighlight %}
 
-We start by defining path to our style and content images. We are using starry image painting as content image and vassily kandinsky painting as style.
+We start by defining the path to our style and content images. We are using starry image painting as a content image and Vassily Kandinsky painting as style.
 
 
 {% highlight python linenos %}
@@ -59,15 +59,15 @@ import IPython.display as display
 from tqdm.notebook import tqdm 
 {% endhighlight %}
 
-Next we import all required modules which we will use:
+Next, we import all required modules which we will use:
 
-- numpy : for arrays manipulation
-- tensorflow : for tensor operations
-- tensorflow.keras : high level neural network library for tensorflow for creating neural networks
-- pillow : for converting an image to numpy array and numpy array to image, saving out output image.
-- time : for calculating time of each iteration
-- Ipython.display : for displaying images in notebook
-- tqdm: for graphical counters
+- `numpy` : for arrays manipulation
+- `tensorflow` : for tensor operations
+- `tensorflow.keras` : high-level neural network library for tensorflow for creating neural networks
+- `pillow` : for converting an image to numpy array and numpy array to image, saving out output image.
+- `time` : for calculating the time of each iteration
+- `Ipython.display` : for displaying images in notebook
+- `tqdm`: for graphical counters
 
 
 {% highlight python linenos %}
@@ -83,7 +83,7 @@ def load_image(image_path,max_dim=512):
 
 the above function
 
-- loads image from path
+- loads image from the path
 - convert it into RGB format
 - resize it with max dimension specified while maintaining aspect ratio
 - converting an image to numpy array and creating a batch of a single image since neural networks expects the input to be in batches.
@@ -108,7 +108,7 @@ def array_to_img(array, deprocessing=False):
     return Image.fromarray(array)
 {% endhighlight %}
 
-the above function will convert array to image. if deprocessing is true it will first deprocess vgg preprocessing and then convert array to image
+the above function will convert an array to an image. if deprocessing is true it will first deprocess vgg preprocessing and then convert array to image
 
 
 {% highlight python linenos %}
@@ -117,7 +117,7 @@ def show_image(img, deprocessing=True):
     display.display(image)
 {% endhighlight %}
 
-the above function will show image in notebook by first converting array to image
+the above function will show image in the notebook by first converting the array to image
 
 
 {% highlight python linenos %}
@@ -135,7 +135,7 @@ show_image(content_image)
     
 
 
-Now lets load our content image and display it.
+Now, let us load our content image and display it.
 
 
 {% highlight python linenos %}
@@ -153,7 +153,7 @@ show_image(style_image)
     
 
 
-Similarly load style image and display it.
+Similarly, load style image and display it.
 
 
 {% highlight python linenos %}
@@ -164,9 +164,9 @@ def stylized_model(model, layer_names):
     return new_model
 {% endhighlight %}
 
-the above function creates a stylized model. Since we are not training our model so we set trainable to false. Our stylized model takes input as image and outputs the activations of layers which we will use to extract content and style from image.
+the above function creates a stylized model. Since we are not training our model so we set trainable to false. Our stylized model takes input as an image and outputs the activations of layers which we will use to extract content and style from the image.
 This function takes:
-- pretrained model which we will use to extract features from images (we are using vgg pretrained model as it was used in original implementation).
+- pre-trained model which we will use to extract features from images (we are using vgg pre-trained model as it was used in original implementation).
 - layer names from which we want to extract features
 
 
@@ -243,10 +243,10 @@ style_layers=['block1_conv1',
              'block5_conv1']
 {% endhighlight %}
 
-Lets define layers which from which we want to extract features for style and content images. We try to extract appearences of our style image from all scenarios extracted by conv nets, so we have used multiple blocks of conv layers to capture feature maps at different spatial scales.
+Let's define layers from which we want to extract features for style and content images. We try to extract the appearance of our style image from all scenarios extracted by conv nets, so we have used multiple blocks of conv layers to capture feature maps at different spatial scales.
 
-- We have used higher conv layer as content layer because higher convolutional layers have learned complex and high-level features
-- For style layers we have use various layers at different scale to capture feature maps at different spatial scales.
+- We have used higher conv layer as a content layer because higher convolutional layers have learned complex and high-level features
+- For style layers, we have used various layers at different scales to capture feature maps at different spatial scales.
 
 
 {% highlight python linenos %}
@@ -268,7 +268,7 @@ for layer_name, outputs in zip(content_layers, content_outputs):
     (18, 28, 512)
     
 
-We get output from layer which we defined in `content_layers` list. The output is feature map spit out by conv layer (block5_conv2) of shape (18,28,512)
+We get output from a layer which we defined in `content_layers` list. The output is a feature map spit out by conv layer (block5_conv2) of shape (18,28,512)
 
 
 {% highlight python linenos %}
@@ -290,14 +290,14 @@ for layer_name,outputs in zip(style_layers, style_outputs):
     (1, 21, 32, 512)
     
 
-Similarly we can check output feature maps from layers defined in `style_layers` list
+Similarly, we can check output feature maps from layers defined in `style_layers` list
 
 
 {% highlight python linenos %}
 model = stylized_model(vgg, style_layers + content_layers)
 {% endhighlight %}
 
-Now lets create a model which we will be used for style transfer. We create a vgg model which outputs all feature maps from the layers defined in `style_layers` and `content_layers` when an image is passed through it.
+Now let's create a model which we will be used for style transfer. We create a vgg model which outputs all feature maps from the layers defined in `style_layers` and `content_layers` when an image is passed through it.
 
 
 {% highlight python linenos %}
@@ -316,8 +316,8 @@ The above function takes style transfer model and image as input and spits out o
 
 This dictionary has 2 keys:
 
-- *content* : has all feature maps for the image from content_layers
-- *style* : has all feature maps for the image from style_layers
+- *content*: has all feature maps for the image from content_layers
+- *style*: has all feature maps for the image from style_layers
 
 
 {% highlight python linenos %}
@@ -356,7 +356,7 @@ content_targets = get_output_dict(model,content_image)['content']
 style_targets = get_output_dict(model,style_image)['style']
 {% endhighlight %}
 
-In above lines we have extracted content feature maps from our content image and style feature maps from style image
+In above lines, we have extracted content feature maps from our content image and style feature maps from style image
 
 ### Loss Functions
 
@@ -383,9 +383,9 @@ def style_loss(placeholder,style):
 
 The above three functions are used to calculate *content loss* and *style loss* from our images. 
 
-- Content Loss : It is defined as mean square error between two images. It denotes, how close pixels of two images are? You have already seen this loss function in regression. If two image are same there mse is zero. We are using `mse` because we want to calculate pixel level closeness of images the more they are close in terms of pixels the more the content of images matches, this way we can check, how close the contents of content image and output image are?
+- Content Loss: It is defined as the mean square error between two images. It denotes, how close pixels of two images are? You have already seen this loss function in regression. If two images are same there mse is zero. We are using `mse` because we want to calculate pixel-level closeness of images the more they are close in terms of pixels the more the content of images matches, this way we can check, how close the contents of the content image and output image are?
 
-- Style loss uses gram matrix to calculate correlation or similarity between feature maps of two images. The dot product tells us by what amount one vector goes in the direction of another, in more intuitive way it tells similarity between two vectors. The more similar vectors are the less is angle between them also dot product is greater in this case. For calculating style loss we are using gram matrix which is dot product of all style features with one another. This helps to capture relationship between feature maps the more the dot product between them the more correlated they are and less the dot product the less correlated they are. This relation capture stats of patterns in activations of convnet which represent appereance of texture in high level. Using `mse` between gram matrix of two images helps us to find closeness of features (style and texture) between two images, this way we can check, how style of one image is similar to another?
+- Style loss uses gram matrix to calculate correlation or similarity between feature maps of two images. The dot product tells us by what amount one vector goes in the direction of another, in the more intuitive way it tells similarity between two vectors. The more similar vectors are the less is the angle between them also dot product is greater in this case. For calculating style loss, we are using the gram matrix which is the dot product of all style features with one another. This helps to capture the relationship between feature maps the more the dot product between them the more correlated they are and less the dot product the less correlated they are. This relation capture stats of patterns in activations of convnet which represent the appearance of texture at a high level. Using `mse` between gram matrix of two images helps us to find the closeness of features (style and texture) between two images, this way we can check, how the style of one image is similar to another?
 
 
 {% highlight python linenos %}
@@ -407,16 +407,16 @@ def loss_function(outputs, content_outputs, style_outputs, content_weight, style
     return loss
 {% endhighlight %}
 
-The above function is our loss function which merges style and content loss of our style image and content image respectively with the style and content loss of our target placeholder image. This placeholder image will be our final styled image which has content of content image and style of style image.
+The above function is our loss function which merges style and content loss of our style image and content image respectively with the style and content loss of our target placeholder image. This placeholder image will be our final styled image which has the content of content image and style of style image.
 
-we are also using some weighting for content and style loss which controls how much style or content we want in our final image. These weights are hyperparameters which can be used to tune final output image.
+we are also using some weighting for content and style loss which controls how much style or content we want in our final image. These weights are hyperparameters which can be used to tune the final output image.
 
 
 {% highlight python linenos %}
 output_image = tf.Variable(content_image, dtype=tf.float32)
 {% endhighlight %}
 
-lets define our output image which we will optimize using loss defined above to create final style image. We simply copy contents of content image into it for faster convergence because content is already present in image, this way we get an appealing image in less number of optimzation epochs. We can also use a noise image from normal distribution for this task.
+let's define our output image which we will optimize using loss defined above to create the final style image. We simply copy contents of the content image into it for faster convergence because the content is already present in the image, this way we get an appealing image in less number of optimization epochs. We can also use a noise image from a normal distribution for this task.
 
 
 {% highlight python linenos %}
@@ -431,7 +431,7 @@ def clip_0_1(image):
     return tf.clip_by_value(image,clip_value_min=0.0, clip_value_max=1.0)
 {% endhighlight %}
 
-The above function make sure that our pixels of image are in range [0, 1]
+The above function makes sure that our pixels of the image are in the range [0, 1]
 
 ### Optimize output image
 
@@ -448,13 +448,13 @@ def loss_optimizer(image, optimizer, content_weight, style_weight, total_variati
     return loss
 {% endhighlight %}
 
-We have defined our loss optimizer which uses an optimizer to decrease loss value. It takes image that we want to optimize and an optimizer for optimization as parameters.
+We have defined our loss optimizer which uses an optimizer to decrease loss value. It takes an image that we want to optimize and an optimizer for optimization as parameters.
 
-The optimization of our loss function(style + content loss) led highly pixelated and noisy image to prevent this we introduced total variation loss. It act as regularizer which smoothens generated image and ensure spatial continuity(different views of an object are sufficiently similar after one view is learned) 
+The optimization of our loss function(style + content loss) led highly pixelated and noisy image to prevent this we introduced total variation loss. It acts as regularizer which smoothens generated image and ensure spatial continuity(different views of an object are sufficiently similar after one view is learned) 
 
-The third parameter is weight for total variation loss which we can use as hyerparameter to tune final image
+The third parameter is the weight for total variation loss which we can use as a hyperparameter to tune the final image
 
-In this funtion we calculate gradients of loss with respect to image using `tape.gradient`. With these gradients we optimize our image using `optimizer.apply_gradients` method.
+In this function, we calculate gradients of loss concerning image using `tape.gradient`. With these gradients, we optimize our image using `optimizer.apply_gradients` method.
 
 
 {% highlight python linenos %}
@@ -463,7 +463,7 @@ style_weight=1e-2
 content_weight=1e4
 {% endhighlight %}
 
-above we have defined our weights for content, style and total variation loss. We can tune them and check their effects in final output image. Change them based on your liking.
+above we have defined our weights for content, style and total variation loss. We can tune them and check their effects in the final output image. Change them based on your liking.
 
 
 {% highlight python linenos %}
@@ -530,9 +530,9 @@ final_image.save("kandinsky_starry.jpg")
     
 
 
-This is an interesting part because we are creating styled image here. we have defined number of epochs and steps per epochs and for every epoch we are calculating loss and optimizing our output image using adam optimizer. 
+This is an interesting part because we are creating a styled image here. we have defined the number of epochs and steps per epochs and for every epoch, we are calculating loss and optimizing our output image using adam optimizer. 
 
-Finally at last we are saving output image into disk, now its time to show off this to your friends. Play with it and share exciting results.
+Finally, at last, we are saving output image into the disk, now its time to show off this image to your friends. Play with it and share exciting results.
 
 Below is the demo video showing style transfer in action.
 
@@ -540,9 +540,9 @@ Below is the demo video showing style transfer in action.
   <a href="http://www.youtube.com/watch?v=weVfBfWVuZw"><img src='http://img.youtube.com/vi/weVfBfWVuZw/0.jpg' alt="Gatys style transfer"></a>
 </div>
 
-In the next part we will be using another style transfer technique which will be 100 times faster than this and can be used to style videos too.
+In the next part, we will be using another style transfer technique which will be 100 times faster than this and can be used to style videos too.
 
-Thanks for reading till last. ✌✌✌
+Thanks for reading. ✌✌✌
 
 ### References
 
