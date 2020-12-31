@@ -6,7 +6,7 @@ category: Deep Learning
 tags: python art intermediate tensorflow vgg style-transfer
 description: Fast style transfer is style transfer technique which is 100 times faster than Gatys optimization-based style transfer technique. This technique can generate styled images in seconds and can be used to style videos too. It can handle even realtime webcam videos with a decent frame rate. Fast style transfer let us train once and generate infinite images. We train a model that converts input content image to styled image using perceptual loss. After training, we can use this model to generate style images in one pass of the network. This is the second part of neural style transfer series, In this part, we will cover both theory and its implementation in TensorFlow.
 ---
-This is the second part of neural style transfer in this part we are dealing with another technique of style transfer which we can call Fast Style Transfer. This is follow up from the previous post if you are directly reading its second part then I recommend you to read the previous part first as many topics are followed up from that post.
+This is the second part of neural style transfer in this part we are dealing with another technique of style transfer which we can call Fast Style Transfer. This is follow up from the [previous post](https://www.tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/) if you are directly reading its second part then I recommend you to read the previous part first as many topics are followed up from that post.
 
 In gatys style transfer, we are not training any network, we are just optimizing output image with respect to loss function(style_loss + content_loss) and optimization takes some number of rounds because of this it is a very slow process to generate the styled image. Using that technique for realtime videos 😭 forget about it. 
 
@@ -20,7 +20,7 @@ Fast style transfer let us train once and generate infinite images. Most of the 
 
 Before reading this post brushup your knowledge about autoencoder especially convolutional autoencoders and residual layers (skip connections) in deep learning because I will not be explaining them but we will be implementing them here so cover up some basic knowledge about convolutional autoencoders and residual layers first this will help to understand implementation easily 
 
-- We train a feedforward network that applies artistic styles to images using loss function defined in [Gatys et al](https://arxiv.org/abs/1508.06576) paper, for more explanation refer to the previous post.
+- We train a feedforward network that applies artistic styles to images using loss function defined in [Gatys et al](https://arxiv.org/abs/1508.06576) paper, for more explanation refer to the [previous post](https://www.tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/).
 
 - Feedforward network which we will use is a residual autoencoder network that takes the content image as input and spits out a stylized image this is the same network that was used in [original implementation](https://arxiv.org/abs/1603.08155)
 
@@ -140,7 +140,7 @@ Above three functions are used for converting and plotting images:
 
 The training model is an encoder-decoder architecture with residual layers. Input images are passed to encoder part and it propagates to decoder part. The output is the same size as input and spits generated image. 
 
-This model is trained on a loss which is called perceptual loss, the loss is calculated in the same way as we calculate in gatys style transfer. Using a pre-trained model to extract feature maps from style and content layers defined and using them to calculate style loss and content loss. (For more detail read the previous post it was explained there)
+This model is trained on a loss which is called perceptual loss, the loss is calculated in the same way as we calculate in gatys style transfer. Using a pre-trained model to extract feature maps from style and content layers defined and using them to calculate style loss and content loss. (For more detail read the [previous post](https://www.tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/) it was explained there)
 
 As part of training the model we need training data, For training model, we need a dataset of different images(can be anything like a person, dog, car etc..) in bulk. In this post, we are using [coco dataset](http://images.cocodataset.org/zips/train2014.zip) which have lots of images. I have also used [kaggle challenge dataset](https://www.kaggle.com/c/gan-getting-started) which has images of different landscapes, you can check code kernel [here](https://www.kaggle.com/tarunbisht11/generate-art-using-fast-style-transfer-in-a-second). We also need a style image whose style we want to learn using autoencoder. We can use any painting or sketch (select one from the internet)
 
@@ -233,7 +233,7 @@ style_layers=['block1_conv1',
             'block5_conv1']
 {% endhighlight %}
 
-Let's define a class that creates a loss model with some additional methods for accessing feature maps from the network. We have also used these functions in the previous post, here we just encapsulated them inside a class.
+Let's define a class that creates a loss model with some additional methods for accessing feature maps from the network. We have also used these functions in the [previous post](https://www.tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/), here we just encapsulated them inside a class.
 
 
 {% highlight python linenos %}
@@ -268,7 +268,7 @@ Now we create our loss model using the above class
 loss_model = LossModel(vgg, content_layers, style_layers)
 {% endhighlight %}
 
-Let us define loss function for calculating content and style loss, below methods `content_loss` and `style _loss` calculates content and style loss respectively. With weighted averaging of these losses, we derive perceptual loss defined in `preceptual_loss` function. The details of these loss functions are covered in the previous post.
+Let us define loss function for calculating content and style loss, below methods `content_loss` and `style _loss` calculates content and style loss respectively. With weighted averaging of these losses, we derive perceptual loss defined in `preceptual_loss` function. The details of these loss functions are covered in the [previous post](https://www.tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/).
 
 
 {% highlight python linenos %}
