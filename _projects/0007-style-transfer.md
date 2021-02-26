@@ -4,6 +4,7 @@ title: Style Transfer
 category: App
 icon: /assets/projects/style-transfer/icon.jpg
 tags: style-transfer art painting filters deep-learning
+comment: true
 urls:
     github: https://github.com/tarun-bisht/fast-style-transfer
     youtube: http://www.youtube.com/watch?v=GrS4rWifdko

@@ -4,6 +4,7 @@ title: Lite Tweet
 category: App
 icon: https://storage.googleapis.com/tarun-bisht.appspot.com/project/twitter-lite3777169d23d2d80b
 tags: lite-app surf-twitter
+comment: true
 urls:
     download: https://storage.googleapis.com/tarun-bisht.appspot.com/apps/lite-tweet1.13949e4a8dfcff6b1.apk
 ---

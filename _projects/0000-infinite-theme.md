@@ -4,6 +4,7 @@ title: Infinite Theme
 category: Web
 icon: https://storage.googleapis.com/tarun-bisht.appspot.com/project/logo_inf8788f1ec01738a37
 tags: theme basic-theme minimilistic-theme website-theme
+comment: true
 urls:
     github: https://github.com/tarun-bisht/infinite-theme
     live: https:/tarun-bisht.github.io/infinite-theme

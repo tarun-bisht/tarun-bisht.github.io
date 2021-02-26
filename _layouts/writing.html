@@ -22,7 +22,7 @@ layout: base
 			</ul>
 		</div>
 		{% if page.urls %}
-		<div class="col-4 mt-3 mb-3">
+		<div class="col-4 mt-3">
 			{% if page.urls.download %}
 				<a class="link-button" href="{{ page.urls.download }}">Download Now <i class="fas fa-download"></i></a>
 			{% endif %}
@@ -37,7 +37,8 @@ layout: base
 			{% endif %}
 		</div>
 		{% endif %}
-
+	</div>
+	<div class="container">
 		{% if page.comment %}
 			{% include disqus.html %}
 		{% endif %}

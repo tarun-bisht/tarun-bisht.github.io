@@ -4,6 +4,7 @@ title: ImgUploader
 category: Web
 icon: https://storage.googleapis.com/tarun-bisht.appspot.com/project/imguploader0f82b65bbe1f40a3
 tags: upload-images image-upload-plugin
+comment: true
 urls:
     github: https://github.com/tarun-bisht/ImgUploader
     live: https://tarun-bisht.github.io/ImgUploader/

@@ -4,6 +4,7 @@ title: Enter2Hell
 category: Game
 icon: https://storage.googleapis.com/tarun-bisht.appspot.com/project/Enter2Hell%20logo598966f555663448
 tags: infinite-runner unity-game
+comment: true
 urls:
     download: https://storage.googleapis.com/tarun-bisht.appspot.com/apps/Enter2Hellbb26059996453abe.apk
 ---

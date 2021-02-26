@@ -4,6 +4,7 @@ title: Style Transfer
 category: App
 icon: /assets/projects/deepdream/icon.png
 tags: deepdream art painting filters deep-learning
+comment: true
 urls:
     github: https://github.com/tarun-bisht/deepdream
     youtube: http://www.youtube.com/watch?v=wmDjFQDh5BY

@@ -4,6 +4,7 @@ title: Balance Sky
 category: Game
 icon: https://storage.googleapis.com/tarun-bisht.appspot.com/project/BalanceIcon00bebaea33811533
 tags: infinite-runner unity-game ball-balance
+comment: true
 urls:
   download: https://storage.googleapis.com/tarun-bisht.appspot.com/apps/BalanceSky44cbe5f83e89a6c52.apk
   youtube: https://www.youtube.com/watch?v=QR42xbLxHC4

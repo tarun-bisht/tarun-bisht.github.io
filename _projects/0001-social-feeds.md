@@ -4,6 +4,7 @@ title: Social Feeds
 category: App
 icon: https://storage.googleapis.com/tarun-bisht.appspot.com/project/social-feeds70129eda5333a570
 tags: social-media lite-browser lite-app
+comment: true
 urls:
     download: https://storage.googleapis.com/tarun-bisht.appspot.com/apps/SocialFeedsUpdate-signed08ed3f326704beb8.apk
 ---
