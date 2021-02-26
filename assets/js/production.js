@@ -1,8 +1,4 @@
-const imgOptions={
-    threshold:0,
-    rootMargin:"0px 0px 300px 0px"
-};
-isdarkMode();
+// functions to run when page loads 
 window.onload=function()
 {
     nav_menu();
@@ -11,6 +7,7 @@ window.onload=function()
     LazyLoad();
     dark_mode_switch();
 }
+// handle navigation menu (reponsive nav menu), sticky navigation and active links
 function nav_menu()
 {
     navMenu("fade-right");
@@ -18,12 +15,24 @@ function nav_menu()
     stickyNav(navbar,300);
     activeLinkOfPage(document.querySelector(".menu"));
 }
+// animate containers with animation attribute set to animation type
 function animate_containers()
 {
     const animation_containers=document.querySelectorAll('[animation]');
-    observeContainers(animation_containers,{threshold:0},onIntersect=animateContainer,furtherObserve=false);
+    observeContainers(animation_containers,{threshold:0,rootMargin:"0px 0px 100px 0px"},
+    onIntersect=animateContainer,furtherObserve=false);
 }
-
+// animate the container passed in parameter
+function animateContainer(element)
+{
+    const anim=element.getAttribute("animation");
+    const anim_time=element.getAttribute("animation-time");
+    if(anim)
+    {
+        element.style.animation=`${anim} ${anim_time} ease-in-out`;
+    }
+}
+// filter projects based on categories selected
 function filter_projects()
 {
     const filterLinks=document.querySelectorAll('[data-category]');
@@ -37,15 +46,7 @@ function filter_projects()
         }
     });
 }
-function animateContainer(element)
-{
-    const anim=element.getAttribute("animation");
-    const anim_time=element.getAttribute("animation-time");
-    if(anim)
-    {
-        element.style.animation=`${anim} ${anim_time} ease-in-out`;
-    }
-}
+// lazy load image for faster page loading
 function LazyLoad()
 {
     const tags=document.querySelectorAll('[data-src]');
@@ -62,22 +63,39 @@ function preload(tag)
         tag.src=src;
     }
 }
+// handle dark model toggle switch
 function dark_mode_switch()
 {
     let switch_box=document.getElementById("switch");
+    if((theme === null && prefersDarkScheme.matches) || theme === "dark")
+    {
+        switch_box.checked=true;
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        handle_theme();
+    });
     switch_box.addEventListener("change",function()
     {
-        html_transition();
+        // change darkmode with smooth animation by adding transition class from css
+        document.documentElement.classList.add('transition');
+        window.setTimeout(function()
+        {
+            document.documentElement.classList.remove('transition');
+        },500);
+
         if(this.checked)
         {
-            dark_mode();
+            enable_dark_mode();
+            localStorage.setItem("theme","dark");
         }
         else
         {
-            light_mode();
+            enable_light_mode();
+            localStorage.setItem("theme","light");
         }
     });
 }
+// fontawesome fallback handle
 function fontawesome_fallback(cssFileToCheck)
 {
     var styleSheets = document.styleSheets;
@@ -105,7 +123,10 @@ WebFontConfig = {
 };
 fontawesome_fallback("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css");
 
-const navMenu=function(animationName="")
+// utilities functions
+
+// nav menu mobile view
+const navMenu=function(animationName)
 {
     const menu_btn=document.querySelector(".menu-btn");
     const menu=document.querySelector(".menu");
@@ -140,6 +161,7 @@ const navMenu=function(animationName="")
         });
     });
 }
+// handle sticky navigation bar
 const stickyNav=function(navMenu,top)
 {
     window.onscroll=function()
@@ -147,6 +169,7 @@ const stickyNav=function(navMenu,top)
         navMenu.classList.toggle("nav-fixed",window.scrollY > top);
     }
 }
+// active link handle
 const activeLinkOfPage=function(menu)
 {
     const curr_location=window.location.href;
@@ -159,6 +182,7 @@ const activeLinkOfPage=function(menu)
         }
     });
 }
+// Intersection observer helper
 const observeContainers=function(containers,options,onIntersect=function(element){},furtherObserve=false)
 {
     const observer=new IntersectionObserver(function(entries,observer)
@@ -180,6 +204,7 @@ const observeContainers=function(containers,options,onIntersect=function(element
         observer.observe(container);
     });
 }
+// filter category utils
 const filterCategory=function(objects,category)
 {
     const objs=Array.from(objects);
@@ -211,6 +236,7 @@ const showAll=function(objects)
         object.style.display="block";
     });
 }
+// get parameters from url
 const get_params=function() 
 {
     let vars = {};
@@ -219,35 +245,4 @@ const get_params=function()
         vars[key] = value;
     });
     return vars;
-}
-function html_transition()
-{
-    document.documentElement.classList.add('transition');
-    window.setTimeout(function()
-    {
-        document.documentElement.classList.remove('transition');
-    },1000);
-}
-function dark_mode()
-{
-    document.documentElement.setAttribute("data-theme","dark");
-    localStorage.setItem("dark",true);
-}
-function light_mode()
-{
-    document.documentElement.setAttribute("data-theme","light");
-    localStorage.setItem("dark",null);
-}
-function isdarkMode()
-{
-    if(localStorage.getItem("dark")==="true")
-    {
-        dark_mode();
-        document.getElementById("switch").checked=true;
-    }
-    else
-    {
-        light_mode();
-        document.getElementById("switch").checked=false;
-    }
 }

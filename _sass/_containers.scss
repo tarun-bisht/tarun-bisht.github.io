@@ -35,7 +35,7 @@
         list-style: none;
         display: grid;
         gap:10px;
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
         align-items: center;
 
         li
@@ -198,7 +198,7 @@
     border-radius: 10px;
     background: var(--primary);
     transition: all .3s ease 0s;
-    box-shadow: var(--secondary-grey) 3px 3px 5px;
+    box-shadow: var(--secondary-grey) 1px 1px 5px;
 
     .card-heading
     {
@@ -214,6 +214,6 @@
 
     &:hover
     {
-        transform: translateY(-10px);
+        transform: translateY(-5px);
     }
 }

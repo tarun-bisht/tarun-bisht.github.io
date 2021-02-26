@@ -6,10 +6,12 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="HandheldFriendly" content="true">
+	<meta name="color-scheme" content="dark light">
 
 	<link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
+	<script src="{{ "/assets/js/dark_mode.min.js" | relative_url }}"></script>
+	<script async src="{{ "/assets/js/production.min.js" | relative_url }}"></script>
 	<link rel="icon" href="{{ "/assets/images/favicon.ico" | relative_url }}">
-	<script defer src="{{ "/assets/js/production.min.js" | relative_url }}"></script>
 	{% seo %}
 	{% include google_tag_manager.html %}
 </head>

@@ -36,8 +36,8 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://www.tarunbisht.com" # the base hostname & protocol for your site, e.g. http://example.com
 
 contact:
-  address: Joshi Bhawan Near Thana Kotwali Pithoragarh 262501
-  email: tarunbishttarun.11@gmail.com
+  address: Joshi Bhawan Near Thana Kotwali Pithoragarh Uttarakhand PIN 262501
+  email: contact@tarunbisht.com
 
 # default blur image for lazy loading
 blob_image: assets/images/blur.jpg
@@ -53,28 +53,28 @@ website:
 
 # about section settings
 about:
-  tagline: Developer, Educator and AI Enthusiast
-  description: I am a Programmer, Developer, Educator and AI enthusiast. Skilled on developing applications, games and educating about Computer Science and Physics.<br><br>Besides a programmer, I am Physics enthusiasts highly interested in Astronomy, Quantum Physics and Modern Physics.
+  tagline: Aspiring AI Researcher, Developer and Educator
+  description: I am an aspiring AI Researcher, willing to contribute to the advancement of AI. My area of interests for research includes computer vision, deep learning and speech recognition. <br><br>I am also a Physics enthusiasts interested in Astronomy, Quantum Physics and Modern Physics.
 
 # social media usernames
 social:
   name: Tarun Bisht
   links:
     - https://twitter.com/tarun_bisht11
-    - https://www.instagram.com/tarunbisht_11
+    - https://www.instagram.com/tarunbisht11
     - https://www.linkedin.com/in/tarun-bisht11/
     - https://github.com/tarun-bisht
-    - https://medium.com/@tarunbishttarun11
+    - https://medium.com/@tarunbisht11
     - https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA
     - https://www.kaggle.com/tarunbisht11
   youtube: https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA
   usernames:
     twitter: tarun_bisht11
     github:  tarun-bisht
-    instagram: tarunbisht_11
+    instagram: tarunbisht11
     linkedin: tarun-bisht11
     kaggle: tarunbisht11
-    medium: tarunbishttarun11
+    medium: tarunbisht11
 
 # project categories worked
 projects_categories:

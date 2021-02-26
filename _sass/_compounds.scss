@@ -110,7 +110,7 @@
             }
             img
             {
-                opacity: 0.5;
+                opacity: 0.4;
             }
             a
             {
@@ -140,7 +140,7 @@
             }
             img
             {
-                opacity: 0.5;
+                opacity: 0.4;
             }
             a
             {
@@ -191,9 +191,6 @@
 
         &:hover
         {
-            box-shadow: 7px 7px 15px var(--secondary-grey);
-            border-radius: 1rem;
-
             .post-title
             {
                 color: var(--ternary);
@@ -206,7 +203,7 @@
         display: flex;
         flex-direction: row;
         background: var(--primary);
-        box-shadow: 2px 2px 3px var(--secondary-grey);
+        box-shadow: 0.5px 0.5px 3px var(--secondary-grey);
         border-radius: 1rem;
         overflow: hidden;
 

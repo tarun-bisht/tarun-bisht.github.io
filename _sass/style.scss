@@ -222,7 +222,7 @@ body
                     min-height: 200px;
                     height: auto;
                     border-radius: 10px;
-                    box-shadow: var(--secondary-grey) 2px 2px 3px;
+                    box-shadow: var(--secondary-grey) 1px 0.5px 5px;
                     transition: all .3s ease 0s;
 
                     &:hover
@@ -538,6 +538,13 @@ body
     .highlight 
     {
         background: none;
+    }
+
+    code
+    {
+        color:var(--code-color);
+        font-size: 17px;
+        padding-right: 5px;
     }
 
     pre
