@@ -4,6 +4,7 @@ title:  crash course On numpy library python for everyday data science
 date:   2020-04-13 22:42:50 +0530
 category: Crash Course
 tags: beginner python
+comment: true
 ---
 NumPy is a library for the Python programming language, adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays. This post acts as a cheat-sheet for using the NumPy library in python. It contains some important functions and submodules of the NumPy library which are used day to day in data science and machine learning.
 <!-- more -->

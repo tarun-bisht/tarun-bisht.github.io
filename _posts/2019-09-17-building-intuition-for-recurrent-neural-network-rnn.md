@@ -4,6 +4,7 @@ title:  building intuition for recurrent neural network
 date:   2019-09-17 22:07:50 +0530
 category: Deep Learning
 tags: beginner rnn introduction
+comment: true
 ---
 So one of the most difficult topics to understand is Recurrent Neural networks and LSTMs. When I jumped from traditional neural networks to recurrent neural networks to recurrent networks for the first time I could not build intuition about it. Scraping internet finding blog posts and videos reading as much I can and do not get inside feeling that I got it Ya!. Then I tried to follow Richard Feynman's approach of learning to learn it and this blog post is the result of it. As I was reviewing my notes I found this topic and I thought the better place for this is in a blog instead of my rough and bad writing and decided to make it live.
 <!-- more -->

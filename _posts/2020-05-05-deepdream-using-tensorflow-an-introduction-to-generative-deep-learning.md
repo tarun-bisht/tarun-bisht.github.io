@@ -4,6 +4,7 @@ title:  deepdream using tensorflow an introduction to generative deep learning
 date:   2020-05-05 22:31:50 +0530
 category: Deep Learning
 tags: python intermediate tensorflow inception
+comment: true
 ---
 DeepDream is image modification algorithm an example of generative deep learning that uses representation learned by convolution neural networks to modify images. It was released by Google in 2015. The popularity of deepdream caused due to its crappy artifacts in images, from eyes to feathers to dog faces. It was initially created to help scientists and engineers to see what a deep neural network is seeing when it is looks given input. 
 <!-- more -->

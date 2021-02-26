@@ -39,3 +39,7 @@ layout: base
 		{% endif %}
 	</div>
 </section>
+
+{% if page.comment %}
+	{% include disqus.html %}
+{% endif %}

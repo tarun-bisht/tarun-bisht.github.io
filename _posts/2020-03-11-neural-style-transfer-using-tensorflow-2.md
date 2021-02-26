@@ -4,6 +4,7 @@ title:  neural style transfer using tensorflow 2
 date:   2020-03-11 23:03:50 +0530
 category: Deep Learning
 tags: style-image python tensorflow2 intermediate
+comment: true
 ---
 When the style of one image is mixed with content of another image then it is called Style Transfer and we are using a neural network to do so call Neural Style Transfer. As we are dealing with images so we need a convolutional neural network.
 Neural Style Transfer was first published in the paper “A Neural Algorithm of Artistic Style” by Gatys et al.,

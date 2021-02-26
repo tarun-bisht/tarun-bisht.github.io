@@ -4,7 +4,8 @@ title:  "Neural Style Transfer Part 1 : Introduction"
 date:   2020-12-28 22:16:50 +0530
 category: Deep Learning
 tags: python art intermediate tensorflow vgg style-transfer
-description: Neural Style Transfer was first published in the paper "A Neural Algorithm of Artistic Style" by Gatys et al., originally released in 2015. It is an image transformation technique which modifies one image in the style of another image. We take two images of content image and style image, using these two images we generate a third image which has contents from the content image while styling (textures) from style image. If we take any painting as a style image then output generated image has contents painted like style image. This is the first part of neural style transfer series, in this part we will cover the optimization-based style transfer technique proposed by Gatys and its implementation in TensorFlow.  
+description: Neural Style Transfer was first published in the paper "A Neural Algorithm of Artistic Style" by Gatys et al., originally released in 2015. It is an image transformation technique which modifies one image in the style of another image. We take two images of content image and style image, using these two images we generate a third image which has contents from the content image while styling (textures) from style image. If we take any painting as a style image then output generated image has contents painted like style image. This is the first part of neural style transfer series, in this part we will cover the optimization-based style transfer technique proposed by Gatys and its implementation in TensorFlow. 
+comment: true 
 ---
 Neural Style Transfer was first published in the paper "A Neural Algorithm of Artistic Style" by Gatys et al., originally released in 2015. It is an image transformation technique which modifies one image in the style of another image.
 

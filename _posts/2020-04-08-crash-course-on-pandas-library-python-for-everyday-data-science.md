@@ -4,6 +4,7 @@ title:  crash course on pandas library python for everyday data science
 date:   2020-04-08 20:46:50 +0530
 category: Crash Course
 tags: beginner python
+comment: true
 ---
 pandas is a fast, powerful, flexible and easy to use open-source data analysis and manipulation tool, built on top of the python programming language. This post acts as a cheat-sheet for using the pandas library in python for everyday data science. It contains some important functions and submodules of pandas library which are used day to day in data science and machine learning.
 <!-- more -->

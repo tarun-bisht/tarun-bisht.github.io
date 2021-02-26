@@ -5,6 +5,7 @@ date:   2020-12-29 22:16:50 +0530
 category: Deep Learning
 tags: python art intermediate tensorflow vgg style-transfer
 description: Fast style transfer is style transfer technique which is 100 times faster than Gatys optimization-based style transfer technique. This technique can generate styled images in seconds and can be used to style videos too. It can handle even realtime webcam videos with a decent frame rate. Fast style transfer let us train once and generate infinite images. We train a model that converts input content image to styled image using perceptual loss. After training, we can use this model to generate style images in one pass of the network. This is the second part of neural style transfer series, In this part, we will cover both theory and its implementation in TensorFlow.
+comment: true
 ---
 This is the second part of neural style transfer in this part we are dealing with another technique of style transfer which we can call Fast Style Transfer. This is follow up from the [previous post](https://www.tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/) if you are directly reading its second part then I recommend you to read the previous part first as many topics are followed up from that post.
 
