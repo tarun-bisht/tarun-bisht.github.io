@@ -1,12 +1,3 @@
-// functions to run when page loads 
-window.onload=function()
-{
-    nav_menu();
-    animate_containers();
-    filter_projects();
-    LazyLoad();
-    dark_mode_switch();
-}
 // handle navigation menu (reponsive nav menu), sticky navigation and active links
 function nav_menu()
 {
@@ -109,7 +100,7 @@ function fontawesome_fallback(cssFileToCheck)
     // because no matching stylesheets were found, we will add a new HTML link element to the HEAD section of the page.
     var link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "assets/css/font-awesome.min.css";
+    link.href = "/assets/css/font-awesome.min.css";
     document.getElementsByTagName("head")[0].appendChild(link);
 }
 (function(d) {

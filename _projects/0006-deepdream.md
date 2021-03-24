@@ -1,6 +1,6 @@
 ---
 layout: writing
-title: Style Transfer
+title: Deepdream
 category: App
 icon: /assets/projects/deepdream/icon.png
 tags: deepdream art painting filters deep-learning
