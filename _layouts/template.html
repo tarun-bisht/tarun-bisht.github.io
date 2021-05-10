@@ -13,5 +13,12 @@ layout: base
 <section class="template-body">
 	<div class="container ">
 	    <div class="markdown-html">{{ content }}</div>
+		{% if page.urls %}
+		<div class="col-4 mt-3">
+			{% for url in page.urls.name %}
+				<a target="_blank" class="link-button" href="{{ page.urls.link }}">{{ page.urls.name }}</a>
+			{% endfor %}
+		</div>
+		{% endif %}
 	</div>
 </section>

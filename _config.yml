@@ -33,7 +33,7 @@ twitter:
 logo: /assets/images/logo_primary.svg
   
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://www.tarunbisht.com" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://tarunbisht.com" # the base hostname & protocol for your site, e.g. http://example.com
 
 contact:
   address: Joshi Bhawan Near Thana Kotwali Pithoragarh Uttarakhand PIN 262501
@@ -64,7 +64,7 @@ social:
     - https://www.instagram.com/tarunbisht11
     - https://www.linkedin.com/in/tarun-bisht11/
     - https://github.com/tarun-bisht
-    - https://medium.com/@tarunbisht11
+    - https://medium.com/@iamtarunbisht
     - https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA
     - https://www.kaggle.com/tarunbisht11
   youtube: https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA
@@ -74,7 +74,8 @@ social:
     instagram: itstarunbisht
     linkedin: tarun-bisht11
     kaggle: tarunbisht11
-    medium: tarunbisht11
+    medium: iamtarunbisht
+
 
 # project categories worked
 projects_categories:
