@@ -15,7 +15,7 @@ urls:
 
 ### RESEARCH INTERESTS
  
-My research goal is to contribute to the advancements of AI. My research interest includes Machine Learning, Computer Vision, Speech Recognition, Generative AI, Self-Supervised learning in vision and speech understanding, which includes learning feature representations for images in self-supervised manner, creating few shots classifiers and object detection systems, streaming end to end speech recognition system etc.
+My research goal is to contribute to the advancements of AI. My research interest includes Machine Learning, Computer Vision, Speech Recognition, Generative AI, Self-Supervised learning in vision and speech understanding, which includes learning feature representations for images in a self-supervised manner, creating few shots classifiers and object detection systems, streaming end to end speech recognition system etc.
 
 
 ### EDUCATION 
@@ -38,7 +38,7 @@ The group aims to create a piece of collaborative research in the field of AI mu
 I have done my master's thesis on the application of object detection in home surveillance, which mainly deals with the problem of creating cheap alert systems for monkey theft detection in our area and alert the user when detected.
 
 #### National Children Science Congress (NCSC), (2010-2012)
-Actively presented research experience papers in NCSC. The research topics include land resources and Energy potential, utilization and conservation.
+Actively presented research experience papers in NCSC. The research topics include Land resources: use for prosperity, save for posterity and Energy: explore, harness and conserve.
 
 
 ### TEACHING EXPERIENCE 
