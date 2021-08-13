@@ -23,9 +23,4 @@ jobs:
       - uses:  helaili/jekyll-action@v2
         with:
           token: ${{ secrets.JEKYLL_PAT }}
-          
-      # Specify the target branch (optional)
-      - uses: helaili/jekyll-action@v2
-        with:
-          token: ${{ secrets.JEKYLL_PAT }}
           target_branch: 'gh-pages'
