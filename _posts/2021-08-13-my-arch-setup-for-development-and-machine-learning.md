@@ -52,7 +52,7 @@ systemctl start auto-cpufreq
 ### Install necessary software
 Now install all your productivity applications, favourite applications, IDE's, code editors, Spotify etc. With the power of AUR, all these things are in your reach, no need to hop around just search AUR and find your application.
 
-In fresh install I install
+In fresh installation, I install these applications:
 - chrome
 - brave browser
 - slack
@@ -63,7 +63,7 @@ In fresh install I install
 - miniconda
 
 {% highlight bash linenos %}
-yay -S chrome brave-bin slack discord-canary spotify kdeconnect vim
+yay -S chrome brave-bin slack-desktop discord spotify kdeconnect vim
 {% endhighlight %}
 I install miniconda from its website instead of AUR as it already set up all things automatically also miniconda package I once installed from AUR was conflicting with python installed.
 
@@ -192,3 +192,98 @@ If you are using arch desktop in dual boot settings with windows then time can c
 {% highlight bash linenos %}
 timedatectl set-local-rtc 1 --adjust-system-clock
 {% endhighlight %}
+
+### Auto Mount Hard drives or partitions
+If you have system with more than one hard drives, like in my case I have two hard drives a M.2 SSD in which linux is installed and a mechanical hard drive for backup and media contents. By default linux will not mount hard drive or partitions automatically other than swap, root and home, so some applications that rely on these drives for saving and loading data will fail on startup as they will not able to access that location. I usually auto mount my backup and media drives to load my music automatically configure backup at startup.
+
+- Create a folder where we want to mount the drive. In my case I want to mount my drives in folder named *media*
+{% highlight bash linenos %}
+sudo mkdir /media
+{% endhighlight %}
+- Create subfolders inside that folder to mount multiple partitions.
+{% highlight bash linenos %}
+sudo mkdir /media/multimedia
+sudo mkdir /media/backup
+{% endhighlight %}
+I want to mount my backup drive in /media/backup and multimedia drive in /media/multimedia
+- Check disk and partitions in system
+{% highlight bash linenos %}
+sudo fdisk -l
+{% endhighlight %}
+- Find UUID of drive which we want to auto mount
+{% highlight bash linenos %}
+sudo blkid
+{% endhighlight %}
+- Copy UUID's of required drives for auto mounting
+- Open fstab file and add entry for drives
+{% highlight bash linenos %}
+sudo nano /etc/fstab
+{% endhighlight %}
+The entry we have to add in the file should be of form 
+```bash
+UUID="PASTE HERE"<tab>/media/folder_name<tab>filesystem<tab>defaults<tab>0<tab>0
+```
+here is an example
+{% highlight bash linenos %}
+UUID=01D4653A0E0898E0	/media/multimedia	ntfs	defaults	0	0
+{% endhighlight %}
+For more info about editing fstab file and details of different parameters visit [this link](https://www.howtogeek.com/444814/how-to-write-an-fstab-file-on-linux/)
+
+
+### Installing MS Office fonts
+MS fonts like ARIAL, Times of Roman etc. can be easily installed using a single command. 
+{% highlight bash linenos %}
+yay -S ttf-ms-fonts
+{% endhighlight %}
+
+### Enabling emoji support
+By default linux will not display emoji instead it will display a black square. To enable emoji support follow steps below.
+- Install noto fonts emoji
+{% highlight bash linenos %}
+yay -S noto-fonts-emoji
+{% endhighlight %}
+- create a config file named emoji.conf inside /etc/fonts/conf.d/
+{% highlight bash linenos %}
+sudo nano /etc/fonts/conf.d/emoji.conf
+{% endhighlight %}
+- Edit contents of config file
+{% highlight bash linenos %}
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+
+    <alias>
+        <family>sans-serif</family>
+        <prefer>
+        <family>Your favorite sans-serif font name</family>
+        <family>Noto Color Emoji</family>
+        <family>Noto Emoji</family>
+        </prefer> 
+    </alias>
+
+    <alias>
+        <family>serif</family>
+        <prefer>
+        <family>Your favorite serif font name</family>
+        <family>Noto Color Emoji</family>
+        <family>Noto Emoji</family>
+        </prefer>
+    </alias>
+
+    <alias>
+    <family>monospace</family>
+    <prefer>
+        <family>Your favorite monospace font name</family>
+        <family>Noto Color Emoji</family>
+        <family>Noto Emoji</family>
+        </prefer>
+    </alias>
+
+</fontconfig>
+{% endhighlight %}
+If you want to use emoji then installing a emoji picker will help.
+- Install emoji picker
+{% highlight bash linenos %}
+yay -S ibus-uniemoji
+{% endhighlight %}
+- Create a keyboard shortcut to open emoji picker with shortcut. Use command `ibus emoji` and set your favourite key combination for opening emoji picker. I am using <kbd>Alt + .</kbd> as shortcut.

@@ -173,6 +173,15 @@
     }
 }
 
+kbd 
+{
+    border-radius: 3px;
+    box-sizing: border-box;
+    color: var(--secondary);
+    padding: 0.1em 0.2em;
+    border: 2px solid var(--secondary);
+}
+
 // scroll down arrow
 .scroll-down-button
 {
