@@ -15,7 +15,7 @@ urls:
 
 ### RESEARCH INTERESTS
  
-My research goal is to contribute to the advancements of AI. My research interest includes Machine Learning, Computer Vision, Speech Recognition, Generative AI, Self-Supervised learning in vision and speech understanding, which includes learning feature representations for images in a self-supervised manner, creating few shots classifiers and object detection systems, streaming end to end speech recognition system etc.
+My research goal is to contribute to the advancements of AI. My research interest includes Machine Learning, Computer Vision, Speech Recognition, Generative AI, Self-Supervised learning in vision and speech understanding, which includes learning feature representations for images in a self-supervised manner, creating few shots classifiers and object detection systems, signal processing and its application in physics, streaming end to end speech recognition system etc.
 
 
 ### EDUCATION 
