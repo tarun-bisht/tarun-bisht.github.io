@@ -229,6 +229,25 @@ UUID=01D4653A0E0898E0	/media/multimedia	ntfs	defaults	0	0
 {% endhighlight %}
 For more info about editing fstab file and details of different parameters visit [this link](https://www.howtogeek.com/444814/how-to-write-an-fstab-file-on-linux/)
 
+If you are mounting ntfs drive, it might not give write permissions to that drive, to solve this issue we have to follow some additional steps.
+
+- Install ntfs-3g
+{% highlight bash linenos %}
+sudo pacman -S ntfs-3g
+{% endhighlight %}
+
+- Find your ntfs drive to enable write access
+{% highlight bash linenos %}
+sudo blkid
+{% endhighlight %}
+this command lists all drive partitions in the device, from this select the drive to enable write access.
+
+- Enable write access
+{% highlight bash linenos %}
+sudo ntfsfix /dev/sda3
+{% endhighlight %}
+replace `/dev/sda3` with your partition.
+
 
 ### Installing MS Office fonts
 MS fonts like ARIAL, Times of Roman etc. can be easily installed using a single command. 
