@@ -13,10 +13,10 @@ In this post, I am sharing how I set up my Arch Linux system for machine learnin
 
 
 ### Why Arch Linux
-- Most technologies somehow utilize linux in their development cycle example setting up a cloud server, web server etc. so learning linux will give you an upper hand. Arch Linux lets you learn and better understand how Linux works. 
+- Most technologies somehow utilize linux in their development cycle example setting up a cloud server, web server etc. so learning linux will give you an upper hand. Arch Linux lets you to better understand how Linux works. 
 - Arch Linux is a rolling release distribution that means the new kernel version or application version rolls out as soon as they are released.
-- The most convincing reason is AUR (arch user repository) which consist mostly of any application you might think of and are easy to install. This feature distinguishes arch Linux from other Linux distros.
-- It is way more performant than windows and ubuntu, if the lightweight desktop environment is used like Xfce then it also uses less RAM which will be helpful during training.
+- The most convincing reason is AUR (arch user repository) which mostly have any application that one might think of and easy to install. This feature distinguishes arch Linux from other Linux distros.
+- It is way more performant than windows and ubuntu, if the lightweight desktop environment is used like Xfce then it also consume less RAM.
 
 
 ### Update Mirrors
@@ -225,11 +225,15 @@ UUID="PASTE HERE"<tab>/media/folder_name<tab>filesystem<tab>defaults<tab>0<tab>0
 ```
 here is an example
 {% highlight bash linenos %}
-UUID=01D4653A0E0898E0	/media/multimedia	ntfs	defaults	0	0
+UUID=01D4653A0E0898E0	/media/multimedia	ext4	defaults	0	0
 {% endhighlight %}
 For more info about editing fstab file and details of different parameters visit [this link](https://www.howtogeek.com/444814/how-to-write-an-fstab-file-on-linux/)
 
-If you are mounting ntfs drive, it might not give write permissions to that drive, to solve this issue we have to follow some additional steps.
+If you are mounting windows ntfs drive, it might not give write permissions to that drive, to solve this issue we have to follow some additional steps.
+
+- Disable fast startup in windows
+The option can be found inside 
+> Control Panel > Power Options > Choose what the power button do > Turn off fast startup
 
 - Install ntfs-3g
 {% highlight bash linenos %}
@@ -240,7 +244,7 @@ sudo pacman -S ntfs-3g
 {% highlight bash linenos %}
 sudo blkid
 {% endhighlight %}
-this command lists all drive partitions in the device, from this select the drive to enable write access.
+this command lists all drive partitions in the device, from this select the ntfs drive to enable write access.
 
 - Enable write access
 {% highlight bash linenos %}
@@ -248,6 +252,10 @@ sudo ntfsfix /dev/sda3
 {% endhighlight %}
 replace `/dev/sda3` with your partition.
 
+We can also automount windows ntfs partition with the help og ntfs-3g that will also enable read and write in that partition. The syntax for this is same as for mounting `ext4` filesystem, just replace paritition filesystem with `ntfs-3g` in the above syntax, here is an example
+{% highlight bash linenos %}
+UUID=0CC84430C84419FA   /media/data     ntfs-3g     rw      0       0
+{% endhighlight %}
 
 ### Installing MS Office fonts
 MS fonts like ARIAL, Times of Roman etc. can be easily installed using a single command. 
