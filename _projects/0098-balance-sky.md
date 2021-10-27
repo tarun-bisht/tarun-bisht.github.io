@@ -52,11 +52,7 @@ Challenge your reaction time, speed and quick responses.
 ### Technology Stack Used
 
 1. Unity 5.6 (Game Engine)
-
-2. Visual Studio (C# Language)
-
+2. C#
 3. Blender 2.7 (3d Models)
-
 4. Adobe Photoshop (Textures)
-
 5. Bosca Ceoil & Bfxr ( Game Sound)

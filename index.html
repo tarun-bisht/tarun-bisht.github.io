@@ -147,20 +147,15 @@ title: Home
 				</a>
 			</div>
 		{% endfor %}
+		<div class="center-text">
+			<a class="link-button" href="{% link blogs/index.html %}">More Posts</a>
+		</div>
 	</div>
 </section>
 
 <section class="latest-works portfolio">
 	<div class="container">
-		<h3 class="headline">Latest Works</h3>	
-	    <div class="filters">
-	        <ul>
-	            <li data-category="all">All Categories</li>
-	            {% for category in site.projects_categories %}
-	                <li data-category="{{ category }}">{{ category }}</li>
-	            {% endfor %}
-	        </ul>
-	    </div>
+		<h3 class="headline">Showcase</h3>
 	    <div class="col-3">
 			{% assign projects = site.projects | reverse %}
 	        {% for project in projects limit:6 %}
@@ -174,5 +169,8 @@ title: Home
 	            </div>
 	        {% endfor %}
 	    </div>
+		<div class="mt-3 center-text">
+			<a class="link-button" href="{% link projects.html %}">More Projects</a>
+		</div>
 	</div>
 </section>

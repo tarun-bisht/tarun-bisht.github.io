@@ -83,6 +83,7 @@ projects_categories:
   - App
   - Web
   - Graphics
+  - Package
 
 # define collections
 collections:

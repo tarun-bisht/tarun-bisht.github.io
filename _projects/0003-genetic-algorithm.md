@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Evolution Visualizer
-category: App
+category: Web
 icon: /assets/projects/genetic-algo/icon.png
 tags: genetic-algorithm monkey-typing
 comment: true
