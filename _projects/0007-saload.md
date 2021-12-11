@@ -11,7 +11,7 @@ urls:
   docs: https://tarun-bisht.github.io/saload/
 ---
 
-Saload is a tool to save and load data efficiently into games.
+Saload is a unity asset to save and load data efficiently into games.
 
 ## Why use Saload?
 
@@ -22,7 +22,7 @@ Saload is a tool to save and load data efficiently into games.
 
 __(note: To be able to track the saved custom created objects use .saload extension to the binary file name while saving data.)__
 
-### Technology Stack Used
+### Created with
 
 1. Unity 2019 (Game Engine)
 2. C#
