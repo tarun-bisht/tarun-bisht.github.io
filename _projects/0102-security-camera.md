@@ -11,7 +11,7 @@ urls:
 
 Intelligent Security camera application powered by AI. It uses live video stream from camera feed or rtsp streaming from ip camera or cctv and use object detection to detect intruders in these feeds, when detected it send alert into mail along with the image it sensed as intruder so user can verify on spot. It also start recording video from the point it detects an intruder till that intruder is on sight of camera. This project is part of my work on a research project that deals with monkey theft detection and alert user when detected.
 
-[Here](/assets/projects/security-camera/writeup.pdf) is very detailed writeup of this project.
+[Here](/assets/projects/security-camera/application-of-object-detection-in-home-surveillance-system.pdf) is very detailed writeup of this project that was part of my master's thesis.
 
 ## Requirements
 
