@@ -8,7 +8,7 @@
 # For technical reasons, this file is *NOT* reloaded automatically when you use
 # 'bundle exec jekyll serve'. If you change this file, please restart the server process.
 #
-# If you need help with YAML syntax, here are some quick references for you: 
+# If you need help with YAML syntax, here are some quick references for you:
 # https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
 # https://learnxinyminutes.com/docs/yaml/
 #
@@ -31,7 +31,7 @@ twitter:
   username: itstarunbisht
 
 logo: /assets/images/logo_primary.svg
-  
+
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://tarunbisht.com" # the base hostname & protocol for your site, e.g. http://example.com
 
@@ -60,8 +60,8 @@ about:
 social:
   name: Tarun Bisht
   links:
-    - https://twitter.com/tarun_bisht11
-    - https://www.instagram.com/tarunbisht11
+    - https://twitter.com/tarunresearches
+    - https://www.instagram.com/tarunresearches/
     - https://www.linkedin.com/in/tarun-bisht11/
     - https://github.com/tarun-bisht
     - https://medium.com/@iamtarunbisht
@@ -69,13 +69,12 @@ social:
     - https://www.kaggle.com/tarunbisht11
   youtube: https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA
   usernames:
-    twitter: itstarunbisht
-    github:  tarun-bisht
-    instagram: itstarunbisht
+    twitter: tarunresearches
+    github: tarun-bisht
+    instagram: tarunresearches
     linkedin: tarun-bisht11
     kaggle: tarunbisht11
     medium: iamtarunbisht
-
 
 # project categories worked
 projects_categories:
@@ -95,7 +94,6 @@ collections:
 sass:
   style: compressed
 
-
 permalink: pretty
 
 # define used plugins
@@ -112,8 +110,7 @@ kramdown:
   input: GFM
   syntax_highlighter_opts:
     default_lang: html
-    css_class: 'syntax'
-
+    css_class: "syntax"
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
