@@ -28,7 +28,7 @@ description: >- # this means to ignore newlines until "baseurl:"
 
 twitter:
   card: summary
-  username: itstarunbisht
+  username: tarunresearches
 
 logo: /assets/images/logo_primary.svg
 
@@ -36,7 +36,7 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://tarunbisht.com" # the base hostname & protocol for your site, e.g. http://example.com
 
 contact:
-  address: Joshi Bhawan Near Thana Kotwali Pithoragarh Uttarakhand PIN 262501
+  address: Pithoragarh, Uttarakhand India 262501
   email: contact@tarunbisht.com
 
 # default blur image for lazy loading
@@ -111,6 +111,11 @@ kramdown:
   syntax_highlighter_opts:
     default_lang: html
     css_class: "syntax"
+
+# Using google analytics along with cookie bot using google tag manager
+enable_google_analytics: false
+# whether to enable disqus commenting or not
+enable_disqus_comments: false
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to

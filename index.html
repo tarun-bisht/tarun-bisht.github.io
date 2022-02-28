@@ -5,13 +5,14 @@ title: Home
 <section class="header">
 	{% include nav.html %}
 	<div class="landing container">
-		<div class="landing-text" animation="fade-left" animation-time="1s">
-			<h3 class="header-headline">{{ site.website.headline }}</h3>
-			<p>{{ site.website.tagline }}</p>
+		<div class="landing-text">
+			<h3 class="header-headline" animation="fade-down" animation-time="1s">{{ site.website.headline }}</h3>
+			<p animation="fade-down" animation-time="1.7s">{{ site.website.tagline }}</p>
 			<div class="landing-button">
-				<a href="{% link projects.html %}" class="link-button" animation="fade-right" animation-time="1.6s">Projects</a>
-				<a href="{% link blogs/index.html %}" class="link-button" animation="fade-down" animation-time="1.5s">Blogs</a>
-                <a href="{% link cv.md %}" class="link-button" animation="fade-right" animation-time="1.7s">CV</a>
+				<a href="{% link projects.html %}" class="link-button">Projects</a>
+				<a href="{% link blogs/index.html %}" class="link-button">Blogs</a>
+				<a href="{% link resume.md %}" class="link-button">Resume</a>
+				<a href="{% link cv.md %}" class="link-button">CV</a>
 			</div>
 		</div>
 	</div>
@@ -30,8 +31,8 @@ title: Home
 				<h4>{{ site.about.tagline }}</h4>
 				<p>{{ site.about.description }}</p>
 				<div>
-					<a href="{% link about.md %}" class="link-button">More Info</a>
-					<a href="{% link cv.md %}" class="link-button">CV</a>
+					<a href="{% link cv.md %}" class="link-button">Academic CV</a>
+					<a href="{% link resume.md %}" class="link-button">Resume</a>
 				</div>
 			</div>
 		</div>

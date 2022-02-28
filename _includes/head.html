@@ -12,5 +12,7 @@
 	<script src="{{ "/assets/js/dark_mode.min.js" | relative_url }}"></script>
 	<link rel="icon" href="{{ "/assets/images/favicon.ico" | relative_url }}">
 	{% seo %}
-	{% include google_tag_manager.html %}
+	{% if site.enable_google_analytics %}
+		{% include google_tag_manager.html %}
+	{% endif %}
 </head>

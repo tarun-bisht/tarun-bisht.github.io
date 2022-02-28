@@ -2,7 +2,9 @@
 <html lang="en">
 {% include head.html %}
 <body>
-    {% include google_tag_manager_body.html %}
+    {% if site.enable_google_analytics %}
+        {% include google_tag_manager_body.html %}
+	{% endif %}
     {{ content }}
     {% include social.html %}
     {% include footer.html %}

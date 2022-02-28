@@ -1,15 +1,10 @@
 ---
 layout: template
 title: CURRICULUM VITAE
-permalink: /online-cv/
-urls:
-  name:
-    - Download CV
-  link:
-    - /assets/pdfs/online-cv.pdf
+permalink: /cv/
 ---
 
-###### Last Updated May 2021
+###### Last Updated Feb 2022
 
 #### CURRICULUM VITAE
 
@@ -17,15 +12,15 @@ urls:
 
 ### RESEARCH INTERESTS
 
-My research goal is to contribute to the advancements of AI. My research interests include Machine Learning, Computer Vision, Signal Processing and Generative AI. My current interests include self-supervised learning in vision and speech understanding which includes learning robust feature representations from data in a self-supervised manner, streaming end to end speech recognition systems etc.
+Research interests include Machine Learning, Computer Vision, Signal Processing and Generative AI. My current interests include self-supervised learning in vision and speech understanding which includes learning robust feature representations from data in a self-supervised manner, streaming end to end speech recognition systems etc.
 
 ### EDUCATION
 
 #### M. Sc. in Computer Science, Kumaun University (2018 – 2020)
 
-- Thesis: Application of object detection in home surveillance system
-- Research Focus: Creating low compute object detection systems for home surveillance.
-- Percentage: 76.55%, Division: First, Rank: 1st
+- Thesis- Application of object detection in home surveillance system
+- Research Focus- Creating low compute object detection systems for home surveillance.
+- Percentage- 76.55%, Division- First, Rank: 1st
 
 #### B.Sc. in Computer Science, Physics and Mathematics, Kumaun University (2015 – 2018)
 
@@ -33,31 +28,41 @@ My research goal is to contribute to the advancements of AI. My research interes
 
 ### RESEARCH EXPERIENCE
 
-#### The Sound Of AI - Open Source Research, (2020 - Ongoing)
+#### The Sound Of AI - Open Source Research | Research Co-Coordinator | 2020 - Ongoing | Remote
 
-The group aims to create a piece of collaborative research in the field of AI music. I am currently working as a research co-coordinator for speech to text group. Our responsibility includes the conversion of speech into text and its integration in the production environment.
+- Developing and maintaining the speech to text module of the project.
+- Integration of modules in production environment.
+- Literature reading and brainstorming.
+- Work closely with a team of developers, researchers and specialists around the world.
 
-#### Research Project - Kumaun University, (2020)
+#### Kumaun University Nainital | Research Scholar | Jan 2020 - Nov 2020 | Nainital, Uttarakhand India
 
-I have done my master's thesis on the application of object detection in home surveillance, which mainly deals with the problem of creating cheap alert systems for monkey theft detection in our area and alert the user when detected.
+- Creating a cheap alert system for monkey theft detection.
+- Data Collection using web scrapers and cleaning, labelling of collected data.
+- Literature reading of various object detection algorithms.
+- Training detection algorithms, performing evaluation and inference.
+- Deploying solution into a raspberry pi and previously installed ip camera modules.
 
 #### National Children Science Congress (NCSC), (2010-2012)
 
-Actively presented research experience papers in NCSC. The research topics include Land resources: use for prosperity, save for posterity and Energy: explore, harness and conserve.
-
-### TEACHING EXPERIENCE
-
-Worked as a private tutor alongside college, the teaching subjects include Computer Science for bachelor's students and Physics, Mathematics for 10 to 12th-grade students. I also write educational tutorials related to computer science and artificial intelligence on my website.
+- Actively presented research experience papers in NCSC. The research topics include Land resources: use for prosperity, save for posterity and Energy: explore, harness and conserve.
 
 ### WORK EXPERIENCE
 
-#### Web and Application Development
+#### The Gamer Studio | Co-Founder and Developer | Apr 2017 - Oct 2019 | Nainital, Uttarakhand India
 
-- Created solutions for my university, related to employee and library management.
-- Developing and integrating machine learning applications.
+- Worked on 8+ games and 3+ applications for android and published them to google play store.
+- Worked on software solutions for library and employee leave management.
 
-### ACHIEVEMENTS
+### TEACHING EXPERIENCE
 
-- GATE (2021): Organized by IIT Bombay (Qualified)
-- UGC NET (2020): Organized by UGC (University Grants Commission) for Assistant Professor (Qualified)
-- Rank 2 in object detection competition organized by dockship.io
+- Worked as a freelance educator alongside college, the teaching subjects include Computer Science, Physics and Mathematics.
+- Write educational tutorials related to computer science and artificial intelligence on my website and medium.
+
+### Awards and Certifications
+
+- UGC NET JRF (2022)- Organised by UGC (University Grants Commission) for Assistant Professor and Junior Research Fellowship
+- GATE (2021)- Organized by IIT Bombay
+- UGC NET (2020) - Organised by UGC (University Grants Commission) for Assistant Professor
+- Rank 2 out of 41 in object detection competition organized by [dockship](https://dockship.io/challenges/5f00d661563fb20aab6c3c4e/pascal-voc-2012-object-detection/leaderboard) (2020).
+- Data Science Math Skills - [Coursera](https://coursera.org/share/7aba5533876e495ba3c325b47558d40b) (2020)
