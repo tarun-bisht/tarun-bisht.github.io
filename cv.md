@@ -4,7 +4,7 @@ title: CURRICULUM VITAE
 permalink: /cv/
 ---
 
-###### Last Updated Feb 2022
+###### Last Updated May 2022
 
 #### CURRICULUM VITAE
 
@@ -20,49 +20,42 @@ Research interests include Machine Learning, Computer Vision, Signal Processing 
 
 - Thesis- Application of object detection in home surveillance system
 - Research Focus- Creating low compute object detection systems for home surveillance.
-- Percentage- 76.55%, Division- First, Rank: 1st
+- Percentage- 76.55% &#124; Division- First &#124; Rank: 1st
 
 #### B.Sc. in Computer Science, Physics and Mathematics, Kumaun University (2015 – 2018)
 
-- Percentage: 65.48%, Division: First
+- Percentage: 65.48% &#124; Division: First
 
 ### RESEARCH EXPERIENCE
 
-#### The Sound Of AI - Open Source Research | Research Co-Coordinator | 2020 - Ongoing | Remote
+#### Research Co-Coordinator &#124;  The Sound of AI OSR, Remote &#124; 2020 - Present
 
-- Developing and maintaining the speech to text module of the project.
-- Integration of modules in production environment.
-- Literature reading and brainstorming.
-- Work closely with a team of developers, researchers and specialists around the world.
+Initiated the application of transformers in automatic speech to text module of NeuralNet music synthesizer which is an open-source research project with team of voluntary researchers and software professionals around the world, achieved decrease in error rates of output text from model by 20% by fine tuning, applying data augmentation and adding decoding algorithms to model output.
 
-#### Kumaun University Nainital | Research Scholar | Jan 2020 - Nov 2020 | Nainital, Uttarakhand India
+#### Academic Research &#124; Kumaun University, Nainital &#124; (2020)
 
-- Creating a cheap alert system for monkey theft detection.
-- Data Collection using web scrapers and cleaning, labelling of collected data.
-- Literature reading of various object detection algorithms.
-- Training detection algorithms, performing evaluation and inference.
-- Deploying solution into a raspberry pi and previously installed ip camera modules.
+Created a cheap alert system for monkey theft detection, accomplished low error rates by using state of art detection algorithms at that time, increased detection fps from 1 to 24 by converting trained model to tensorflow lite which enabled the system to be deployed in a raspberry pi, also provided software solution for previously installed ip cameras.
 
-#### National Children Science Congress (NCSC), (2010-2012)
+#### Research Scholar &#124; National Children Science Congress (NCSC) &#124; (2010-2012)
 
-- Actively presented research experience papers in NCSC. The research topics include Land resources: use for prosperity, save for posterity and Energy: explore, harness and conserve.
+Actively presented research experience papers in NCSC, The research topics include Land resources: use for prosperity save for posterity and Energy: explore, harness and conserve.
 
 ### WORK EXPERIENCE
 
-#### The Gamer Studio | Co-Founder and Developer | Apr 2017 - Oct 2019 | Nainital, Uttarakhand India
+#### Co-Founder and Developer &#124; The Gamer Studio &#124; (2017 - 2019)
 
-- Worked on 8+ games and 3+ applications for android and published them to google play store.
-- Worked on software solutions for library and employee leave management.
+Co-Founded game and app development business, developed over 8+ games, 3+ mobile applications and 2+ softwares solutions out of which 9 apps and games were delivered and published to google play store with two apps over 40K+ and 13K+ downloads - *Unity &#124; C# &#124; JAVA &#124; Python &#124; Flask &#124; PHP &#124; Git &#124; Project Management &#124; Project Design*
 
 ### TEACHING EXPERIENCE
 
-- Worked as a freelance educator alongside college, the teaching subjects include Computer Science, Physics and Mathematics.
-- Write educational tutorials related to computer science and artificial intelligence on my website and medium.
+Worked as a freelance educator, the teaching subjects include Computer Science for bachelor's students and Physics, Mathematics for 10 to 12th-grade students. I also write educational tutorials related to computer science and artificial intelligence on my [website](https://tarunbisht.com).
 
 ### Awards and Certifications
 
-- UGC NET JRF (2022)- Organised by UGC (University Grants Commission) for Assistant Professor and Junior Research Fellowship
-- GATE (2021)- Organized by IIT Bombay
+- Awarded **UGC NET Junior Research Fellowship (2021)** for Phd in Computer Science
+- Qualified **UGC NET (2020)** for Assistant Professor in Computer Science
+- Qualified **GATE (2021)** in Computer Science and Engineering organised by IIT Bombay.
 - UGC NET (2020) - Organised by UGC (University Grants Commission) for Assistant Professor
-- Rank 2 out of 41 in object detection competition organized by [dockship](https://dockship.io/challenges/5f00d661563fb20aab6c3c4e/pascal-voc-2012-object-detection/leaderboard) (2020).
-- Data Science Math Skills - [Coursera](https://coursera.org/share/7aba5533876e495ba3c325b47558d40b) (2020)
+- Rank **2 out of 41** in object detection competition organized by [dockship](https://dockship.io/challenges/5f00d661563fb20aab6c3c4e/pascal-voc-2012-object-detection/leaderboard) (2020).
+- Kaggle Rank **139/1138** in Google Research Football and **388/1219** in G2Net gravitational wave detection challenge
+- Data Science Math Skills Coursera - [Coursera](https://coursera.org/share/7aba5533876e495ba3c325b47558d40b) (2020)

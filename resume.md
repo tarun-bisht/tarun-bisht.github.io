@@ -1,78 +1,69 @@
 ---
 layout: template
-title: Short Resume
+title: Resume
 permalink: /resume/
 ---
 
-###### Last Updated Feb 2022
+###### Last Updated May 2022
 
 #### Resume
 
 # Tarun Bisht
 
-3+ years of software development and machine learning with good fundamentals in wide area subjects in computer science, possess good research, machine learning skills, extensive literature reading experience and can bring relevant ideas from the state of the art literature.
+*Passionate machine learning engineer with experience in computer vision, developing ML models and systems, data collection, exploration and analysis, enhancing existing models, deploying solutions to real world, possess good research and literature reading experience, can bring relevant ideas from state of art literature, proficient in collaborating with teams, has done some code contributions to open source projects including keras, At The Sound of AI - Open Source Research developed model that decreased detection error rates by 20%*
 
 ### EXPERIENCE
 
-#### The Sound of AI - Open Source Research Group | Research Co-Coordinator | Dec 2020 - Present | Remote
+#### Research Co-Coordinator &#124;  The Sound of AI OSR, Remote &#124; Dec 2020 - Present
+Initiated the application of transformers in automatic speech to text module of NeuralNet music synthesizer which is an open-source research project with team of voluntary researchers and software professionals around the world, achieved decrease in error rates of output text from model by 20% by fine tuning, applying data augmentation and adding decoding algorithms to model output. -  *Python &#124; Pytorch &#124; HuggingFace Transformers &#124; Async programming &#124; Git &#124; librosa*
 
-- Developing and maintaining the speech to text module of the project.
-- Integration of modules in production environment.
-- Literature reading and brainstorming.
-- Work closely with a team of developers, researchers and specialists around the world.
+#### Academic Research &#124; Kumaun University, Nainital &#124; Jan 2020 - Nov 2020
 
-#### Kumaun University Nainital | Research Scholar | Jan 2020 - Nov 2020 | Nainital, Uttarakhand India
+Created a cheap alert system for monkey theft detection, accomplished low error rates by using state of art detection algorithms at that time, increased detection fps from 1 to 24 by converting trained model to tensorflow lite which enabled the system to be deployed in a raspberry pi, also provided software solution for previously installed ip cameras - *Python &#124; Keras &#124; TensorFlow &#124; OpenCV &#124; Multithreading &#124; YOLO &#124; SSD &#124; Git &#124; Web Scraping &#124; Raspberry PI &#124; TF Object Detection API*
 
-- Creating a cheap alert system for monkey theft detection.
-- Data Collection using web scrapers and cleaning, labelling of collected data.
-- Literature reading of various object detection algorithms.
-- Training detection algorithms, performing evaluation and inference.
-- Deploying solution into a raspberry pi and previously installed ip camera modules.
+#### The Gamer Studio &#124; Co-Founder and Developer, Nainital &#124; Apr 2017 - Oct 2019
 
-#### The Gamer Studio | Co-Founder and Developer | Apr 2017 - Oct 2019 | Nainital, Uttarakhand India
-
-- Worked on 8+ games and 3+ applications for android and published them to google play store.
-- Worked on software solutions for library and employee leave management.
+Co-Founded game and app development business, developed over 8+ games, 3+ mobile applications and 2+ softwares solutions out of which 9 apps and games were delivered and published to google play store with two apps over 40K+ and 13K+ downloads - *Unity &#124; C# &#124; JAVA &#124; Python &#124; Flask &#124; PHP &#124; Git &#124; Project Management &#124; Project Design*
 
 ### EDUCATION
 
-#### Master of Science in Computer Science | Kumaun University | Nov 2020
+#### Master of Science in Computer Science &#124; Kumaun University &#124; Nov 2020
 
-- Thesis- Application of object detection in home surveillance system
-- Percentage- 76.55%, Division- First,  Rank- 1
+Thesis- Application of object detection in home surveillance system
+Percentage- 76.55% &#124; Division- First &#124; Rank- 1
 
-#### Bachelor of Science in Computer Science Physics and Mathematics | Kumaun University | Jun 2020
+
+#### Bachelor of Science in Computer Science Physics and Mathematics &#124; Kumaun University &#124; Jun 2020
 
 - Percentage- 65.48%, Division- First
 
-### SKILLS
-
-- Technical Skills- Git, Docker, Software Design and Development, Solution Deployment, Machine Learning, Computer Vision, Signal Processing, Setting Linux Server
-- Programming Language- Python, C#, JavaScript
-- Frameworks & Tools- Flask, Django, PostgreSQL, Pandas, Scikit Learn, TensorFlow, Keras, Pytorch, Pytorch Lightning, Hugging Face Transformers, Weights and Biases, Linux
-
 ### PROJECTS
 
-#### Fast Style Transfer | Open Source | Jul 2020 - Present
+#### [Fast Style Transfer](https://github.com/tarun-bisht/fast-style-transfer) - Convert any photos and videos into an artwork
 
-Maintainer of Fast Style Transfer, an open source project which applies the style of one image into any photos and videos. Work includes Literature reading of research papers and applying ideas from these papers using TensorFlow and Keras.
+Implementation of style transfer for photos and videos as proposed in paper Perceptual Losses for Real-Time Style Transfer and Super-Resolution, which is 100 times faster than previous implementations. - Tensorflow &#124; Keras &#124; OpenCV
 
-#### Blogpad | Open Source | Jan 2020 - Present
+#### [Security Camera](https://github.com/tarun-bisht/security-camera) - Intelligent Surveillance Camera
 
-Maintainer and creator of Blogpad, simplistic medium style WYSIWYG editor created with JavaScript for websites. Simple and easy to use, can be installed using a CDN or as a node package.
+An object detection based surveillance application, uses live video stream from camera to detect intruders and send alerts when detected. - Python &#124; Tensorflow &#124; Keras &#124; Multithreading &#124; SSD &#124; Git
 
-#### Security Camera | Kumaun University | Jan 2020 - Present
+#### [Wav2Vec2 ASR](https://github.com/tarun-bisht/wav2vec2-asr) - Automatic Speech Recognition using Wav2Vec2
 
-Maintainer for Security Camera that was part of my research project in Kumaun University, security camera application powered by AI takes live video stream from camera feed or rtsp streaming from ip camera and use object detection to detect intruders in these feeds, when detected sends alert to mail along with image it sensed as intruder so user can verify on spot.
+wav2vec2 based automatic speech recognition system, takes speech signal as input and outputs text transcriptions asynchronously.  - Python &#124; Pytorch &#124; hugging face transformers &#124; speech recognition &#124; Git 
 
-#### Balance Sky | The Gamer Studio | Oct 2017 - Mar 2018
+#### [Blogpad](https://github.com/tarun-bisht/blogpad) &#124; Simple WYSIWYG blogs editor for websites
 
-Creator of the game Balance Sky, which is a simple, adventurous, arcade game with simple controls, that was part of my work in The Gamer Studio, worked in creating game design, mechanism, arts, sounds, programming and integration with google play service and admobs.
+Javascript package for integrating WYSIWYG editor to write blogs for websites, comes with inbuilt content editing toolbar and is easy to integrate. - JavaScript
+
+### SKILLS
+
+**Technical Skills** - Python &#124; C# &#124; Pandas &#124; Scikit Learn &#124; TensorFlow &#124; Pytorch &#124; Keras &#124; Lightning &#124; Huggingface &#124; Linux &#124; Machine Learning &#124; Deep Learning &#124; Data Analysis &#124; Computer Vision &#124; Signal Processing &#124; Web Scraping &#124; Basic NLP
+
+**Soft Skills** - Project Management &#124; Peer Tutoring &#124; Self improvement &#124; Collaboration &#124; Understanding Research Papers
 
 ### AWARDS AND CERTIFICATIONS
 
-- UGC NET JRF (2022)- Organised by UGC (University Grants Commission) for Assistant Professor and Junior Research Fellowship
-- GATE (2021)- Organized by IIT Bombay
-- UGC NET (2020) - Organised by UGC (University Grants Commission) for Assistant Professor
-- Rank 2 out of 41 in object detection competition organized by [dockship](https://dockship.io/challenges/5f00d661563fb20aab6c3c4e/pascal-voc-2012-object-detection/leaderboard) (2020).
-- Data Science Math Skills - [Coursera](https://coursera.org/share/7aba5533876e495ba3c325b47558d40b) (2020)
+- Rank **2 out of 41** in object detection competition organized by [dockship](https://dockship.io/challenges/5f00d661563fb20aab6c3c4e/pascal-voc-2012-object-detection/leaderboard) (2020).
+- Kaggle Rank **139/1138** in Google Research Football and **388/1219** in G2Net gravitational wave detection challenge
+- Awarded **UGC NET Junior Research Fellowship (2021)** for Phd in Computer Science
+- Qualified **GATE (2021)** in Computer Science and Engineering organised by IIT Bombay.
