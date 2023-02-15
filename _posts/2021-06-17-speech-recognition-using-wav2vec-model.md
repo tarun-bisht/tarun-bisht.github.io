@@ -133,7 +133,7 @@ I hope this post explains wav2vec model or point towards right direction to lear
 
 ## Further Readings
 - [BERT paper](https://arxiv.org/abs/1810.04805)
-- [wav2vec paper](https://arxiv.org/abs/1810.04805)
+- [wav2vec paper](https://arxiv.org/abs/1904.05862)
 - [wav2vec2 paper](https://arxiv.org/abs/2006.11477)
 - [Transformer architecture explained](https://www.youtube.com/watch?v=OyFJWRnt_AY)
 - [Attention explained](https://www.youtube.com/watch?v=d25rAmk0NVk)
