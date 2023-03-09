@@ -14,7 +14,7 @@ Let us start understanding Recurrent neural networks with questions and examples
 
 ![Photo by Emily Morter on Unsplash](https://cdn-images-1.medium.com/max/1200/0*8vkk5MeN-e2DnACV)
 
-When we are in school why don't we get to sit in highschool directly if it’s the first exam that matter’s lot? 
+When we are in school why don't we get to sit in highschool directly if it’s the first exam that matter’s lot?
 
 Why do we have to study class (grade) first to ninth before sitting in highschool?
 
@@ -76,7 +76,7 @@ So I hope it helps someone to make intuition of the recurrent neural network.
 
 ### References
 
-[Understanding LSTM Networks ](http://colah.github.io/posts/2015-08-Understanding-LSTMs/ "http://colah.github.io/posts/2015-08-Understanding-LSTMs/")
+[Understanding LSTM Networks](http://colah.github.io/posts/2015-08-Understanding-LSTMs/ "http://colah.github.io/posts/2015-08-Understanding-LSTMs/")
 
 [The Unreasonable Effectiveness of Recurrent Neural Networks](http://karpathy.github.io/2015/05/21/rnn-effectiveness/ "http://karpathy.github.io/2015/05/21/rnn-effectiveness/")
 

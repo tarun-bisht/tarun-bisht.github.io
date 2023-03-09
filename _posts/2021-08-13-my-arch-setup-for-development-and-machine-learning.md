@@ -35,7 +35,7 @@ sudo pacman -Syyu
 yay(yet another yogurt) is an AUR helper that lets to install a new package from AUR, update and remove installed AUR packages.
 {% highlight bash linenos %}
 pacman -S --needed base-devel
-git clone https://aur.archlinux.org/yay.git
+git clone <https://aur.archlinux.org/yay.git>
 cd yay
 makepkg -si
 cd ..
@@ -75,7 +75,7 @@ I install miniconda from its website instead of AUR as it already set up all thi
 
 {% highlight bash linenos %}
 cd Downloads
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+wget <https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh>
 sudo chmod +x Miniconda3-latest-Linux-x86_64.sh
 ./Miniconda3-latest-Linux-x86_64.sh
 {% endhighlight %}
@@ -251,7 +251,7 @@ I have my website build using jekyll, so I need jekyll to test changes to websit
 
 Rust is installed and managed by the rustup tool it makes the process easier to install and manage rust versions.
 {% highlight bash linenos %}
-curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+curl --proto '=https' --tlsv1.2 <https://sh.rustup.rs> -sSf | sh
 {% endhighlight %}
 
 ## Setting up GitHub ssh

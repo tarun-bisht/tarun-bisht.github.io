@@ -13,22 +13,19 @@ pandas is a fast, powerful, flexible and easy to use open-source data analysis a
 
 pandas can be installed easily by using pip. First, create a virtual environment and activate it. Then run the command below to install pandas.
 
-
 {% highlight bash linenos %}
 pip install pandas
-{% endhighlight %} 
+{% endhighlight %}
 
 ### Importing the library
 
 Create a python project or open an existing project and import pandas using
-
 
 {% highlight python linenos %}
 import pandas
 {% endhighlight %}
 
 we can also use an alias pd to use pandas into the project by importing pandas as pd
-
 
 {% highlight python linenos %}
 import pandas as pd
@@ -37,7 +34,6 @@ import pandas as pd
 ### Reading and Visualizing CSV files
 
 *data = pd.read_csv("path_to_csv_file")*
-
 
 {% highlight python linenos %}
 data = pd.read_csv("corona.csv")
@@ -49,13 +45,9 @@ this will read and load CSV file from memory and creates a pandas DataFrame obje
 
 this will help to visualize how loaded data looks. It is stored in the DataFrame object which is pandas way to structure CSV data in the form of tables. ex:
 
-
 {% highlight python linenos %}
 data.head(5)  #shows first 5 rows of dataframe
 {% endhighlight %}
-
-
-
 
 <div>
 <style scoped>
@@ -121,19 +113,13 @@ data.head(5)  #shows first 5 rows of dataframe
 </table>
 </div>
 
-
-
 Similarly, this will help to visualize the last part of data in DataFrame
 
 *data.tail(numbers_of_columns)*
 
-
 {% highlight python linenos %}
 data.tail(5)
 {% endhighlight %}
-
-
-
 
 <div>
 <style scoped>
@@ -199,51 +185,31 @@ data.tail(5)
 </table>
 </div>
 
-
-
 ### Getting shape or dimensions and size of loaded data
 
-shape property gives out the shape or dimension of DataFrame as a tuple of the form (number_of_rows, number_of_columns) 
-
+shape property gives out the shape or dimension of DataFrame as a tuple of the form (number_of_rows, number_of_columns)
 
 {% highlight python linenos %}
 data.shape
 {% endhighlight %}
 
-
-
-
     (27, 4)
 
-
-
 size gives out the number of elements or number of unique cells in DataFrame.
-
 
 {% highlight python linenos %}
 data.size
 {% endhighlight %}
 
-
-
-
     108
 
-
-
 len on the DataFrame object gives out the number of rows in DataFrame.
-
 
 {% highlight python linenos %}
 len(data)
 {% endhighlight %}
 
-
-
-
     27
-
-
 
 ### Retrieving data from DataFrame
 
@@ -251,13 +217,9 @@ len(data)
 
 *data[['column_1','column_2','column_3']]*
 
-
 {% highlight python linenos %}
  data['Death']
 {% endhighlight %}
-
-
-
 
     0     0
     1     0
@@ -288,15 +250,9 @@ len(data)
     26    1
     Name: Death, dtype: int64
 
-
-
-
 {% highlight python linenos %}
 data[['Name of State / UT','Death']]
 {% endhighlight %}
-
-
-
 
 <div>
 <style scoped>
@@ -460,17 +416,11 @@ data[['Name of State / UT','Death']]
 </table>
 </div>
 
-
-
 sort and return DataFrame column specified
-
 
 {% highlight python linenos %}
 data.sort_values(['Total Confirmed cases *']) #sort and return DataFrame column
 {% endhighlight %}
-
-
-
 
 <div>
 <style scoped>
@@ -689,8 +639,6 @@ data.sort_values(['Total Confirmed cases *']) #sort and return DataFrame column
   </tbody>
 </table>
 </div>
-
-
 
 #### Using loc and iloc
 
@@ -714,13 +662,9 @@ loc has following valid inputs -
 
 Example:
 
-
 {% highlight python linenos %}
 data.loc[:,'Total Confirmed cases *'] #selects all rows from column Total Confirmed cases
 {% endhighlight %}
-
-
-
 
     0      19
     1       9
@@ -751,15 +695,9 @@ data.loc[:,'Total Confirmed cases *'] #selects all rows from column Total Confir
     26     19
     Name: Total Confirmed cases *, dtype: int64
 
-
-
-
 {% highlight python linenos %}
 data.loc[:,['Total Confirmed cases *','Death']]
 {% endhighlight %}
-
-
-
 
 <div>
 <style scoped>
@@ -923,15 +861,9 @@ data.loc[:,['Total Confirmed cases *','Death']]
 </table>
 </div>
 
-
-
-
 {% highlight python linenos %}
 data.loc[:,'Total Confirmed cases *':'Death'] #( including death column [refer input type 3])
 {% endhighlight %}
-
-
-
 
 <div>
 <style scoped>
@@ -1122,8 +1054,6 @@ data.loc[:,'Total Confirmed cases *':'Death'] #( including death column [refer i
   </tbody>
 </table>
 </div>
-
-
 
 **note: using loc slices contrary to usual python slices, both the start and the stop is included, when present in the index ie.. in ' a ' : ' c ' both ' a ' and ' c ' row are inclusive.**
 
@@ -1147,14 +1077,9 @@ iloc has the following valid inputs -
 
 Example:
 
-
-
 {% highlight python linenos %}
 data.iloc[:,1]   #selects all rows of column with index 1
 {% endhighlight %}
-
-
-
 
     0      19
     1       9
@@ -1185,15 +1110,9 @@ data.iloc[:,1]   #selects all rows of column with index 1
     26     19
     Name: Total Confirmed cases *, dtype: int64
 
-
-
-
 {% highlight python linenos %}
 data.iloc[:,[1,3]]   #selects every row of column with index 1 and 4
 {% endhighlight %}
-
-
-
 
 <div>
 <style scoped>
@@ -1357,15 +1276,9 @@ data.iloc[:,[1,3]]   #selects every row of column with index 1 and 4
 </table>
 </div>
 
-
-
-
 {% highlight python linenos %}
 data.iloc[:,1:3]  #selects every row of column with index 1 and 2 only
 {% endhighlight %}
-
-
-
 
 <div>
 <style scoped>
@@ -1529,15 +1442,9 @@ data.iloc[:,1:3]  #selects every row of column with index 1 and 2 only
 </table>
 </div>
 
-
-
-
 {% highlight python linenos %}
 data.iloc[0:3,:]  #selects rows 0 to 2 and every column
 {% endhighlight %}
-
-
-
 
 <div>
 <style scoped>
@@ -1589,8 +1496,6 @@ data.iloc[0:3,:]  #selects rows 0 to 2 and every column
 </table>
 </div>
 
-
-
 both iloc and loc also take callables as valid input. Callables are functions that return row and column needed to select. This is useful when we have to filter some information before selecting it.
 
 *data.loc[callable_function]*
@@ -1599,13 +1504,9 @@ both iloc and loc also take callables as valid input. Callables are functions th
 
 Example
 
-
 {% highlight python linenos %}
 data.loc[lambda data:data["Name of State / UT"] == 'Uttarakhand'] #selects all rows and columns with country India
 {% endhighlight %}
-
-
-
 
 <div>
 <style scoped>
@@ -1643,15 +1544,9 @@ data.loc[lambda data:data["Name of State / UT"] == 'Uttarakhand'] #selects all r
 </table>
 </div>
 
-
-
-
 {% highlight python linenos %}
 data.iloc[lambda x:x.index % 2 == 0] #selects all rows and columns with even index
 {% endhighlight %}
-
-
-
 
 <div>
 <style scoped>
@@ -1779,8 +1674,6 @@ data.iloc[lambda x:x.index % 2 == 0] #selects all rows and columns with even ind
   </tbody>
 </table>
 </div>
-
-
 
 ### Plotting a DataFrame
 
@@ -1808,21 +1701,13 @@ Following types of graphs are valid in pandas:
 
 syntax: *data.plot(kind='graph_type')*
 
-
 {% highlight python linenos %}
 data.plot(x ='Name of State / UT', y='Total Confirmed cases *',kind='bar')
 {% endhighlight %}
 
-
-
-
     <matplotlib.axes._subplots.AxesSubplot at 0x2272464b148>
 
-
-
-
 ![png](https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/pandas_bar_graph3dd3074ff7cb5424)
-
 
 ### Concatenating DataFrame with another
 
@@ -1831,7 +1716,6 @@ We can concatenate DataFrame using pd.concat method
 syntax: *pd.concat([dataframe1,dataframe2,….],axis= 0 or 1)*
 
 pass list of DataFrame to which are needed to concatenate and axis from where to concatenate
-
 
 {% highlight python linenos %}
 data1 = {'Enrollment No.': [1,2,3,4,5,6,7,8,9,10],
@@ -1846,9 +1730,6 @@ df2 = pd.DataFrame(data2)
 df=pd.concat([df1,df2],axis=1)
 df.head(5)
 {% endhighlight %}
-
-
-
 
 <div>
 <style scoped>
@@ -1914,21 +1795,15 @@ df.head(5)
 </table>
 </div>
 
-
-
 ### Checking null values in column
 
 pd.isna function is used to check for missing values like NaN or blank etc.
 
 syntax: *pd.isna(data[column_name])*
 
-
 {% highlight python linenos %}
 pd.isna(data['Death'])
 {% endhighlight %}
-
-
-
 
     0     False
     1     False
@@ -1958,12 +1833,12 @@ pd.isna(data['Death'])
     25    False
     26    False
     Name: Death, dtype: bool
-		
-		
+  
 So thats what you needed to get started for everyday data science work. There are lot of other features but these can be learned as you progress your journey.
 All the Best !!!
 
 [IPython Notebook Link](https://github.com/tarun-bisht/blogs-notebooks/tree/master/numpy-crash-course)
 
 ### References
+
 [pandas docs](https://pandas.pydata.org/pandas-docs/stable/reference/index.html)

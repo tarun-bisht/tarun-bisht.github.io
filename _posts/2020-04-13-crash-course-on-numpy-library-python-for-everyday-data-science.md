@@ -19,20 +19,17 @@ Merits of numpy over python list: --
 
 An easy way to install numpy is via pip. Create a virtual environment and activate it or activate an old virtual environment and run command to install
 
-
 {% highlight bash linenos %}
 pip install numpy
 {% endhighlight %}
 
 ### Importing library
 
-
 {% highlight python linenos %}
 import numpy
 {% endhighlight %}
 
 numpy can be imported by an alias name np or any which you like
-
 
 {% highlight python linenos %}
 import numpy as np
@@ -46,7 +43,6 @@ syntax: *np.array(list_of_elements)*
 
 Creates a numpy array from the list passed as parameter
 
-
 {% highlight python linenos %}
 var=np.array([[2,3],[3,2]])
 print(var)
@@ -54,16 +50,15 @@ print(var)
 
     [[2 3]
      [3 2]]
-    
 
 #### arange
 
-syntax: 
+syntax:
+
 * *np.arange(number_of_iter)*
 * *np.arange(start,stop,step,dtype)*
 
 Same as range() which creates an array of numbers between the range specified
-
 
 {% highlight python linenos %}
 var=np.arange(100)
@@ -75,14 +70,12 @@ print(var)
      48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71
      72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
      96 97 98 99]
-    
 
 #### diag
 
 syntax: *np.diag(list_of_values)*
 
 Creates a diagonal array of values provided in list send as parameter.
-
 
 {% highlight python linenos %}
 var=np.diag(range(4))
@@ -93,17 +86,15 @@ print(var)
      [0 1 0 0]
      [0 0 2 0]
      [0 0 0 3]]
-    
 
 #### linspace
 
 syntax: *np.linspace(value1,value2,number_of_elements)*
-It will return a numpy array which contains numbers of elements passed in number_of_elements parameter whose values is between *value1* and *value2* which are at equal interval. 
+It will return a numpy array which contains numbers of elements passed in number_of_elements parameter whose values is between *value1* and *value2* which are at equal interval.
 
-Say let *value1 = 1* and *value2 = 3* and we need 5 elements then we get 
+Say let *value1 = 1* and *value2 = 3* and we need 5 elements then we get
 
 [1, 1.5, 2, 2.5, 3]
-
 
 {% highlight python linenos %}
 var=np.linspace(1,2,5)
@@ -111,14 +102,12 @@ print(var)
 {% endhighlight %}
 
     [1.   1.25 1.5  1.75 2.  ]
-    
 
 #### random.randn
 
 syntax: *np.random.randn(dimensions)*
 
 Generates an array with random numbers
-
 
 {% highlight python linenos %}
 var=np.random.randn(2,2,3)
@@ -130,14 +119,12 @@ print(var)
     
      [[ 0.36747904  1.20299115  0.95669774]
       [ 0.13572886  0.4454223  -1.07577104]]]
-    
 
 #### random.normal
 
 syntax: *np.random.normal(size=(dimensions))*
 
 Generates an array with random numbers from a normal (Gaussian) distribution
-
 
 {% highlight python linenos %}
 var=np.random.normal(size=(2,2))
@@ -146,14 +133,12 @@ print(var)
 
     [[ 0.09112449  0.9688921 ]
      [ 1.09627332 -1.0526527 ]]
-    
 
 #### zeros
 
 syntax: *np.zeros((dimension))*
-    
-Generates a zero or null array with all elements = 0 of dimension specified.
 
+Generates a zero or null array with all elements = 0 of dimension specified.
 
 {% highlight python linenos %}
 var=np.zeros((2,2))
@@ -162,14 +147,12 @@ print(var)
 
     [[0. 0.]
      [0. 0.]]
-    
 
 #### ones
 
 syntax: *np.ones((dimension))*
-    
-Generates a array with all elements = 1 of dimension specified.
 
+Generates a array with all elements = 1 of dimension specified.
 
 {% highlight python linenos %}
 var=np.ones((2,2))
@@ -178,14 +161,12 @@ print(var)
 
     [[1. 1.]
      [1. 1.]]
-    
 
 #### identity
 
 syntax: *np.identity(dimension)*
-    
-Generates an identity matrix with dimension specified
 
+Generates an identity matrix with dimension specified
 
 {% highlight python linenos %}
 var=np.identity(2)
@@ -194,13 +175,10 @@ print(var)
 
     [[1. 0.]
      [0. 1.]]
-    
 
 ### Important properties of NumPy array
 
 For reference let
-
-
 
 {% highlight python linenos %}
 var= np.array([[2,3],[4,5]])
@@ -209,12 +187,10 @@ print(var)
 
     [[2 3]
      [4 5]]
-    
 
 #### ndim
 
 gives out the dimension of the array
-
 
 {% highlight python linenos %}
 var.ndim
@@ -226,64 +202,45 @@ var.ndim
 
 Gives out number of elements in array
 
-
 {% highlight python linenos %}
 var.itemsize
 {% endhighlight %}
 
-
     4
-
 
 #### dtype
 
 gives out data type of elements
 
-
 {% highlight python linenos %}
 var.dtype
 {% endhighlight %}
 
-
     dtype('int32')
-
 
 #### size
 
 gives out the size of array ie. Number of elements in the array
 
-
 {% highlight python linenos %}
 var.size
 {% endhighlight %}
 
-
-
-
     4
-
-
 
 #### shape
 
 gives out the dimension of array in the form of tuple
 
-
 {% highlight python linenos %}
 var.shape
 {% endhighlight %}
 
-
-
-
     (2, 2)
-
-
 
 #### reshape
 
 reshape array dimensions to the desired one if the given shape is compatible. Make sure the product of dimension before and after is the same. ie.. If we have an array of dimension (2,2) in this case product of dimension in 2x2=4 so it can be reshaped into (1,4) since product of dimension is still 2X1=4
-
 
 {% highlight python linenos %}
 a=var.reshape((1,4))
@@ -291,14 +248,11 @@ print(a)
 {% endhighlight %}
 
     [[2 3 4 5]]
-    
-
 
 {% highlight python linenos %}
 a=var.reshape((1,2))
 print(a)
 {% endhighlight %}
-
 
     ---------------------------------------------------------------------------
 
@@ -311,7 +265,6 @@ print(a)
 
     ValueError: cannot reshape array of size 4 into shape (1,2)
 
-
 ### Maths Functions in NumPy
 
 * #### sqrt
@@ -322,11 +275,12 @@ Find square of each element present in numpy array
 
 finds sine value of all the elements of the array
 
-* #### cos 
+* #### cos
 
 finds cosine value of all the elements of the array
 
 * #### tan
+
 finds the tangent value of all the elements of the array
 
 * #### log
@@ -361,15 +315,12 @@ return max value in the array from axis specified
 
 return sum of all elements of numpy array from the axis specified
 
-
 {% highlight python linenos %}
 print(np.sqrt(var))
 {% endhighlight %}
 
     [[1.41421356 1.73205081]
      [2.         2.23606798]]
-    
-
 
 {% highlight python linenos %}
 print(np.sin(var))
@@ -377,8 +328,6 @@ print(np.sin(var))
 
     [[ 0.90929743  0.14112001]
      [-0.7568025  -0.95892427]]
-    
-
 
 {% highlight python linenos %}
 print(np.cos(var))
@@ -386,8 +335,6 @@ print(np.cos(var))
 
     [[-0.41614684 -0.9899925 ]
      [-0.65364362  0.28366219]]
-    
-
 
 {% highlight python linenos %}
 print(np.tan(var))
@@ -395,8 +342,6 @@ print(np.tan(var))
 
     [[-2.18503986 -0.14254654]
      [ 1.15782128 -3.38051501]]
-    
-
 
 {% highlight python linenos %}
 print(np.log(var))
@@ -404,8 +349,6 @@ print(np.log(var))
 
     [[0.69314718 1.09861229]
      [1.38629436 1.60943791]]
-    
-
 
 {% highlight python linenos %}
 print(np.log10(var))
@@ -413,8 +356,6 @@ print(np.log10(var))
 
     [[0.30103    0.47712125]
      [0.60205999 0.69897   ]]
-    
-
 
 {% highlight python linenos %}
 print(np.exp(var))
@@ -422,47 +363,36 @@ print(np.exp(var))
 
     [[  7.3890561   20.08553692]
      [ 54.59815003 148.4131591 ]]
-    
-
 
 {% highlight python linenos %}
 print(np.std(var))
 {% endhighlight %}
 
     1.118033988749895
-    
-
 
 {% highlight python linenos %}
 print(np.mean(var))
 {% endhighlight %}
 
     3.5
-    
-
 
 {% highlight python linenos %}
 print(np.var(var))
 {% endhighlight %}
 
     1.25
-    
-
 
 {% highlight python linenos %}
 print(np.max(var,axis=None))
 {% endhighlight %}
 
     5
-    
-
 
 {% highlight python linenos %}
 print(np.sum(var,axis=None))
 {% endhighlight %}
 
     14
-    
 
 ### NumPy Operations Functions
 
@@ -471,7 +401,6 @@ print(np.sum(var,axis=None))
 syntax: *np.vstack((arrays_to_stack_verical))*
 
 stacks vertically all the arrays send in parameter
-
 
 {% highlight python linenos %}
 a=np.zeros(shape=var.shape)
@@ -483,14 +412,12 @@ print(vertical)
      [4. 5.]
      [0. 0.]
      [0. 0.]]
-    
 
 #### hstack
 
 syntax: *np.hstack((arrays_to_horizontal_stack))*
-    
-horizontal stacks all the arrays send in parameter
 
+horizontal stacks all the arrays send in parameter
 
 {% highlight python linenos %}
 a=np.zeros(shape=var.shape)
@@ -500,7 +427,6 @@ print(horizontal)
 
     [[2. 3. 0. 0.]
      [4. 5. 0. 0.]]
-    
 
 #### ravel
 
@@ -508,21 +434,18 @@ syntax *np.ravel()*
 
 flats out numpy array creating just a single row
 
-
 {% highlight python linenos %}
 flat=np.ravel(var)
 print(flat)
 {% endhighlight %}
 
     [2 3 4 5]
-    
 
 #### dot
 
 syntax: *np.dot(array1,array2)*
 
 find dot product of both arrays sends in the parameter.
-
 
 {% highlight python linenos %}
 a=np.array([[3,3],[5,2]])
@@ -532,7 +455,6 @@ print(dot_product)
 
     [[21 12]
      [37 22]]
-    
 
 #### transpose
 
@@ -540,18 +462,12 @@ syntax: *np.transpose(array)*
 
 finds the transpose of the array specified
 
-
 {% highlight python linenos %}
 np.transpose(var)
 {% endhighlight %}
 
-
-
-
     array([[2, 4],
            [3, 5]])
-
-
 
 #### linalg.inv
 
@@ -559,18 +475,12 @@ syntax: *np.linalg.inv(array)*
 
 finds the inverse of array send in parameter
 
-
 {% highlight python linenos %}
 np.linalg.inv(var)
 {% endhighlight %}
 
-
-
-
     array([[-2.5,  1.5],
            [ 2. , -1. ]])
-
-
 
 #### linalg.det
 
@@ -578,18 +488,17 @@ syntax: *np.linalg.det(array)*
 
 returns determinant of array send in parameter
 
-
 {% highlight python linenos %}
 np.linalg.det(var)
 {% endhighlight %}
 
-
     -2.0
-		
+  
 So thats what you needed to get started for everyday data science work. There are lot of other features but these can be learned as you progress your journey.
 All the Best !!!
 
 [IPython Notebook Link](https://github.com/tarun-bisht/blogs-notebooks/tree/master/numpy-crash-course)
 
 ### References
+
 [numpy docs](https://docs.scipy.org/doc/numpy/reference/)

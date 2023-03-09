@@ -6,14 +6,14 @@ category: Deep Learning
 tags: python intermediate tensorflow inception
 comment: true
 ---
-DeepDream is image modification algorithm an example of generative deep learning that uses representation learned by convolution neural networks to modify images. It was released by Google in 2015. The popularity of deepdream caused due to its crappy artifacts in images, from eyes to feathers to dog faces. It was initially created to help scientists and engineers to see what a deep neural network is seeing when it looks given input. 
+DeepDream is image modification algorithm an example of generative deep learning that uses representation learned by convolution neural networks to modify images. It was released by Google in 2015. The popularity of deepdream caused due to its crappy artifacts in images, from eyes to feathers to dog faces. It was initially created to help scientists and engineers to see what a deep neural network is seeing when it looks given input.
 <!-- more -->
 
 DeepDream is based on one of the techniques of visualizing learnings of convnets. Using that technique we can visualize patterns that activate a given layer of convolutional neural network or visual pattern that each filter respond to in convolutional layers. This is done by applying gradient ascent in input space, which maximizes the response of the specific filter in convnets.
 
 ### Gradient Ascent
 
-gradient ascent is opposite of gradient descent. Both are optimization algorithms. As gradient descent finds out minima of a function gradient ascent finds out maxima of a function. The process of gradient ascent is same as gradient descent we first find out gradient(derivative) of function with respect to our training parameters and then change training parameters so as to maximize instead of minimizing by moving it in opposite direction of gradient descent. 
+gradient ascent is opposite of gradient descent. Both are optimization algorithms. As gradient descent finds out minima of a function gradient ascent finds out maxima of a function. The process of gradient ascent is same as gradient descent we first find out gradient(derivative) of function with respect to our training parameters and then change training parameters so as to maximize instead of minimizing by moving it in opposite direction of gradient descent.
 
 For visualizing patterns learned by convnets we have to maximize the response of specific filters. In simple words, we have a response(activations) of the specific filter in a convolutional layer and we change our input space to maximize that filter's response by using gradient ascent.
 
@@ -27,13 +27,11 @@ on RAM and provide better results.
 
 Implementing deepdream teaches a lot of other concepts of deep learning. It breaks the rule of traditional *model.fit* in every deep learning problem. Also playing with result is quite interesting so get ready for deepdream.
 
-
 {% highlight python linenos %}
 input_img_path="starry.jpg"
 {% endhighlight %}
 
 Starting with our input image in which deepdream patterns will be shown as output. First we will define path of our input image.
-
 
 {% highlight python linenos %}
 import numpy as np
@@ -45,7 +43,7 @@ import IPython.display as display
 import time
 {% endhighlight %}
 
-Next we will import all dependencies which we will need for creating deepdream. 
+Next we will import all dependencies which we will need for creating deepdream.
 
 - **numpy :** for arrays manipulation
 - **tensorflow :** for tensor operations
@@ -58,7 +56,6 @@ We are using Inception pretrained model for this as it produces better outputs o
 
 > Dreams in Inception movie.😁😁
 
-
 {% highlight python linenos %}
 def load_image(image_path,max_dim=512):
     img=Image.open(image_path)
@@ -69,12 +66,12 @@ def load_image(image_path,max_dim=512):
     return img
 {% endhighlight %}
 
-the above function 
+the above function
+
 - loads image from path
 - convert it into RGB format
 - resize it with max dimension specified while maintaining aspect ratio
-- converting an image to numpy array and creating a batch of a single image since neural networks expects the input to be in batches. 
-
+- converting an image to numpy array and creating a batch of a single image since neural networks expects the input to be in batches.
 
 {% highlight python linenos %}
 def deprocess_inception_image(img):
@@ -83,7 +80,6 @@ def deprocess_inception_image(img):
 {% endhighlight %}
 
 the above function cancels out effects of preprocessing applied by inception's preprocess_input function. preprocess_input function for inception model scales down pixels of image to be in range -1 to 1 so this function will scale pixels to be in range 0 to 255
-
 
 {% highlight python linenos %}
 def array_to_img(array,deprocessing=False):
@@ -97,7 +93,6 @@ def array_to_img(array,deprocessing=False):
 
 the above function will convert array to image. if deprocessing is true it will first deprocess inception preprocessing and then convert array to image
 
-
 {% highlight python linenos %}
 def show_image(img):
     image=array_to_img(img)
@@ -106,7 +101,6 @@ def show_image(img):
 
 the above function will show image in notebook by first converting array to image
 
-
 {% highlight python linenos %}
 input_image=load_image(input_img_path,max_dim=512)
 print(input_image.shape)
@@ -114,26 +108,19 @@ show_image(input_image)
 {% endhighlight %}
 
     (1, 338, 512, 3)
-    
-
 
 ![png](https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/deep_dream_10ec0c4529c1aafed)
 
-
 Now lets load our input image and display it.
-
 
 {% highlight python linenos %}
 preprocessed_image=inception_v3.preprocess_input(input_image)
 show_image(deprocess_inception_image(preprocessed_image))
 {% endhighlight %}
 
-
 ![png](https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/deep_dream_29905fe4cd8a5744b)
 
-
 Also check if our deprocess_image function is working as expected
-
 
 {% highlight python linenos %}
 def deep_dream_model(model,layer_names):
@@ -144,7 +131,6 @@ def deep_dream_model(model,layer_names):
 {% endhighlight %}
 
 the above function creates a deepdream model. Since we are not training our model so set trainable to false. Our deepdream model takes input as image and outputs the activations of layers which we will use to embed patterns learned by that layers into our input image
-
 
 {% highlight python linenos %}
 inception=inception_v3.InceptionV3(weights="imagenet",include_top=False)
@@ -816,10 +802,8 @@ inception.summary()
     Trainable params: 21,768,352
     Non-trainable params: 34,432
     __________________________________________________________________________________________________
-    
 
 Now since we are using inception model so lets create a inception model using keras and print its layers
-
 
 {% highlight python linenos %}
 layers_contributions=['mixed3', 'mixed5']
@@ -827,13 +811,11 @@ layers_contributions=['mixed3', 'mixed5']
 
 Lets describe layers whose patterns we want to embed into our input image. Here we are using *mixed3* and *mixed5* layers which are concatenation of different convolution layers.
 
-
 {% highlight python linenos %}
 dream_model=deep_dream_model(inception,layers_contributions)
 {% endhighlight %}
 
 Now we will create dream model using *deep_dream_model* function which we had defined earlier
-
 
 {% highlight python linenos %}
 deep_outputs=dream_model(preprocessed_image)
@@ -849,17 +831,14 @@ for layer_name,outputs in zip(layers_contributions,deep_outputs):
     mixed5
     (1, 19, 30, 768)
     0.16857202
-    
 
 Lets test how we can extract and manipulate activations of layers which we have defined in *layers_contributions* using our deep dream model
-
 
 {% highlight python linenos %}
 model_output= lambda model,inputs:model(inputs)
 {% endhighlight %}
 
 Now lets define a helper function which will return output of model on providing input. Above we have defined a *lambda* function which takes model and input image as parameter and return output of model *ie..*  activations of layers which we have defined in *layers_contributions*
-
 
 {% highlight python linenos %}
 def get_loss(activations):
@@ -871,7 +850,6 @@ def get_loss(activations):
 
 the above function defines our loss function which we will maximize using gradient ascent. It is simply sum of mean of activations
 
-
 {% highlight python linenos %}
 def get_loss_and_gradient(model,inputs,total_variation_weight=0):
     with tf.GradientTape() as tape:
@@ -880,7 +858,7 @@ def get_loss_and_gradient(model,inputs,total_variation_weight=0):
         loss=get_loss(activations)
         loss=loss+total_variation_weight*tf.image.total_variation(inputs)
     grads=tape.gradient(loss,inputs)
-    grads /= tf.math.reduce_std(grads) + 1e-8 
+    grads /= tf.math.reduce_std(grads) + 1e-8
     return loss,grads
 {% endhighlight %}
 
@@ -891,7 +869,6 @@ There is also *total_variation_weight* parameter this will be used for adding so
 The total variation loss is the sum of the absolute differences for neighbouring pixel-values in the input images. This measures how much noise is in the images.
 
 *total variation loss* is not necessary for deep dream outputs but can be used to smooth out result. play with *total_variation_weight* parameter to find result of your liking.
-
 
 {% highlight python linenos %}
 def run_gradient_ascent(model,inputs,epochs=1,steps_per_epoch=1,weight=0.01,total_variation_weight=0):
@@ -913,7 +890,6 @@ def run_gradient_ascent(model,inputs,epochs=1,steps_per_epoch=1,weight=0.01,tota
 Now we have gradients of loss with respect to input image, we define a function that will do gradient ascent by changing our input image in direction of gradients. This will maximize input space which will eventually increase activations of layers.
 This function also takes *epochs* as parameter which is number of iteration for which we want to process image. *weight* parameter is strength of patterns embeds to image. Method also prints stats of each epoch
 
-
 {% highlight python linenos %}
 image_array=run_gradient_ascent(dream_model,preprocessed_image,epochs=2,steps_per_epoch=100,weight=0.01)
 {% endhighlight %}
@@ -923,10 +899,8 @@ image_array=run_gradient_ascent(dream_model,preprocessed_image,epochs=2,steps_pe
     epoch: 2 ====================================================================================================
     
     Time elapsed: 62.779686sec
-    
 
 Now its time to create deep dream image, we apply gradient ascent for some epochs and save our image into a variable which is a numpy array
-
 
 {% highlight python linenos %}
 show_image(deprocess_inception_image(image_array))
@@ -934,9 +908,7 @@ resultant_image=array_to_img(image_array,True)
 resultant_image.save("deep_dream_simple.jpg")
 {% endhighlight %}
 
-
 ![png](https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/deep_dream_3e52bb8d7841697e1)
-
 
 Now we are ready to see how our input image looks like. We first deprocess our numpy array and then convert it to image and finally save output image to hard drive as image.
 
@@ -944,12 +916,12 @@ Now we are ready to see how our input image looks like. We first deprocess our n
 
 To improve quality of patterns in image we can use octaves technique. In this technique input image is processed at different scale. Each different size image is an octave this improve quality of patterns on image.
 
-### Steps:
+### Steps
+
 - first base shape of image is saved to a variable
 - input image is then scaled to different sizes smaller and greater than base shape
 - these octaves (different scaled images) are then passed to *run_gradient_ascent* function to apply gradient ascent to each octave.
 - finally resultant image is again resized to base shape
-
 
 {% highlight python linenos %}
 def run_gradient_ascent_with_octaves(model,inputs,epochs=1,steps_per_epoch=1,num_octaves=2,octave_size=1.3,weight=0.01,total_variation_weight=0):
@@ -966,12 +938,11 @@ def run_gradient_ascent_with_octaves(model,inputs,epochs=1,steps_per_epoch=1,num
     return tf.image.resize(img,base_shape).numpy()
 {% endhighlight %}
 
-the above function runs gradient ascent using octave technique. It takes *num_octaves* parameter which is number of octaves you want to process. Default is 2 that means it process 2 octaves and 1 original image. 
+the above function runs gradient ascent using octave technique. It takes *num_octaves* parameter which is number of octaves you want to process. Default is 2 that means it process 2 octaves and 1 original image.
 
-Image is resized using tensorflow *image.resize* function. New shape is calculated by raising height and width of image to power of octave number to process. As you can notice loops starts from *-num_octaves to 0 (excluding 1)*. Negative power will scale down the image from its base shape. We can also run loop from *-num_octaves to +num_octave* but as image size increases it consume more RAM. 
+Image is resized using tensorflow *image.resize* function. New shape is calculated by raising height and width of image to power of octave number to process. As you can notice loops starts from *-num_octaves to 0 (excluding 1)*. Negative power will scale down the image from its base shape. We can also run loop from *-num_octaves to +num_octave* but as image size increases it consume more RAM.
 
-*octave_size* parameter tells by what factor we want to scale images 
-
+*octave_size* parameter tells by what factor we want to scale images
 
 {% highlight python linenos %}
 image_array=run_gradient_ascent_with_octaves(dream_model,preprocessed_image,epochs=1,steps_per_epoch=100,num_octaves=3,octave_size=1.3,weight=0.01)
@@ -993,10 +964,8 @@ image_array=run_gradient_ascent_with_octaves(dream_model,preprocessed_image,epoc
     epoch: 1 ====================================================================================================
     
     Time elapsed: 31.441849sec
-    
 
 Now its time to create deep dream image, It takes more time to create deep dream but it worth.
-
 
 {% highlight python linenos %}
 show_image(deprocess_inception_image(image_array))
@@ -1004,25 +973,24 @@ image=array_to_img(image_array,True)
 image.save("deep_dream_with_octave.jpg")
 {% endhighlight %}
 
-
 ![png](https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/deep_dream_4c563e15f644beece)
-
 
 And this time we got some exciting results.
 
 ## Deep Dreaming using Image Tiling
 
-As we start processing bigger images we need more RAM to put it into memory for calculating gradients. Also we cannot process more octaves using above techniques. 
+As we start processing bigger images we need more RAM to put it into memory for calculating gradients. Also we cannot process more octaves using above techniques.
 
-This issue can be fixed by using image tilings, In this technique we split image into tiles and gradient is calculated for each tile seperately. 
+This issue can be fixed by using image tilings, In this technique we split image into tiles and gradient is calculated for each tile seperately.
 
 By tiling images into small sizes and processing these tiles solves the issue as we have to process small tiles of image not the entire image.
 
 While tiling we make sure that it is random else we get seam in our image after processing.
 
-
 {% highlight python linenos %}
-# Randomly rolls the image to avoid tiled boundaries.
+
+# Randomly rolls the image to avoid tiled boundaries
+
 def random_image_tiling(img, maxdim):
     shift = tf.random.uniform(shape=[2], minval=-maxdim, maxval=maxdim, dtype=tf.int32)
     shift_r,shift_d=shift
@@ -1032,30 +1000,26 @@ def random_image_tiling(img, maxdim):
 
 the above function takes image as input and randomly rolls the image to avoid tiled boundaries. It returns shifted image and positions from where image was shifted. We have used tensorflow *roll* function to shift images. It create roll of an array along different axis from shift positions specified.
 
-
 {% highlight python linenos %}
 shift_r,shift_d,img_tiled=random_image_tiling(input_image[0], 512)
 show_image(img_tiled.numpy())
 {% endhighlight %}
 
-
 ![png](https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/deep_dream_5ccaac83447e81783)
 
-
 lets test of how random tiled image function transforms our image and randomly roll it so that we do not get same tile everytime we process and seam across image.
-
 
 {% highlight python linenos %}
 def get_loss_and_grads_with_tiling(model,inputs,tile_size=512,total_variation_weight=0.004):
     shift_r,shift_d,rolled_image=random_image_tiling(inputs[0],tile_size)
     grads=tf.zeros_like(rolled_image)
     # create a tensor from 0 to rolled_image width with step of tile size
-    x_range = tf.range(0, rolled_image.shape[0], tile_size)[:-1]
+    x_range = tf.range[0, rolled_image.shape[0], tile_size](:-1)
     # check if x_range is not empty
     if not tf.cast(len(x_range), bool):
         x_range= tf.constant([0])
     # create a tensor from 0 to rolled_image height with step of tile size
-    y_range = tf.range(0, rolled_image.shape[1], tile_size)[:-1] 
+    y_range = tf.range[0, rolled_image.shape[1], tile_size](:-1)
     # check if y_range is not empty
     if not tf.cast(len(y_range), bool):
         y_range=tf.constant([0])
@@ -1067,7 +1031,7 @@ def get_loss_and_grads_with_tiling(model,inputs,tile_size=512,total_variation_we
                 image_tile= tf.expand_dims(rolled_image[x:x+tile_size, y:y+tile_size],axis=0)
                 activations=model_output(model,image_tile)
                 loss=get_loss(activations)
-                loss=loss+total_variation_weight*tf.image.total_variation(image_tile) 
+                loss=loss+total_variation_weight*tf.image.total_variation(image_tile)
             grads=grads+tape.gradient(loss,rolled_image)
     grads = tf.roll(grads, shift=[-shift_r,-shift_d], axis=[1,0]) #reverse shifting of rolled image
     grads /= tf.math.reduce_std(grads) + 1e-8
@@ -1075,7 +1039,6 @@ def get_loss_and_grads_with_tiling(model,inputs,tile_size=512,total_variation_we
 {% endhighlight %}
 
 Lets define a way to get gradients from tiled image. In above function we first get random rolled image and its rolling positions using *random_image_tiling* function. We then have some logic to create a tile from rolled image of size *tile_size* specified. This tile image is then passed to model and loss is calculated finally gradients are calculated for that tile and added to *grads* tensor. We process small tiles of rolled image till we have iterated whole image (rolled image) and all gradients of each tile are summed together. Then we reverse the shiftings of rolled image back to original image and finally scaling and returning the gradients.
-
 
 {% highlight python linenos %}
 def run_gradient_ascent_with_octave_tiling(model,inputs,steps_per_octave=100,num_octaves=2,octave_size=1.3,tile_size=512,weight=0.01,total_variation_weight=0.0004):
@@ -1103,7 +1066,6 @@ def run_gradient_ascent_with_octave_tiling(model,inputs,steps_per_octave=100,num
 
 the above funtion is same as *run_gradient_ascent_with_octave* but instead of using *get_loss_and_grads* function here we have used *get_loss_and_grads_with_tiling* to get gradients using tiling images strategy.
 
-
 {% highlight python linenos %}
 image_array=run_gradient_ascent_with_octave_tiling(dream_model,preprocessed_image,steps_per_octave=100,num_octaves=3,octave_size=1.3,tile_size=512,weight=0.01,total_variation_weight=0)
 {% endhighlight %}
@@ -1130,10 +1092,8 @@ image_array=run_gradient_ascent_with_octave_tiling(dream_model,preprocessed_imag
     ====================================================================================================
     
     Time elapsed: 270.3 sec
-    
 
 Now its time to create deep dream image. Time taken to create dream depends on size of input image passed. It also uses octave technique previously discussed to improve quality of image but now we can process more octaves.
-
 
 {% highlight python linenos %}
 show_image(deprocess_inception_image(image_array))
@@ -1141,9 +1101,7 @@ image=array_to_img(image_array,True)
 image.save("deep_dream_with_octave_tiling.jpg")
 {% endhighlight %}
 
-
 ![png](https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/deep_dream_6f2e0c8cf112caee2)
-
 
 and this time we got some more exciting results also we can create bigger resolution dream.
 
@@ -1155,7 +1113,7 @@ Thanks for reading till last. ✌✌✌
 
 [IPython Notebook Link](https://github.com/tarun-bisht/blogs-notebooks/tree/master/deepdream)
 
-### References
+## References
 
 [Tensorflow Tutorials](https://www.tensorflow.org/tutorials/generative/deepdream)
 [Keras Book](https://livebook.manning.com/book/deep-learning-with-python/chapter-8/76)

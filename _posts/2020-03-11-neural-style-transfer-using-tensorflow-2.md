@@ -9,7 +9,7 @@ comment: true
 When the style of one image is mixed with content of another image then it is called Style Transfer and we are using a neural network to do so call Neural Style Transfer. As we are dealing with images so we need a convolutional neural network.
 Neural Style Transfer was first published in the paper “A Neural Algorithm of Artistic Style” by Gatys et al.,
  originally released in 2015 and in this session, we are implementing this paper using Tensorflow 2.0.
- 
+
  <!-- more -->
 
 [arXiv paper link](https://arxiv.org/abs/1508.06576)
@@ -48,7 +48,6 @@ Loss Function to minimize neural style transfer is given by
 
 ![updating generated image](https://cdn-images-1.medium.com/max/800/1*SKWcdg1TWFTPMgAOKOfsJg.png)
 
-
 ### Content Cost Function
 
 - Let L be hidden layer to compute the content cost
@@ -58,7 +57,6 @@ Loss Function to minimize neural style transfer is given by
 - If both a[L][C] and a[L][G] are similar both images have the same content.
 
 ![Content Loss](https://cdn-images-1.medium.com/max/800/1*9AcWLV_XJ8obhBl4ZI2-tQ.png)
-
 
 ### Style Cost Function
 
@@ -75,7 +73,6 @@ Loss Function to minimize neural style transfer is given by
 - In a more intuitive way, gram matrix can be seen as how similar two images are similar, Its dot product between two vectors of activation at layer L the lesser the angle between them or more closer the respective coordinates. So the more similar they are, the larger the dot product gets.
 
 ![Style Loss](https://cdn-images-1.medium.com/max/800/1*Sr0aXBBTXkBw3pvx7bDfQQ.png)
-
 
 Now we have defined Content Loss and Style loss putting these in Total Loss equation and we get the total loss.
 
@@ -97,7 +94,6 @@ I have commented on every section to understand well. I am only posting some scr
 **Installing Tensorflow 2.0**
 
 ![Installing Tensorflow](https://miro.medium.com/max/366/1*XB5EXKMQ_LkopYQaUcw97Q.png)
-
 
 **Importing Dependencies**
 
@@ -137,16 +133,13 @@ VGG model takes images as BGR format instead of RGB format so it needed to be pr
 
 ![Gram Matrix and Style Loss](https://miro.medium.com/max/1283/1*1vaXbZd3L7Sh97C87efBKg.png)
 
-
 ![Total Loss](https://miro.medium.com/max/1217/1*hWnn1pJEaAn0oF1Ko7Q3vw.png)
-
 
 **Optimizing Loss**
 
 Optimization Function optimize generated image values based on minimizing the total loss function
 
 ![Optimizing Loss and generating images](https://miro.medium.com/max/1278/1*ZzYdGOtkH_ZGX-S2w9yj0Q.png)
-
 
 So, I Hope, this article is helpful for someone understanding and implementing neural style transfer. Thanks for being till last.
 
