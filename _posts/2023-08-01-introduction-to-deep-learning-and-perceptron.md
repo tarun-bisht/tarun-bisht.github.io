@@ -397,6 +397,7 @@ HTML(anim.to_html5_video())
 ```
 Video Epoch 1
 ```
+[Video Link](https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/601d0227-0ee4-42f3-aa4e-cca6226928ea)
 
 {% highlight python linenos %}
 epochs += 1
@@ -408,6 +409,7 @@ HTML(anim.to_html5_video())
 ```
 Video Epoch 2
 ```
+[Video Link](https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/15ca216d-2674-42c1-ab48-7d28fb3f6aa3)
 
 {% highlight python linenos %}
 epochs += 1
@@ -419,6 +421,7 @@ HTML(anim.to_html5_video())
 ```
 Video Epoch 3
 ```
+[Video Link](https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/518cff16-be17-4d2b-92c3-5d6c41a9e937)
 
 {% highlight python linenos %}
 epochs += 1
@@ -430,6 +433,7 @@ HTML(anim.to_html5_video())
 ```
 Video Epoch 4
 ```
+[Video Link](https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/0d3c840a-da52-4d86-8965-84d3a5a4105f)
 
 {% highlight python linenos %}
 epochs += 1
@@ -441,6 +445,7 @@ HTML(anim.to_html5_video())
 ```
 Video Epoch 5
 ```
+[Video Link](https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/f5ed5f51-2916-4005-b149-f87dbbd63200)
 
 ### Perceptron Convergence Theorem
 
