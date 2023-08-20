@@ -147,7 +147,7 @@ x = np.random.multivariate_normal(mean=[0, 0], cov=identity_matrix, size=size)
 
 # label all points as +1
 
-y = np.array([1]\*size)
+y = np.array([1]*size)
 
 # full data with label +1
 
