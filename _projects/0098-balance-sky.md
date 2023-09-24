@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Balance Sky
-category: Game
+category: Games
 icon: https://storage.googleapis.com/tarun-bisht.appspot.com/project/BalanceIcon00bebaea33811533
 tags: infinite-runner unity-game ball-balance
 comment: true

@@ -25,7 +25,7 @@ Deep Learning is subset of machine learning which on its own subset of Artificia
 - 2012: Alexnet shows huge performance boost in Imagenet data.
 - 2013: computer vision shifted to neural networks
 - 2016: NLP community also shifts to neural nets.
-- present: many AI trends like generating modalities (DALLE, GPT), robotics, control, games(Dota2, Alphago) use neural nets.
+- present: many AI trends like generating modalities (DALLE, GPT), robotics, control, games (Dota2, Alphago) use neural nets.
 
 > **SUMMARY:** Deep Learning is subset of Machine Learning which itself is subset of AI. It is different from ML, as it can learn from unstructured data and discover patterns from data without explicitly defined features. It is widely used currently because of availability of large volumes of data and computation power.
 
@@ -213,13 +213,13 @@ Function to visualize the dataset.
 
 {% highlight python linenos %}
 def plot_data(data):
-    features = data[:, :-1]
-    labels = data[:, -1]
-    plt.figure(figsize=(12, 8))
-    plt.scatter(x=features[:, 0], y=features[:, 1], c=labels, cmap="plasma", edgecolors="#111")
-    plt.grid()
-    plt.title("Plotting Data", pad=30, fontdict={"fontsize": 24})
-    plt.show()
+features = data[:, :-1]
+labels = data[:, -1]
+plt.figure(figsize=(12, 8))
+plt.scatter(x=features[:, 0], y=features[:, 1], c=labels, cmap="plasma", edgecolors="#111")
+plt.grid()
+plt.title("Plotting Data", pad=30, fontdict={"fontsize": 24})
+plt.show()
 {% endhighlight %}
 
 {% highlight python linenos %}
@@ -232,26 +232,26 @@ plot_data(d)
 
 {% highlight python linenos %}
 def activation(out):
-  if out >=0:
-    return 1
-  return -1
+if out >=0:
+return 1
+return -1
 {% endhighlight %}
 
 {% highlight python linenos %}
 def perceptron_prediction(w, x): # compute the prediction for the example x using weight w
-  out = np.dot(w, x)
-  return activation(out)
+out = np.dot(w, x)
+return activation(out)
 {% endhighlight %}
 
 #### Perceptron update rule
 
 {% highlight python linenos %}
 def perceptron_update_weights(w, x, y, y_pred):
-  is_mistake = False # check for mistake and set is_mistake flag accordingly
-  if y != y_pred:
-    is_mistake = True # and write code to update the weights in perceptron
-    w = w + x*y
-  return w, is_mistake
+is_mistake = False # check for mistake and set is_mistake flag accordingly
+if y != y_pred:
+is_mistake = True # and write code to update the weights in perceptron
+w = w + x\*y
+return w, is_mistake
 {% endhighlight %}
 
 ### Training procedure for perceptron
@@ -260,16 +260,15 @@ This function takes data and trains the perceptron to classify the datapoints in
 
 {% highlight python linenos %}
 def train_perceptron(data): # Initialize weights
-  w = np.zeros(shape=(3, )) # we can also initialize with random weights # w = np.random.normal(size=(3, ))
-  epochs = 0
-  num_mistakes = 99
-  max_epochs = 50
+w = np.zeros(shape=(3, )) # we can also initialize with random weights # w = np.random.normal(size=(3, ))
+epochs = 0
+num_mistakes = 99
+max_epochs = 50
 
-  while num_mistakes > 0 and epochs<max_epochs:
-    num_mistakes = 0
-    for i in range(len(data)):
-      # retrieve the feature vector x from data set D
-      x = data[i, :-1]
+while num_mistakes > 0 and epochs<max_epochs:
+num_mistakes = 0
+for i in range(len(data)): # retrieve the feature vector x from data set D
+x = data[i, :-1]
 
       # Append an additional constant feature 1 to x
       x = np.concatenate([x, [1]])
@@ -285,7 +284,8 @@ def train_perceptron(data): # Initialize weights
         num_mistakes += 1
     print(f"Epoch {epochs+1} completed, Number of mistakes: {num_mistakes}")
     epochs=epochs+1
-  return w
+
+return w
 
 {% endhighlight %}
 
@@ -305,24 +305,26 @@ Epoch 5 completed, Number of mistakes: 0
 
 {% highlight python linenos %}
 def plot_line(w, xlim=None):
-  axes = plt.gca()
-  # get x limits
-  x_vals = np.array(axes.get_xlim())
-  y_vals = -(w[2] + w[0] \* x_vals)/w[1]
-  plt.plot(x_vals, y_vals, 'r--')
+axes = plt.gca()
+
+# get x limits
+
+x_vals = np.array(axes.get_xlim())
+y_vals = -(w[2] + w[0] \* x_vals)/w[1]
+plt.plot(x_vals, y_vals, 'r--')
 {% endhighlight %}
 
 {% highlight python linenos %}
 def plot_data_with_separator(data, w):
-  features = data[:, :-1]
-  labels = data[:, -1]
-  plt.scatter(x=features[:, 0], y=features[:, 1], c=labels, cmap="plasma", edgecolors="#111")
-  plt.xlim([features[:, 0].min() - 1, features[:, 0].max() + 1])
-  plt.ylim([features[:, 1].min() - 1, features[:, 1].max() + 1])
-  plot_line(w)
-  plt.grid()
-  plt.title("Plotting decision boundary", pad=30, fontdict={"fontsize": 24})
-  plt.show()
+features = data[:, :-1]
+labels = data[:, -1]
+plt.scatter(x=features[:, 0], y=features[:, 1], c=labels, cmap="plasma", edgecolors="#111")
+plt.xlim([features[:, 0].min() - 1, features[:, 0].max() + 1])
+plt.ylim([features[:, 1].min() - 1, features[:, 1].max() + 1])
+plot_line(w)
+plt.grid()
+plt.title("Plotting decision boundary", pad=30, fontdict={"fontsize": 24})
+plt.show()
 {% endhighlight %}
 
 {% highlight python linenos %}
@@ -360,13 +362,13 @@ x_vals = np.array(ax.get_xlim())
 plt.close()
 
 def animation(i):
-  global weights
-  ax.set_title(f"Plotting decision boundary, dataset iteration: {i+1}", pad=30, fontdict={"fontsize": 24})
-  if weights[1] == 0: # for solving divide by zero error
-    y_vals = -(weights[2] + weights[0] * x*vals)
-  else:
-    y_vals = -(weights[2] + weights[0] * x_vals)/weights[1]
-    line.set_data(x_vals, y_vals)
+global weights
+ax.set_title(f"Plotting decision boundary, dataset iteration: {i+1}", pad=30, fontdict={"fontsize": 24})
+if weights[1] == 0: # for solving divide by zero error
+y_vals = -(weights[2] + weights[0] * x*vals)
+else:
+y_vals = -(weights[2] + weights[0] \* x_vals)/weights[1]
+line.set_data(x_vals, y_vals)
 
     # retrieve the feature vector x from data set D
 
@@ -384,7 +386,7 @@ def animation(i):
 
     weights, is_mistake = perceptron_update_weights(weights, x, y, y_hat)
 
-  return line,
+return line,
 {% endhighlight %}
 
 {% highlight python linenos %}
@@ -397,6 +399,7 @@ HTML(anim.to_html5_video())
 ```
 Video Epoch 1
 ```
+
 [Video Link](https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/601d0227-0ee4-42f3-aa4e-cca6226928ea)
 
 {% highlight python linenos %}
@@ -409,6 +412,7 @@ HTML(anim.to_html5_video())
 ```
 Video Epoch 2
 ```
+
 [Video Link](https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/15ca216d-2674-42c1-ab48-7d28fb3f6aa3)
 
 {% highlight python linenos %}
@@ -421,6 +425,7 @@ HTML(anim.to_html5_video())
 ```
 Video Epoch 3
 ```
+
 [Video Link](https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/518cff16-be17-4d2b-92c3-5d6c41a9e937)
 
 {% highlight python linenos %}
@@ -433,6 +438,7 @@ HTML(anim.to_html5_video())
 ```
 Video Epoch 4
 ```
+
 [Video Link](https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/0d3c840a-da52-4d86-8965-84d3a5a4105f)
 
 {% highlight python linenos %}
@@ -445,12 +451,13 @@ HTML(anim.to_html5_video())
 ```
 Video Epoch 5
 ```
+
 [Video Link](https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/f5ed5f51-2916-4005-b149-f87dbbd63200)
 
 ### Perceptron Convergence Theorem
 
 > For any finite set of linearly separable labeled examples, the Perceptron Learning
-Algorithm will halt after a finite number of iterations.
+> Algorithm will halt after a finite number of iterations.
 
 - Under linear seperable assumptions of positive and negative samples the training procedure for perceptron converges in finite time.
 
@@ -482,9 +489,9 @@ $$
 \implies y^t \langle w^*, x^t \rangle > \gamma
 $$
 
-$$
-\therefore \langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle > \gamma -\textbf{eq(A)}
-$$
+\begin{equation}
+\therefore \langle w^\*, w^{t+1} \rangle - \langle w^\*, w^t \rangle > \gamma \tag{A}
+\end{equation}
 
 - If mistake do not occur at round t
 
@@ -492,9 +499,9 @@ $$
 \langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle = \langle w^*, w^t \rangle - \langle w^*, w^t \rangle \implies 0
 $$
 
-$$
-\therefore \langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle = 0 -\textbf{eq(B)}
-$$
+\begin{equation}
+\therefore \langle w^\*, w^{t+1} \rangle - \langle w^\*, w^t \rangle = 0 \tag{B}
+\end{equation}
 
 - For T rounds $$\langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle$$
 
@@ -508,9 +515,9 @@ $$
 \implies > \sum_\limits{t \in \text{mistake}}\gamma \ + 0
 $$
 
-$$
-\therefore \sum_\limits{t=1}^\limits{T} \langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle > M \gamma -\textbf{eq(C)}
-$$
+\begin{equation}
+\therefore \sum\_\limits{t=1}^\limits{T} \langle w^\*, w^{t+1} \rangle - \langle w^\*, w^t \rangle > M \gamma \tag{C}
+\end{equation}
 
 LHS.
 
@@ -532,7 +539,11 @@ $$
 \therefore \langle w^*, w^{T+1} \rangle
 $$
 
-so, $$\langle w^*, w^{T+1} \rangle > M \gamma -\textbf{eq(D)}$$
+so,
+
+\begin{equation}
+\langle w^\*, w^{T+1} \rangle > M \gamma \tag{D}
+\end{equation}
 
 Now using cauchy Schwarz inequality
 
@@ -625,12 +636,12 @@ $$
 Squaring both sides
 
 $$
-M^2 \gamma^2 \leq \|w^*\|_2^2 \|w^T+1\|_2^2
+M^2 \gamma^2 \leq \|w^*\|_2^2 \|w^{T+1}\|_2^2
 $$
 
-$$
-\implies M \leq \frac{\|w^*\|_2^2 R^2}{\gamma^2} -\textbf{eq(Z)}
-$$
+\begin{equation}
+\implies M \leq \frac{\lVert w^\*\rVert_2^2 R^2}{\gamma^2} \tag{Z}
+\end{equation}
 
 Assuming $$\|w^*\|$$ and $$R$$ can be controlled we have
 
@@ -642,7 +653,7 @@ ie. Mistakes are inversly proportional to distance of data points from seperatin
 
 $$\textbf{eq(Z)}$$ denote **mistake bound of perceptron**.
 
-As perceptron training depends on mistakes and mistakes are bounded therefore eq(A)training will also take finite time and perceptron will converge eventually.
+As perceptron training depends on mistakes and mistakes are bounded therefore eq(A) training will also take finite time and perceptron will converge eventually.
 
 ### Problems in Perceptron
 
@@ -653,3 +664,7 @@ As perceptron training depends on mistakes and mistakes are bounded therefore eq
 - Perceptron is very simple function while tasks in real world are very complex and connot be solved using it.
 
 > **SUMMARY:** Perceptron was proposed by F. Rosenblatt which was inspired by brain. Perceptron learns optimal weights corresponding to a hyperplane that seperates data into two classes, used for binary classfication. Perceptron prediction rule = $$\langle w, x \rangle > \theta$$. While training perceptron we update perceptron weights to learn the seperating hyperplane. Weights updation rule when mistake occurs = $$w^{t+1} = w^t + x^ty^t$$ . Perceptron will converge in finite steps as mistake bound for perceptron = $$M \leq \frac{\| w \|_2^2R^2}{\gamma^2}$$ as number of mistakes are bounded so training is also bounded and it will converge in some finite steps. Perceptron only works when data is linearly seperable, and is not useful to learn complex boundaries.
+
+## References
+
+- [IE643- Deep Learning theory and practice](https://www.ieor.iitb.ac.in/acad/courses/ie643) in IIT Bombay taught by Prof. P. Balamurugan

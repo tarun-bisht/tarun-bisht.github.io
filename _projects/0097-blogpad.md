@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Blogpad
-category: Package
+category: Packages
 icon: /assets/projects/blogpad/icon.png
 tags: wysiwyg medium-editor wysiwyg-editor wysiwyg-editors wysiwyg-html-editor wysiwyg-js-editor
 comment: true

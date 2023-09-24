@@ -7,7 +7,7 @@ permalink: /projects/
 <div class="portfolio">
     <div class="filters">
         <ul>
-            <li data-category="all">All Categories</li>
+            <li data-category="all" class="active">All Categories</li>
             {% for category in site.projects_categories %}
                 <li data-category="{{ category }}">{{ category }}</li>
             {% endfor %}

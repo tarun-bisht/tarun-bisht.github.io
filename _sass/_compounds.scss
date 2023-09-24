@@ -22,10 +22,14 @@
 
                 &:hover
                 {
-                    color: var(--secondary);
-                    transform: scale(1.1);
+                    color: var(--ternary);
                     cursor: pointer;
                 }
+            }
+
+            .active
+            {
+                color: var(--ternary);
             }
 
             @include break2
@@ -110,7 +114,7 @@
             }
             img
             {
-                opacity: 0.4;
+                opacity: 0.1;
             }
             a
             {
@@ -140,7 +144,7 @@
             }
             img
             {
-                opacity: 0.4;
+                opacity: 0.1;
             }
             a
             {

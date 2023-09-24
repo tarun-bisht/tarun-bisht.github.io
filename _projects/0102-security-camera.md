@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Security Camera
-category: App
+category: AI/ML
 icon: /assets/projects/security-camera/icon.jpg
 tags: object-detection camera surveillance cctv
 comment: true

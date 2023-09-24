@@ -53,8 +53,8 @@ website:
 
 # about section settings
 about:
-  tagline: Aspiring AI Researcher, Developer and Educator
-  description: I am an aspiring AI Researcher, willing to contribute to the advancement of AI. My area of interests for research includes computer vision, deep learning and speech recognition. <br><br>I am also a Physics enthusiasts interested in Astronomy, Quantum Physics and Modern Physics.
+  tagline: Aspiring Researcher, Fan of AI, Space, Physics, Bots and Simulations
+  description: I am deeply interested in Machine Learning (ML), Deep Learning (DL) applications, and Generative AI. I aim to explore the development of solid data representations to enhance the performance and reliability of AI systems with a keen interest in addressing interdisciplinary challenges. <br><br>I am also a Physics enthusiasts interested in Astronomy and Modern Physics.
 
 # social media usernames
 social:
@@ -78,11 +78,13 @@ social:
 
 # project categories worked
 projects_categories:
-  - Game
-  - App
-  - Web
-  - Graphics
-  - Package
+  - Android Apps
+  - AI/ML
+  - Course Projects
+  - Games
+  - Packages
+  - Web Apps
+  - Web Themes
 
 # define collections
 collections:

@@ -1,12 +1,12 @@
 ---
 layout: writing
 title: Wav2Vec2 ASR
-category: App
+category: AI/ML
 icon: /assets/projects/wav2vec2/icon.png
 tags: asr speech-recognition speech-to-text transcribe-audio
 comment: true
 urls:
-    github: https://github.com/tarun-bisht/wav2vec2-asr
+  github: https://github.com/tarun-bisht/wav2vec2-asr
 ---
 
 This project uses wav2vec2 model introduced by facebook AI in their paper [wav2vec 2.0: A Framework for Self-Supervised Learning of Speech Representations
@@ -17,10 +17,12 @@ I have also written a [post](https://www.tarunbisht.com/deep%20learning/2021/06/
 ## Installation
 
 #### Get Started
+
 - Install Python3 or anaconda and install them. For detailed steps follow installation guide for [Python3](https://realpython.com/installing-python/) and [Anaconda](https://docs.anaconda.com/anaconda/install/)
 - Install required packages via pip or conda.
 
 #### Installing via pip
+
 - Download and Install python
 - Create a virtual environment using `python -m venv env_name`
 - enable created environment `env_path\Scripts\activate`
@@ -28,6 +30,7 @@ I have also written a [post](https://www.tarunbisht.com/deep%20learning/2021/06/
 - Install required dependencies `pip install -r requirements.txt`
 
 #### Installing via conda
+
 - Download and install miniconda
 - Create a new virutal environment using `conda create --name env_name python==3.8`
 - enable create environment `conda activate env_name`
@@ -35,10 +38,12 @@ I have also written a [post](https://www.tarunbisht.com/deep%20learning/2021/06/
 - Install required dependencies `pip install -r requirements.txt`
 
 ### Usage Instructions
+
 - Download Github repository
 - Follow [README guide](https://github.com/tarun-bisht/wav2vec2-asr/blob/master/README.md#inferencing) for using the application.
 
 ## Tested Platforms
+
 - native windows 10 ✔
 - windows-10 wsl2 cpu ✔
 - windows-10 wsl2 gpu ✔
