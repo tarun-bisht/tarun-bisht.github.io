@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Digit Recognition
-category: Web Apps
+category: Web-Apps AI/ML
 icon: /assets/projects/digit-recognition/icon.png
 tags: digit-recognition mnist
 comment: true

@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Security Camera
-category: AI/ML
+category: AI/ML Course-Projects Research-Projects
 icon: /assets/projects/security-camera/icon.jpg
 tags: object-detection camera surveillance cctv
 comment: true

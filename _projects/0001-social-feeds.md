@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Social Feeds
-category: Android Apps
+category: Android-Apps
 icon: https://storage.googleapis.com/tarun-bisht.appspot.com/project/social-feeds70129eda5333a570
 tags: social-media lite-browser lite-app
 comment: true

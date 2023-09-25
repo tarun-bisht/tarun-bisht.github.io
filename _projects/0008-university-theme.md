@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: University Theme
-category: Web Themes
+category: Web-Themes
 icon: /assets/projects/university_theme/icon.png
 tags: theme basic-theme minimilistic-theme website-theme
 comment: true

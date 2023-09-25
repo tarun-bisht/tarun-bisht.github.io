@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: R.G. Speech to Text
-category: AI/ML
+category: AI/ML Research-Projects
 icon: /assets/projects/rg-speech-to-text/icon.png
 tags: open-source speech-to-text
 comment: true

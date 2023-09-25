@@ -1,6 +1,6 @@
 ---
 layout: writing
-title: Wav2Vec2 ASR
+title: Speech Recognition
 category: AI/ML
 icon: /assets/projects/wav2vec2/icon.png
 tags: asr speech-recognition speech-to-text transcribe-audio

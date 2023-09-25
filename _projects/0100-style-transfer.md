@@ -1,6 +1,6 @@
 ---
 layout: writing
-title: Style Transfer
+title: Fast Style Transfer
 category: AI/ML
 icon: /assets/projects/style-transfer/icon.jpg
 tags: style-transfer art painting filters deep-learning

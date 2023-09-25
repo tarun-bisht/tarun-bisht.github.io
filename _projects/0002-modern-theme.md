@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Modern Theme
-category: Web Themes
+category: Web-Themes
 icon: /assets/projects/modern-theme/icon.jpg
 tags: modern-theme portfolio-theme
 comment: true

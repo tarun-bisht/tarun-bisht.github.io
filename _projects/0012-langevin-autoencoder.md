@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Langevin Autoencoders
-category: Course Projects
+category: Course-Projects AI/ML Research-Projects
 icon: /assets/projects/LAE/icon.png
 tags: deep-learning machine-learning autoencoders MCMC
 comment: true

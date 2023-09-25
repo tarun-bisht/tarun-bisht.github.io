@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Infinite Theme
-category: Web Themes
+category: Web-Themes
 icon: https://storage.googleapis.com/tarun-bisht.appspot.com/project/logo_inf8788f1ec01738a37
 tags: theme basic-theme minimilistic-theme website-theme
 comment: true

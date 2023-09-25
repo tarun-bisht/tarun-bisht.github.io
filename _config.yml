@@ -78,13 +78,14 @@ social:
 
 # project categories worked
 projects_categories:
-  - Android Apps
+  - Android-Apps
   - AI/ML
-  - Course Projects
+  - Course-Projects
   - Games
   - Packages
-  - Web Apps
-  - Web Themes
+  - Research-Projects
+  - Web-Apps
+  - Web-Themes
 
 # define collections
 collections:

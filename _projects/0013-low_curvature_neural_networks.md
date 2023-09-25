@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Low Curvature Neural Nets
-category: Course Projects
+category: Course-Projects AI/ML Research-Projects
 icon: /assets/projects/LCNN/icon.png
 tags: deep-learning machine-learning autoencoders MCMC
 comment: true

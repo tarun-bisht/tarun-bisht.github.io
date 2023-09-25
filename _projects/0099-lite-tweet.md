@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Lite Tweet
-category: Android Apps
+category: Android-Apps
 icon: https://storage.googleapis.com/tarun-bisht.appspot.com/project/twitter-lite3777169d23d2d80b
 tags: lite-app surf-twitter
 comment: true

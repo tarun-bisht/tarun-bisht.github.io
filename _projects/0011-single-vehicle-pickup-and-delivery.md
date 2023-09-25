@@ -1,7 +1,7 @@
 ---
 layout: writing
 title: Pickup & Delivery
-category: Course Projects
+category: Course-Projects Research-Projects
 icon: /assets/projects/1-PDTSP/icon.png
 tags: integer-programming optimization TSP pickup-and-delivery cbc
 comment: true
@@ -74,8 +74,8 @@ $$0 \leq f_{i,j} \leq Qx_{i,j}, \ \ \forall i \in E \ \ \forall (i,j)\in \{ 1, 2
 
 ## Other Links
 
-- [Project Report]({% link /assets/projects/1-PDTSP/project_report.pdf %}){:target="_blank"}
-- [Project PPT]({% link /assets/projects/1-PDTSP/PPT.pdf %}){:target="_blank"}
+- [Project Report]({% link /assets/projects/1-PDTSP/project_report.pdf %}){:target="\_blank"}
+- [Project PPT]({% link /assets/projects/1-PDTSP/PPT.pdf %}){:target="\_blank"}
 
 ## References
 

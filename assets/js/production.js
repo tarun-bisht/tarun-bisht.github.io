@@ -195,7 +195,7 @@ const filterCategory = function (objects, category) {
     showAll(objs);
   } else {
     const filtered = objs.filter(function (object) {
-      return object.getAttribute("category") == category;
+      return object.getAttribute("category").split(" ").includes(category);
     });
     showAll(filtered);
   }
