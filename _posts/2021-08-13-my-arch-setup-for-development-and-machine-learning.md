@@ -226,7 +226,14 @@ Currently we need to run docker commands with sudo and root password to solve th
 {% highlight bash linenos %}
 sudo usermod -aG docker $USER
 {% endhighlight %}
-After this command reboot the machine.
+Install Docker compose
+{% highlight bash linenos %}
+sudo pacman -S docker-compose
+{% endhighlight %}
+After this command reboot the machine. After rebooting check if docker runs succesfully by running docker hello world.
+{% highlight bash linenos %}
+docker run hello-world
+{% endhighlight %}
 
 ## Jekyll setup
 
