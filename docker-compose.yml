@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  web:
+    container_name: jekyll-site
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/app
+    working_dir: /usr/app
+    ports:
+      - 4000:4000
+      - 35729:35729
+    command: bundle exec jekyll serve --livereload --host 0.0.0.0

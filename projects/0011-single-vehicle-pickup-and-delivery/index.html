@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="color-scheme" content="dark light">
+
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<script src="/assets/js/dark_mode.min.js"></script>
+	<link rel="icon" href="/assets/images/favicon.ico">
+	<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Pickup &amp; Delivery | Tarun Bisht</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Pickup &amp; Delivery" />
+<meta name="author" content="Tarun Bisht" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="This repository contains code to find solution of Single Vehicle Pickup and Delivery travelling salesman problem (1-PDTSP) using integer programming for any list of cities. 1-PDTSP problem is, given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city also fulfilling demands of each node.? My teammates in this project are Hritiz Gogoi and Jyoti." />
+<meta property="og:description" content="This repository contains code to find solution of Single Vehicle Pickup and Delivery travelling salesman problem (1-PDTSP) using integer programming for any list of cities. 1-PDTSP problem is, given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city also fulfilling demands of each node.? My teammates in this project are Hritiz Gogoi and Jyoti." />
+<link rel="canonical" href="https://tarunbisht.com/projects/0011-single-vehicle-pickup-and-delivery/" />
+<meta property="og:url" content="https://tarunbisht.com/projects/0011-single-vehicle-pickup-and-delivery/" />
+<meta property="og:site_name" content="Tarun Bisht" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-02-18T09:30:58+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pickup &amp; Delivery" />
+<meta name="twitter:site" content="@tarunresearches" />
+<meta name="twitter:creator" content="@Tarun Bisht" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"Pickup &amp; Delivery","dateModified":"2025-02-18T09:30:58+00:00","datePublished":"2025-02-18T09:30:58+00:00","description":"This repository contains code to find solution of Single Vehicle Pickup and Delivery travelling salesman problem (1-PDTSP) using integer programming for any list of cities. 1-PDTSP problem is, given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city also fulfilling demands of each node.? My teammates in this project are Hritiz Gogoi and Jyoti.","url":"https://tarunbisht.com/projects/0011-single-vehicle-pickup-and-delivery/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/projects/0011-single-vehicle-pickup-and-delivery/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+	
+</head>
+<body>
+    
+    <section class="writing-header">
+	<div class="header">
+		<nav>
+	<div class="logo"></div>
+	<div class="menu-btn">
+		<div class="line1"></div>
+		<div class="line2"></div>
+		<div class="line3"></div>
+	</div>
+    <ul class="menu">
+        <li><a href="/"> Home</a></li>
+        <li><a href="/about/"> About</a></li>
+        <li><a href="/blogs/"> Blogs</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/cv/">CV</a></li>
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/contact/"> Contact</a></li>
+        <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
+	</ul>
+</nav>
+	</div>
+</section>
+
+<section class="writing-body">
+	<div class="container">
+    	<div class="markdown-html">
+			<h1 class="headline">Pickup & Delivery</h1>
+            <p>This repository contains code to find solution of Single Vehicle Pickup and Delivery travelling salesman problem (1-PDTSP) using integer programming for any list of cities. 1-PDTSP problem is, given a list of cities and the distances between each pair of cities, what is the shortest possible route that visits each city exactly once and returns to the origin city also fulfilling demands of each node.? My teammates in this project are <a href="https://www.ieor.iitb.ac.in/students/hritizgogoi">Hritiz Gogoi</a> and Jyoti.</p>
+
+<h2 id="1-pdtsp-milp-formulation">1-PDTSP MILP Formulation</h2>
+
+<p>Let variable \(x_{i,j}\) is a binary variable denoting if edge connecting \(i, j\) is part of optimal solution \((1)\) or not \((0)\). Number of these variables is equal to total number of edges.</p>
+
+\[x =
+\begin{cases}
+1 &amp;\text{if edge } (i,j) \text{ is part of optimal solution} \\
+0 &amp;\text{if edge } (i,j) \text{ is not part of optimal solution}
+\end{cases}\]
+
+<p>Another variable \(u\) will track edge number, it starts from \(1\) and goes till number of nodes. Number of these variables is equal to total number of nodes.</p>
+
+<p>Let \(\lvert N \rvert\) denotes total number of nodes and \(\vert E \vert\) denotes total number of edges.</p>
+
+\[u \in {1, 2, 3, ...., |N|}\]
+
+<p>Let \(d_{i,j}\) denote distance between cities \(i\) and \(j\)</p>
+
+<h4 id="model-formulation">Model Formulation</h4>
+
+\[min\ \sum_{i=1}^{|E|}\sum_{j=1}^{|E|} d_{i,j}x_{i,j}\]
+
+\[s.t. \ \ \sum*{i=1}^{n}x*{i,k} = 1 \ \ \forall k\in \{ 1, 2, 3....,|E| \}, i \neq j \tag{1}\]
+
+\[\sum*{j=1}^{n}x*{k,j} = 1 \ \ \forall k\in \{ 1, 2, 3....,|E| \}, i \neq j \tag{2}\]
+
+\[u_1 = 1 \tag{3}\]
+
+\[u*i - u_j + 1 \leq (n-1)(1-x*{i,j}) \ \ \forall (i,j)\in \{ 1, 2, 3....,|E| \}^2, i \neq j \tag{4}\]
+
+\[u_i \ge 2 \ \ \forall i\in \{ 2, 3....,|E| \} \tag{5}\]
+
+\[u_i \le |N| \ \ \forall i\in \{ 2, 3....,|E| \} \tag{6}\]
+
+\[\sum_{i=1}^{n}f_{i,k} - \sum_{j=1}^{n}f_{k,j} = q_i \ \ \forall k\in \{ 1, 2, 3....,|E| \}, i \neq j \tag{7}\]
+
+\[0 \leq f_{i,j} \leq Qx_{i,j}, \ \ \forall i \in E \ \ \forall (i,j)\in \{ 1, 2, 3....,|E| \}^2 \tag{8}\]
+
+<ul>
+  <li>\(constraint(1)\) denotes from each node there is one incoming edge.</li>
+  <li>\(constraint(2)\) denotes from each node there is one outgoing edge.</li>
+  <li>\(constraint(3)\) denotes when \(x_{i,j} = 1\) then \(u_j = u_i + 1\) ie. \(j^{th}\) edge will be labelled \(1\) more than previous label \((i^{th})\) label if edge \(x_{i,j}\) is selected. This constraint denotes ordering of each node in optimal solution. This constraint is not considered for last edge of path which connect last node with first node to create a cycle.</li>
+  <li>\(constraint(4)\) denotes first node ordering is always \(1\)</li>
+  <li>\(constraint(5)\) and \(constraint(6)\) are bound constraints on \(u\).</li>
+  <li>\(constraint(7)\) and \(constraint(8)\) are demand constraints and bound constraints on \(f\) respectively.</li>
+</ul>
+
+<h2 id="features">Features</h2>
+
+<ul>
+  <li>Provide method to get city details, latitude and longitude information from <a href="https://nominatim.openstreetmap.org">openstreetmap API</a> using which distance between these cities is calculated using <a href="https://www.geeksforgeeks.org/haversine-formula-to-find-distance-between-two-points-on-a-sphere/">Haversine formula</a>.</li>
+  <li>Provide a formulation of TSP using <a href="http://www.pyomo.org/">pyomo</a> that can be solved by any MILP solver supported by pyomo.</li>
+</ul>
+
+<h2 id="results-on-34-locations-points-of-mumbai-india">Results on 34 locations points of Mumbai India</h2>
+
+<ul>
+  <li><a href="https://tarun-bisht.github.io/IE716-Team-Dantzig/data/map.html">Demand 1</a></li>
+  <li><a href="https://tarun-bisht.github.io/IE716-Team-Dantzig/data/map1.html">Demand 2</a></li>
+  <li><a href="https://tarun-bisht.github.io/IE716-Team-Dantzig/data/map2.html">Demand 3</a></li>
+</ul>
+
+<h2 id="other-links">Other Links</h2>
+
+<ul>
+  <li><a href="/assets/projects/1-PDTSP/project_report.pdf" target="\_blank">Project Report</a></li>
+  <li><a href="/assets/projects/1-PDTSP/PPT.pdf" target="\_blank">Project PPT</a></li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li>
+    <p>Hernández-Pérez and Salazar-González, 2003 Hernández-Pérez, H. and Salazar-González, J.-J. (2003). The one-commodity pickup-and-delivery travelling salesman problem. In Combinatorial Optimization—Eureka, You Shrink! Papers Dedicated to Jack Edmonds 5th International Workshop Aussois, France, March 5–9, 2001 Revised Papers, pages 89–104. Springer.</p>
+  </li>
+  <li>
+    <p>Mosheiov, 1994 Mosheiov, G. (1994). The travelling salesman problem with pick-up and delivery. European Journal of Operational Research, 79(2):299–310.</p>
+  </li>
+  <li>
+    <p>Stein, 1978 Stein, D. M. (1978). Scheduling dial-a-ride transportation systems. Transportation Science, 12(3):232–249.</p>
+  </li>
+</ul>
+
+		</div>
+		<div class="post-tags">
+			<ul>
+				
+					<li>integer-programming</li>
+				
+					<li>optimization</li>
+				
+					<li>TSP</li>
+				
+					<li>pickup-and-delivery</li>
+				
+					<li>cbc</li>
+				
+			</ul>
+		</div>
+		
+		<div class="col-4 mt-3">
+			
+			
+			
+				<a class="link-button" target="_blank" href="https://github.com/tarun-bisht/IE716-Team-Dantzig">Github Source <i class="fab fa-github"></i></a>
+			
+			
+			
+		</div>
+		
+	</div>
+	<div class="container">
+		
+	</div>
+</section>
+
+    <section class="social">
+    <ul animation="fade-down" animation-time="1s">
+        <li><a target="_blank" href="https://twitter.com/tarunresearches"><i class="fab fa-twitter"></i></a></li>
+        <li><a target="_blank" href="https://www.instagram.com/tarunresearches"><i class="fab fa-instagram"></i></a></li>
+        <li><a target="_blank" href="https://www.linkedin.com/in/tarunbisht"><i class="fab fa-linkedin-in"></i></a></li>
+        <li><a target="_blank" href="https://www.kaggle.com/tarunbisht11"><i class="fab fa-kaggle"></i></a></li>
+        <li><a target="_blank" href="https://github.com/tarun-bisht"><i class="fab fa-github"></i></a></li>
+        <li><a target="_blank" href="https://medium.com/@iamtarunbisht"><i class="fab fa-medium-m"></i></a></li>
+        <li><a target="_blank" href="https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA"><i class="fab fa-youtube"></i></a></li>
+    </ul>
+</section>
+    <footer>
+  <div class="image"></div>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/blogs/"> Blogs</a></li>
+      <li><a href="/projects/">Projects</a></li>
+      <li><a href="/resume/">Resume</a></li>
+      <li><a href="/cv/">Academic CV</a></li>
+      <li><a href="/contact/">Contact</a></li>
+      
+    </ul>
+  </nav>
+  <div class="copyright">
+    Copyright © 2025 All rights reserved
+  </div>
+</footer>
+
+    
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<script src="/assets/js/production.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</body>
+</html>

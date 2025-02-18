@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="color-scheme" content="dark light">
+
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<script src="/assets/js/dark_mode.min.js"></script>
+	<link rel="icon" href="/assets/images/favicon.ico">
+	<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Langevin Autoencoders | Tarun Bisht</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Langevin Autoencoders" />
+<meta name="author" content="Tarun Bisht" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="This project is based on the paper Langevin Autoencoders for Learning Deep Latent Variable Models by Shohei Taniguchi, Yusuke Iwasawa, Wataru Kumagai, Yutaka Matsuo" />
+<meta property="og:description" content="This project is based on the paper Langevin Autoencoders for Learning Deep Latent Variable Models by Shohei Taniguchi, Yusuke Iwasawa, Wataru Kumagai, Yutaka Matsuo" />
+<link rel="canonical" href="https://tarunbisht.com/projects/0012-langevin-autoencoder/" />
+<meta property="og:url" content="https://tarunbisht.com/projects/0012-langevin-autoencoder/" />
+<meta property="og:site_name" content="Tarun Bisht" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-02-18T09:30:58+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Langevin Autoencoders" />
+<meta name="twitter:site" content="@tarunresearches" />
+<meta name="twitter:creator" content="@Tarun Bisht" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"Langevin Autoencoders","dateModified":"2025-02-18T09:30:58+00:00","datePublished":"2025-02-18T09:30:58+00:00","description":"This project is based on the paper Langevin Autoencoders for Learning Deep Latent Variable Models by Shohei Taniguchi, Yusuke Iwasawa, Wataru Kumagai, Yutaka Matsuo","url":"https://tarunbisht.com/projects/0012-langevin-autoencoder/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/projects/0012-langevin-autoencoder/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+	
+</head>
+<body>
+    
+    <section class="writing-header">
+	<div class="header">
+		<nav>
+	<div class="logo"></div>
+	<div class="menu-btn">
+		<div class="line1"></div>
+		<div class="line2"></div>
+		<div class="line3"></div>
+	</div>
+    <ul class="menu">
+        <li><a href="/"> Home</a></li>
+        <li><a href="/about/"> About</a></li>
+        <li><a href="/blogs/"> Blogs</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/cv/">CV</a></li>
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/contact/"> Contact</a></li>
+        <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
+	</ul>
+</nav>
+	</div>
+</section>
+
+<section class="writing-body">
+	<div class="container">
+    	<div class="markdown-html">
+			<h1 class="headline">Langevin Autoencoders</h1>
+            <p>This project is based on the paper <a href="https://arxiv.org/abs/2209.07036" target="\_blank">Langevin Autoencoders for Learning Deep Latent Variable Models</a> by <em>Shohei Taniguchi, Yusuke Iwasawa, Wataru Kumagai, Yutaka Matsuo</em></p>
+
+<p>This project report aims to train a deep latent variable model using Markov Chain Monte Carlo (MCMC) by simulating a stochastic differential equation called Langevin dynamics. This project studies Langevin Autoencoder (LAE), which uses Amortized Langevin dynamics (ALD) that replaces datapoint-wise MCMC iteration with updates on an encoder that maps data points into latent variables. Using the MNIST dataset, we compare the generation capability and latent space of LAE and Variational Autoencoder (VAE). We also benchmark different parameters of LAE and their effect. We then proposed a new training algorithm based on deep latent variable models (DLVMs) that incorporates DLVM while training the model to generate similar data samples. We benchmarked our proposed training method and show that this training procedure is more robust towards adversarial attacks than normal training.</p>
+
+<h2 id="experiments">Experiments</h2>
+
+<p>(1) evaluate the generation capability of LAE and compare it to VAE</p>
+
+<p>(2) compare the latent space of VAE and LAE</p>
+
+<p>(3) evaluate the representation learning capability of LAE and compare it 5with VAE</p>
+
+<p>(4) evaluate the effectiveness of our proposed training method</p>
+
+<p>(5) evaluate whether our proposed training method is robust toward adversarial attacks</p>
+
+<p>(6) generation of samples from interpolation of latent space.</p>
+
+<p>These experiments are primarily conducted on linear encoder and decoder using the MNIST datasets and the PyTorch torch distributions framework.</p>
+
+<h2 id="other-links">Other Links</h2>
+
+<ul>
+  <li><a href="/assets/projects/LAE/final_report.pdf" target="\_blank">Project Report</a></li>
+  <li><a href="/assets/projects/LAE/PPT_part1.pdf" target="\_blank">Project PPT Part 1</a></li>
+  <li><a href="/assets/projects/LAE/PPT_part2.pdf" target="\_blank">Project PPT Part 2</a></li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li>Pytorch distributions, 2023.</li>
+  <li>Shohei Taniguchi, Yusuke Iwasawa, Wataru Kumagai, and Yutaka Matsuo. Langevin autoencoders for learning deep latent variable models, 2022.</li>
+</ul>
+
+		</div>
+		<div class="post-tags">
+			<ul>
+				
+					<li>deep-learning</li>
+				
+					<li>machine-learning</li>
+				
+					<li>autoencoders</li>
+				
+					<li>MCMC</li>
+				
+			</ul>
+		</div>
+		
+		<div class="col-4 mt-3">
+			
+			
+			
+				<a class="link-button" target="_blank" href="https://github.com/tarun-bisht/IE506-Project-2023">Github Source <i class="fab fa-github"></i></a>
+			
+			
+			
+		</div>
+		
+	</div>
+	<div class="container">
+		
+	</div>
+</section>
+
+    <section class="social">
+    <ul animation="fade-down" animation-time="1s">
+        <li><a target="_blank" href="https://twitter.com/tarunresearches"><i class="fab fa-twitter"></i></a></li>
+        <li><a target="_blank" href="https://www.instagram.com/tarunresearches"><i class="fab fa-instagram"></i></a></li>
+        <li><a target="_blank" href="https://www.linkedin.com/in/tarunbisht"><i class="fab fa-linkedin-in"></i></a></li>
+        <li><a target="_blank" href="https://www.kaggle.com/tarunbisht11"><i class="fab fa-kaggle"></i></a></li>
+        <li><a target="_blank" href="https://github.com/tarun-bisht"><i class="fab fa-github"></i></a></li>
+        <li><a target="_blank" href="https://medium.com/@iamtarunbisht"><i class="fab fa-medium-m"></i></a></li>
+        <li><a target="_blank" href="https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA"><i class="fab fa-youtube"></i></a></li>
+    </ul>
+</section>
+    <footer>
+  <div class="image"></div>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/blogs/"> Blogs</a></li>
+      <li><a href="/projects/">Projects</a></li>
+      <li><a href="/resume/">Resume</a></li>
+      <li><a href="/cv/">Academic CV</a></li>
+      <li><a href="/contact/">Contact</a></li>
+      
+    </ul>
+  </nav>
+  <div class="copyright">
+    Copyright © 2025 All rights reserved
+  </div>
+</footer>
+
+    
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<script src="/assets/js/production.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</body>
+</html>

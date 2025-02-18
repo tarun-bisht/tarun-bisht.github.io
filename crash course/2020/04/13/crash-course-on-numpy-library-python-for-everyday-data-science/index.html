@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="color-scheme" content="dark light">
+
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<script src="/assets/js/dark_mode.min.js"></script>
+	<link rel="icon" href="/assets/images/favicon.ico">
+	<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>crash course On numpy library python for everyday data science | Tarun Bisht</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="crash course On numpy library python for everyday data science" />
+<meta name="author" content="Tarun Bisht" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="NumPy is a library for the Python programming language, adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays. This post acts as a cheat-sheet for using the NumPy library in python. It contains some important functions and submodules of the NumPy library which are used day to day in data science and machine learning." />
+<meta property="og:description" content="NumPy is a library for the Python programming language, adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays. This post acts as a cheat-sheet for using the NumPy library in python. It contains some important functions and submodules of the NumPy library which are used day to day in data science and machine learning." />
+<link rel="canonical" href="https://tarunbisht.com/crash%20course/2020/04/13/crash-course-on-numpy-library-python-for-everyday-data-science/" />
+<meta property="og:url" content="https://tarunbisht.com/crash%20course/2020/04/13/crash-course-on-numpy-library-python-for-everyday-data-science/" />
+<meta property="og:site_name" content="Tarun Bisht" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-13T17:12:50+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="crash course On numpy library python for everyday data science" />
+<meta name="twitter:site" content="@tarunresearches" />
+<meta name="twitter:creator" content="@Tarun Bisht" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"crash course On numpy library python for everyday data science","dateModified":"2020-04-13T17:12:50+00:00","datePublished":"2020-04-13T17:12:50+00:00","description":"NumPy is a library for the Python programming language, adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays. This post acts as a cheat-sheet for using the NumPy library in python. It contains some important functions and submodules of the NumPy library which are used day to day in data science and machine learning.","url":"https://tarunbisht.com/crash%20course/2020/04/13/crash-course-on-numpy-library-python-for-everyday-data-science/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/crash%20course/2020/04/13/crash-course-on-numpy-library-python-for-everyday-data-science/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+	
+</head>
+<body>
+    
+    <section class="writing-header">
+	<div class="header">
+		<nav>
+	<div class="logo"></div>
+	<div class="menu-btn">
+		<div class="line1"></div>
+		<div class="line2"></div>
+		<div class="line3"></div>
+	</div>
+    <ul class="menu">
+        <li><a href="/"> Home</a></li>
+        <li><a href="/about/"> About</a></li>
+        <li><a href="/blogs/"> Blogs</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/cv/">CV</a></li>
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/contact/"> Contact</a></li>
+        <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
+	</ul>
+</nav>
+	</div>
+</section>
+
+<section class="writing-body">
+	<div class="container">
+    	<div class="markdown-html">
+			<h1 class="headline">crash course On numpy library python for everyday data science</h1>
+            <p>NumPy is a library for the Python programming language, adding support for large, multi-dimensional arrays and matrices, along with a large collection of high-level mathematical functions to operate on these arrays. This post acts as a cheat-sheet for using the NumPy library in python. It contains some important functions and submodules of the NumPy library which are used day to day in data science and machine learning.
+<!-- more --></p>
+
+<p>Merits of numpy over python list: –</p>
+
+<ol>
+  <li>Occupy less memory compare to list</li>
+  <li>Fast compared to the list</li>
+  <li>Convenient to use.</li>
+</ol>
+
+<h3 id="installing-numpy">Installing NumPy</h3>
+
+<p>An easy way to install numpy is via pip. Create a virtual environment and activate it or activate an old virtual environment and run command to install</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>pip <span class="nb">install </span>numpy
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="importing-library">Importing library</h3>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">numpy</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>numpy can be imported by an alias name np or any which you like</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="creating-numpy-arrays">Creating NumPy arrays</h3>
+
+<h4 id="array">array</h4>
+
+<p>syntax: <em>np.array(list_of_elements)</em></p>
+
+<p>Creates a numpy array from the list passed as parameter</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">var</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[2 3]
+ [3 2]]
+</code></pre></div></div>
+
+<h4 id="arange">arange</h4>
+
+<p>syntax:</p>
+
+<ul>
+  <li><em>np.arange(number_of_iter)</em></li>
+  <li><em>np.arange(start,stop,step,dtype)</em></li>
+</ul>
+
+<p>Same as range() which creates an array of numbers between the range specified</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">var</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+ 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+ 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71
+ 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
+ 96 97 98 99]
+</code></pre></div></div>
+
+<h4 id="diag">diag</h4>
+
+<p>syntax: <em>np.diag(list_of_values)</em></p>
+
+<p>Creates a diagonal array of values provided in list send as parameter.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">var</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">diag</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[0 0 0 0]
+ [0 1 0 0]
+ [0 0 2 0]
+ [0 0 0 3]]
+</code></pre></div></div>
+
+<h4 id="linspace">linspace</h4>
+
+<p>syntax: <em>np.linspace(value1,value2,number_of_elements)</em>
+It will return a numpy array which contains numbers of elements passed in number_of_elements parameter whose values is between <em>value1</em> and <em>value2</em> which are at equal interval.</p>
+
+<p>Say let <em>value1 = 1</em> and <em>value2 = 3</em> and we need 5 elements then we get</p>
+
+<p>[1, 1.5, 2, 2.5, 3]</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">var</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[1.   1.25 1.5  1.75 2.  ]
+</code></pre></div></div>
+
+<h4 id="randomrandn">random.randn</h4>
+
+<p>syntax: <em>np.random.randn(dimensions)</em></p>
+
+<p>Generates an array with random numbers</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">var</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[[ 0.62417698 -0.53171972 -0.25723222]
+  [ 1.36357605 -0.43352711  0.19280647]]
+
+ [[ 0.36747904  1.20299115  0.95669774]
+  [ 0.13572886  0.4454223  -1.07577104]]]
+</code></pre></div></div>
+
+<h4 id="randomnormal">random.normal</h4>
+
+<p>syntax: <em>np.random.normal(size=(dimensions))</em></p>
+
+<p>Generates an array with random numbers from a normal (Gaussian) distribution</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">var</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[ 0.09112449  0.9688921 ]
+ [ 1.09627332 -1.0526527 ]]
+</code></pre></div></div>
+
+<h4 id="zeros">zeros</h4>
+
+<p>syntax: <em>np.zeros((dimension))</em></p>
+
+<p>Generates a zero or null array with all elements = 0 of dimension specified.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">var</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[0. 0.]
+ [0. 0.]]
+</code></pre></div></div>
+
+<h4 id="ones">ones</h4>
+
+<p>syntax: <em>np.ones((dimension))</em></p>
+
+<p>Generates a array with all elements = 1 of dimension specified.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">var</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[1. 1.]
+ [1. 1.]]
+</code></pre></div></div>
+
+<h4 id="identity">identity</h4>
+
+<p>syntax: <em>np.identity(dimension)</em></p>
+
+<p>Generates an identity matrix with dimension specified</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">var</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[1. 0.]
+ [0. 1.]]
+</code></pre></div></div>
+
+<h3 id="important-properties-of-numpy-array">Important properties of NumPy array</h3>
+
+<p>For reference let</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">var</span><span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[2 3]
+ [4 5]]
+</code></pre></div></div>
+
+<h4 id="ndim">ndim</h4>
+
+<p>gives out the dimension of the array</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">var</span><span class="p">.</span><span class="n">ndim</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>2
+</code></pre></div></div>
+
+<h4 id="itemsize">itemsize</h4>
+
+<p>Gives out number of elements in array</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">var</span><span class="p">.</span><span class="n">itemsize</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>4
+</code></pre></div></div>
+
+<h4 id="dtype">dtype</h4>
+
+<p>gives out data type of elements</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">var</span><span class="p">.</span><span class="n">dtype</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>dtype('int32')
+</code></pre></div></div>
+
+<h4 id="size">size</h4>
+
+<p>gives out the size of array ie. Number of elements in the array</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">var</span><span class="p">.</span><span class="n">size</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>4
+</code></pre></div></div>
+
+<h4 id="shape">shape</h4>
+
+<p>gives out the dimension of array in the form of tuple</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">var</span><span class="p">.</span><span class="n">shape</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>(2, 2)
+</code></pre></div></div>
+
+<h4 id="reshape">reshape</h4>
+
+<p>reshape array dimensions to the desired one if the given shape is compatible. Make sure the product of dimension before and after is the same. ie.. If we have an array of dimension (2,2) in this case product of dimension in 2x2=4 so it can be reshaped into (1,4) since product of dimension is still 2X1=4</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">a</span><span class="o">=</span><span class="n">var</span><span class="p">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[2 3 4 5]]
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">a</span><span class="o">=</span><span class="n">var</span><span class="p">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>---------------------------------------------------------------------------
+
+ValueError                                Traceback (most recent call last)
+
+<span class="nt">&lt;ipython-input-20-62745c373b92&gt;</span> in <span class="nt">&lt;module&gt;</span>
+----&gt; 1 a=var.reshape((1,2))
+      2 print(a)
+
+
+ValueError: cannot reshape array of size 4 into shape (1,2)
+</code></pre></div></div>
+
+<h3 id="maths-functions-in-numpy">Maths Functions in NumPy</h3>
+
+<ul>
+  <li>
+    <h4 id="sqrt">sqrt</h4>
+  </li>
+</ul>
+
+<p>Find square of each element present in numpy array</p>
+
+<ul>
+  <li>
+    <h4 id="sin">sin</h4>
+  </li>
+</ul>
+
+<p>finds sine value of all the elements of the array</p>
+
+<ul>
+  <li>
+    <h4 id="cos">cos</h4>
+  </li>
+</ul>
+
+<p>finds cosine value of all the elements of the array</p>
+
+<ul>
+  <li>
+    <h4 id="tan">tan</h4>
+  </li>
+</ul>
+
+<p>finds the tangent value of all the elements of the array</p>
+
+<ul>
+  <li>
+    <h4 id="log">log</h4>
+  </li>
+</ul>
+
+<p>finds log value of all the elements of the array</p>
+
+<ul>
+  <li>
+    <h4 id="log10">log10</h4>
+  </li>
+</ul>
+
+<p>finds log base 10 value of all the elements of the array</p>
+
+<ul>
+  <li>
+    <h4 id="exponent">exponent</h4>
+  </li>
+</ul>
+
+<p>finds exponents (e raise to the power) value of all the elements of the array</p>
+
+<ul>
+  <li>
+    <h4 id="standard-deviation">standard deviation</h4>
+  </li>
+</ul>
+
+<p>return standard deviation of elements of the array</p>
+
+<ul>
+  <li>
+    <h4 id="mean">mean</h4>
+  </li>
+</ul>
+
+<p>return mean of elements of the array</p>
+
+<ul>
+  <li>
+    <h4 id="variance">variance</h4>
+  </li>
+</ul>
+
+<p>return variance of elements of the array</p>
+
+<ul>
+  <li>
+    <h4 id="maximum">maximum</h4>
+  </li>
+</ul>
+
+<p>return max value in the array from axis specified</p>
+
+<ul>
+  <li>
+    <h4 id="sum">sum</h4>
+  </li>
+</ul>
+
+<p>return sum of all elements of numpy array from the axis specified</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[1.41421356 1.73205081]
+ [2.         2.23606798]]
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">sin</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[ 0.90929743  0.14112001]
+ [-0.7568025  -0.95892427]]
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">cos</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[-0.41614684 -0.9899925 ]
+ [-0.65364362  0.28366219]]
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">tan</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[-2.18503986 -0.14254654]
+ [ 1.15782128 -3.38051501]]
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[0.69314718 1.09861229]
+ [1.38629436 1.60943791]]
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">log10</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[0.30103    0.47712125]
+ [0.60205999 0.69897   ]]
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">exp</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[  7.3890561   20.08553692]
+ [ 54.59815003 148.4131591 ]]
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>1.118033988749895
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>3.5
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">var</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>1.25
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">max</span><span class="p">(</span><span class="n">var</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="bp">None</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>5
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">var</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="bp">None</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>14
+</code></pre></div></div>
+
+<h3 id="numpy-operations-functions">NumPy Operations Functions</h3>
+
+<h4 id="vstack">vstack</h4>
+
+<p>syntax: <em>np.vstack((arrays_to_stack_verical))</em></p>
+
+<p>stacks vertically all the arrays send in parameter</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">a</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">var</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">vertical</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">var</span><span class="p">,</span><span class="n">a</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">vertical</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[2. 3.]
+ [4. 5.]
+ [0. 0.]
+ [0. 0.]]
+</code></pre></div></div>
+
+<h4 id="hstack">hstack</h4>
+
+<p>syntax: <em>np.hstack((arrays_to_horizontal_stack))</em></p>
+
+<p>horizontal stacks all the arrays send in parameter</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">a</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">var</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">horizontal</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">var</span><span class="p">,</span><span class="n">a</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">horizontal</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[2. 3. 0. 0.]
+ [4. 5. 0. 0.]]
+</code></pre></div></div>
+
+<h4 id="ravel">ravel</h4>
+
+<p>syntax <em>np.ravel()</em></p>
+
+<p>flats out numpy array creating just a single row</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">flat</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">flat</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[2 3 4 5]
+</code></pre></div></div>
+
+<h4 id="dot">dot</h4>
+
+<p>syntax: <em>np.dot(array1,array2)</em></p>
+
+<p>find dot product of both arrays sends in the parameter.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">a</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">dot_product</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">var</span><span class="p">,</span><span class="n">a</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">dot_product</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>[[21 12]
+ [37 22]]
+</code></pre></div></div>
+
+<h4 id="transpose">transpose</h4>
+
+<p>syntax: <em>np.transpose(array)</em></p>
+
+<p>finds the transpose of the array specified</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">np</span><span class="p">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>array([[2, 4],
+       [3, 5]])
+</code></pre></div></div>
+
+<h4 id="linalginv">linalg.inv</h4>
+
+<p>syntax: <em>np.linalg.inv(array)</em></p>
+
+<p>finds the inverse of array send in parameter</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">inv</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>array([[-2.5,  1.5],
+       [ 2. , -1. ]])
+</code></pre></div></div>
+
+<h4 id="linalgdet">linalg.det</h4>
+
+<p>syntax: <em>np.linalg.det(array)</em></p>
+
+<p>returns determinant of array send in parameter</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">np</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">det</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>-2.0
+</code></pre></div></div>
+
+<p>So thats what you needed to get started for everyday data science work. There are lot of other features but these can be learned as you progress your journey.
+All the Best !!!</p>
+
+<p><a href="https://github.com/tarun-bisht/blogs-notebooks/tree/master/numpy-crash-course">IPython Notebook Link</a></p>
+
+<h3 id="references">References</h3>
+
+<p><a href="https://docs.scipy.org/doc/numpy/reference/">numpy docs</a></p>
+
+		</div>
+		<div class="post-tags">
+			<ul>
+				
+					<li>beginner</li>
+				
+					<li>python</li>
+				
+			</ul>
+		</div>
+		
+	</div>
+	<div class="container">
+		
+	</div>
+</section>
+
+    <section class="social">
+    <ul animation="fade-down" animation-time="1s">
+        <li><a target="_blank" href="https://twitter.com/tarunresearches"><i class="fab fa-twitter"></i></a></li>
+        <li><a target="_blank" href="https://www.instagram.com/tarunresearches"><i class="fab fa-instagram"></i></a></li>
+        <li><a target="_blank" href="https://www.linkedin.com/in/tarunbisht"><i class="fab fa-linkedin-in"></i></a></li>
+        <li><a target="_blank" href="https://www.kaggle.com/tarunbisht11"><i class="fab fa-kaggle"></i></a></li>
+        <li><a target="_blank" href="https://github.com/tarun-bisht"><i class="fab fa-github"></i></a></li>
+        <li><a target="_blank" href="https://medium.com/@iamtarunbisht"><i class="fab fa-medium-m"></i></a></li>
+        <li><a target="_blank" href="https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA"><i class="fab fa-youtube"></i></a></li>
+    </ul>
+</section>
+    <footer>
+  <div class="image"></div>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/blogs/"> Blogs</a></li>
+      <li><a href="/projects/">Projects</a></li>
+      <li><a href="/resume/">Resume</a></li>
+      <li><a href="/cv/">Academic CV</a></li>
+      <li><a href="/contact/">Contact</a></li>
+      
+    </ul>
+  </nav>
+  <div class="copyright">
+    Copyright © 2025 All rights reserved
+  </div>
+</footer>
+
+    
+
+<script src="/assets/js/production.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</body>
+</html>

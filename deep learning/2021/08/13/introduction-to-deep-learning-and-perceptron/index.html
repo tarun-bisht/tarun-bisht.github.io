@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="color-scheme" content="dark light">
+
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<script src="/assets/js/dark_mode.min.js"></script>
+	<link rel="icon" href="/assets/images/favicon.ico">
+	<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>introduction to deep learning and perceptron | Tarun Bisht</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="introduction to deep learning and perceptron" />
+<meta name="author" content="Tarun Bisht" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Deep Learning is subset of machine learning which on its own subset of Artificial Intelligence, that has seen boom after 2012 with the increase in amount of data and compute (especially with introduction of GPU for deep learning). Now these networks are part of our daily life. Google searches, Google translate, ChatGPT, Image processing etc. are few examples that uses deep learning in their backend. Like machine learning we learn rules from data, instead of hand code rules to program we make algorithm learn those rule. In this post we will introduce deep learning and explore perceptron along with its implementation. We will also derive perceptron mistake bound and deduce perceptron convergence theorem." />
+<meta property="og:description" content="Deep Learning is subset of machine learning which on its own subset of Artificial Intelligence, that has seen boom after 2012 with the increase in amount of data and compute (especially with introduction of GPU for deep learning). Now these networks are part of our daily life. Google searches, Google translate, ChatGPT, Image processing etc. are few examples that uses deep learning in their backend. Like machine learning we learn rules from data, instead of hand code rules to program we make algorithm learn those rule. In this post we will introduce deep learning and explore perceptron along with its implementation. We will also derive perceptron mistake bound and deduce perceptron convergence theorem." />
+<link rel="canonical" href="https://tarunbisht.com/deep%20learning/2021/08/13/introduction-to-deep-learning-and-perceptron/" />
+<meta property="og:url" content="https://tarunbisht.com/deep%20learning/2021/08/13/introduction-to-deep-learning-and-perceptron/" />
+<meta property="og:site_name" content="Tarun Bisht" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-08-13T08:12:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="introduction to deep learning and perceptron" />
+<meta name="twitter:site" content="@tarunresearches" />
+<meta name="twitter:creator" content="@Tarun Bisht" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"introduction to deep learning and perceptron","dateModified":"2021-08-13T08:12:00+00:00","datePublished":"2021-08-13T08:12:00+00:00","description":"Deep Learning is subset of machine learning which on its own subset of Artificial Intelligence, that has seen boom after 2012 with the increase in amount of data and compute (especially with introduction of GPU for deep learning). Now these networks are part of our daily life. Google searches, Google translate, ChatGPT, Image processing etc. are few examples that uses deep learning in their backend. Like machine learning we learn rules from data, instead of hand code rules to program we make algorithm learn those rule. In this post we will introduce deep learning and explore perceptron along with its implementation. We will also derive perceptron mistake bound and deduce perceptron convergence theorem.","url":"https://tarunbisht.com/deep%20learning/2021/08/13/introduction-to-deep-learning-and-perceptron/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/deep%20learning/2021/08/13/introduction-to-deep-learning-and-perceptron/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+	
+</head>
+<body>
+    
+    <section class="writing-header">
+	<div class="header">
+		<nav>
+	<div class="logo"></div>
+	<div class="menu-btn">
+		<div class="line1"></div>
+		<div class="line2"></div>
+		<div class="line3"></div>
+	</div>
+    <ul class="menu">
+        <li><a href="/"> Home</a></li>
+        <li><a href="/about/"> About</a></li>
+        <li><a href="/blogs/"> Blogs</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/cv/">CV</a></li>
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/contact/"> Contact</a></li>
+        <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
+	</ul>
+</nav>
+	</div>
+</section>
+
+<section class="writing-body">
+	<div class="container">
+    	<div class="markdown-html">
+			<h1 class="headline">introduction to deep learning and perceptron</h1>
+            <p>Deep Learning is subset of machine learning which on its own subset of Artificial Intelligence, that has seen boom after 2012 with the increase in amount of data and compute (especially with introduction of GPU for deep learning). Now these networks are part of our daily life. Google searches, Google translate, ChatGPT, Image processing etc. are few examples that uses deep learning in their backend. Like machine learning we learn rules from data, instead of hand code rules to program we make algorithm learn those rule. Deep learning emphasis on learning representations from data in hierarchical manner which is inspired from brain, where subsequent layers learns different features. Deep Learning is different from classical machine learning as it can learn from unstructured data like images, audio, texts etc. while in classical machine learning we have to specifically encode these to some representations that then can be fed to machine learning algorithm, but for deep learning they learn on its own. Example: haar cascade face detection algorithm uses set of cleverly designed features from faces and then these features are put into ML algorithm (SVM). While deep learning will take image as input and learn from that, so no need to design features they will learn those.</p>
+
+<h2 id="history">History</h2>
+
+<ul>
+  <li>It originated from the field which now known as cybernetics</li>
+  <li>1940 : McCulloch and Pitts came up with idea of neurons as threshold unit with on/off states.</li>
+  <li>1947: Donal Hebb proposed that neuron in brain learn by modifying strength of the connections between neurons.</li>
+  <li>1957: Frank Rosenblatt proposed Perceptron</li>
+  <li>took off in 1950’s and died in 1960’s</li>
+  <li>Failed because, researchers used binary neurons, also multiplication is very costly operation at that time.</li>
+  <li>took off again in 1985 with emergence of backpropagation</li>
+  <li>1995: again died, dominance of SVM.</li>
+  <li>2010: neural network shows huge performance in speech recognition systems.</li>
+  <li>2012: Alexnet shows huge performance boost in Imagenet data.</li>
+  <li>2013: computer vision shifted to neural networks</li>
+  <li>2016: NLP community also shifts to neural nets.</li>
+  <li>present: many AI trends like generating modalities (DALLE, GPT), robotics, control, games (Dota2, Alphago) use neural nets.</li>
+</ul>
+
+<blockquote>
+  <p><strong>SUMMARY:</strong> Deep Learning is subset of Machine Learning which itself is subset of AI. It is different from ML, as it can learn from unstructured data and discover patterns from data without explicitly defined features. It is widely used currently because of availability of large volumes of data and computation power.</p>
+</blockquote>
+
+<h2 id="perceptron">Perceptron</h2>
+
+<ul>
+  <li>
+    <p>It is a simple machine learning algorithm inspired from working of human brain later which gave rise to modern neural networks.</p>
+  </li>
+  <li>
+    <p>F. Rosenblatt gave the idea of perceptron in his paper titled <em>The Perceptron: A Probabilistic model for information storage and organization in the brain.</em></p>
+  </li>
+  <li>
+    <p>It assumes that similar stimuli create connections with the same set of cells, while dissimilar stimuli create connections with different sets of cells in the brain.</p>
+  </li>
+</ul>
+
+<p><img src="/assets/blogs/perceptron/1.png" alt="png" /></p>
+
+<ul>
+  <li>
+    <p>It can be thought as a function that takes some input process it and provide some output.</p>
+  </li>
+  <li>
+    <p>It was introduced as classification model, it assumes a constant value \(\theta\) called threshold. If output lies above this threshold it gives 1 else -1</p>
+  </li>
+</ul>
+
+<p><img src="/assets/blogs/perceptron/2.png" alt="png" /></p>
+
+<ul>
+  <li>
+    <p>It learns from feedback provided when the prediction given by it is wrong.</p>
+  </li>
+  <li>
+    <p>Input given is of form \(x = (x_1, x_2, ……, x_n) \in \mathbb{R}^d\).</p>
+  </li>
+  <li>
+    <p>weight vectors are associated to each connections. \(w = (w_1, w_2, ….., w_d) \in \mathbb{R}^d\)</p>
+  </li>
+</ul>
+
+<p><img src="/assets/blogs/perceptron/3.png" alt="png" /></p>
+
+<h3 id="perceptron-prediction-rule">Perceptron Prediction Rule</h3>
+
+\[\sum_{i=1}^d w_ix_i \geq \theta \implies \text{predict 1}\]
+
+\[\sum_{i=1}^d w_ix_i &lt; \theta \implies \text{predict -1}\]
+
+<ul>
+  <li>\(\sum_\limits{i=1}^\limits{d} w_ix_i = \langle w,x \rangle\) is dot product of weight vector with input vector.</li>
+</ul>
+
+<p>we can also write above equations as</p>
+
+\[\langle w,x \rangle - \theta \geq 0 \implies \text{predict 1}\]
+
+\[\langle w,x \rangle - \theta &lt; 0 \implies \text{predict -1}\]
+
+<p>we can incorporate \(\theta\) inside \(w\) as \(w_0\) and append \(x\) with \(1\), to make equation as</p>
+
+\[\langle w,x \rangle \geq 0 \implies \text{predict 1}\]
+
+\[\langle w,x \rangle &lt; 0 \implies \text{predict -1}\]
+
+<p><img src="/assets/blogs/perceptron/4.png" alt="png" /></p>
+
+<h3 id="geometric-intuition">Geometric Intuition</h3>
+
+<ul>
+  <li>
+    <p>\(w\) can be seen as vector representing hyperplane, which is perpendicular to that hyperplane.</p>
+  </li>
+  <li>
+    <p>Equation of hyperplane is \(w^T + b = 0\) where \(w \in \mathbb{R}^d\) and \(b\) is intercept term, also vector \(w\) is perpendicular to hyperplane.</p>
+  </li>
+  <li>
+    <p>For geometric intuition of perceptron we can thought vector \(w\) corresponding to a hyperplane that divides data into two classes.</p>
+  </li>
+</ul>
+
+<p><img src="/assets/blogs/perceptron/5.png" alt="png" /></p>
+
+<ul>
+  <li>
+    <p>When learning we will learn optimal value of \(w\) such that hyperplane corresponding divides data into two classes.</p>
+  </li>
+  <li>
+    <p>Using prediction rule we can find which class new point \(x_{new}\) belongs \(\langle w, x_{new} \rangle\) and check which side of hyperplane this new point lies.</p>
+  </li>
+</ul>
+
+<h3 id="perceptron-update-rule">Perceptron Update Rule</h3>
+
+<blockquote>
+  <p>Algorithm</p>
+</blockquote>
+
+<ul>
+  <li>Initialize weight vector with \(0\) ie.. \(w_i = 0 \ \ \forall \ i=1, ..., d\) and initialize \(t = 1\)</li>
+  <li>Given an example \(x\), predict \(1\) iff \(w^t \cdot x &gt; 0\) else predict \(-1\)</li>
+  <li>On a mistake, update \(w^{t+1} \leftarrow w^t + y^tx^t\).</li>
+  <li>\(t \leftarrow t+1\).</li>
+</ul>
+
+<p>We only update perceptron weights only when mistake occurs using the update rule \(w^{t+1} = w^t + y^tx^t\).</p>
+
+<h3 id="code-implementation">Code Implementation</h3>
+
+<h4 id="import-required-packages">Import required packages</h4>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">random</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="c1"># seed random number generator of numpy for reproducibility
+</span>
+<span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="data-generation">Data Generation</h4>
+
+<p>Generating \(10\) two-dimensional data points from a multi-variate Gaussian distribution with mean \([0,0]\) and identity covariance matrix and label them as \(+1\).</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td><td class="code"><pre><span class="c1"># Generate data with mean [0,0] and identity covariance matrix
+</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">identity_matrix</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                   <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+
+<span class="c1"># features
+</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="n">identity_matrix</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+
+<span class="c1"># label all points as +1
+</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">size</span><span class="p">)</span>
+
+<span class="c1"># full data with label +1
+</span>
+<span class="n">d1</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">d1</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>(10, 3)
+</code></pre></div></div>
+
+<p>Generating \(10\) two-dimensional data points from a multi-variate Gaussian distribution with mean \([-2,-2]\) and identity covariance matrix and label them as \(-1\).</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td><td class="code"><pre><span class="c1"># Generate data with mean [-2, -2] and identity covariance matrix.
+</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">identity_matrix</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                   <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+
+<span class="c1"># features
+</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="n">identity_matrix</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+
+<span class="c1"># labels all points as -1
+</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>\<span class="o">*</span><span class="n">size</span><span class="p">)</span>
+
+<span class="c1"># full data with label -1
+</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">d2</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>(10, 3)
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre><span class="c1"># Construct dataset D and shuffle.
+</span>
+<span class="c1"># concatenate data into d
+</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># shuffle data
+</span>
+<span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>(20, 3)
+</code></pre></div></div>
+
+<h3 id="data-visualization">Data Visualization</h3>
+
+<p>Function to visualize the dataset.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">plot_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">"plasma"</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s">"#111"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Plotting Data"</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s">"fontsize"</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">plot_data</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="/assets/blogs/perceptron/output_13_0.png" alt="png" /></p>
+
+<h4 id="perceptron-prediction-rule-1">Perceptron prediction rule</h4>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">activation</span><span class="p">(</span><span class="n">out</span><span class="p">):</span>
+<span class="k">if</span> <span class="n">out</span> <span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+<span class="k">return</span> <span class="mi">1</span>
+<span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">perceptron_prediction</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="c1"># compute the prediction for the example x using weight w
+</span><span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="k">return</span> <span class="n">activation</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="perceptron-update-rule-1">Perceptron update rule</h4>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">perceptron_update_weights</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="n">is_mistake</span> <span class="o">=</span> <span class="bp">False</span> <span class="c1"># check for mistake and set is_mistake flag accordingly
+</span><span class="k">if</span> <span class="n">y</span> <span class="o">!=</span> <span class="n">y_pred</span><span class="p">:</span>
+<span class="n">is_mistake</span> <span class="o">=</span> <span class="bp">True</span> <span class="c1"># and write code to update the weights in perceptron
+</span><span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">+</span> <span class="n">x</span>\<span class="o">*</span><span class="n">y</span>
+<span class="k">return</span> <span class="n">w</span><span class="p">,</span> <span class="n">is_mistake</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="training-procedure-for-perceptron">Training procedure for perceptron</h3>
+
+<p>This function takes data and trains the perceptron to classify the datapoints into appropriate classes.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">train_perceptron</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="c1"># Initialize weights
+</span><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">))</span> <span class="c1"># we can also initialize with random weights # w = np.random.normal(size=(3, ))
+</span><span class="n">epochs</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">num_mistakes</span> <span class="o">=</span> <span class="mi">99</span>
+<span class="n">max_epochs</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="k">while</span> <span class="n">num_mistakes</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">epochs</span><span class="o">&lt;</span><span class="n">max_epochs</span><span class="p">:</span>
+<span class="n">num_mistakes</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span> <span class="c1"># retrieve the feature vector x from data set D
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+      <span class="c1"># Append an additional constant feature 1 to x
+</span>      <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+      <span class="n">y_hat</span> <span class="o">=</span> <span class="n">perceptron_prediction</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+      <span class="c1"># retrieve the label y for x from data set D
+</span>      <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+      <span class="n">w</span><span class="p">,</span> <span class="n">is_mistake</span> <span class="o">=</span> <span class="n">perceptron_update_weights</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">is_mistake</span><span class="p">:</span>
+        <span class="n">num_mistakes</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Epoch </span><span class="si">{</span><span class="n">epochs</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s"> completed, Number of mistakes: </span><span class="si">{</span><span class="n">num_mistakes</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="o">+</span><span class="mi">1</span>
+
+<span class="k">return</span> <span class="n">w</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">w_final</span> <span class="o">=</span> <span class="n">train_perceptron</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Epoch 1 completed, Number of mistakes: 5
+Epoch 2 completed, Number of mistakes: 3
+Epoch 3 completed, Number of mistakes: 2
+Epoch 4 completed, Number of mistakes: 1
+Epoch 5 completed, Number of mistakes: 0
+</code></pre></div></div>
+
+<h4 id="plotting-the-decision-boundary-seperating-line">Plotting the decision boundary (seperating line)</h4>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">plot_line</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">gca</span><span class="p">()</span>
+
+<span class="c1"># get x limits
+</span>
+<span class="n">x_vals</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">axes</span><span class="p">.</span><span class="n">get_xlim</span><span class="p">())</span>
+<span class="n">y_vals</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> \<span class="o">*</span> <span class="n">x_vals</span><span class="p">)</span><span class="o">/</span><span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="s">'r--'</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">plot_data_with_separator</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">"plasma"</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s">"#111"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlim</span><span class="p">([</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">].</span><span class="nb">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">].</span><span class="nb">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylim</span><span class="p">([</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">].</span><span class="nb">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">].</span><span class="nb">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plot_line</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Plotting decision boundary"</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s">"fontsize"</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">plot_data_with_separator</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">w_final</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="/assets/blogs/perceptron/output_31_0.png" alt="png" /></p>
+
+<h4 id="lets-also-animate-each-perceptron-update-step">Lets also animate each perceptron update step</h4>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="o">!</span>pip <span class="nb">install</span> <span class="nt">-qq</span> ffmpeg-python
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+</pre></td><td class="code"><pre><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">d</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">"plasma"</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s">"#111"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">].</span><span class="nb">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">].</span><span class="nb">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">].</span><span class="nb">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">].</span><span class="nb">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">line</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="p">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="s">'r'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Plot Data"</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s">"fontsize"</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
+<span class="n">x_vals</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">ax</span><span class="p">.</span><span class="n">get_xlim</span><span class="p">())</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">animation</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="k">global</span> <span class="n">weights</span>
+<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s">"Plotting decision boundary, dataset iteration: </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s">"</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s">"fontsize"</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
+<span class="k">if</span> <span class="n">weights</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># for solving divide by zero error
+</span><span class="n">y_vals</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="o">*</span><span class="n">vals</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+<span class="n">y_vals</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> \<span class="o">*</span> <span class="n">x_vals</span><span class="p">)</span><span class="o">/</span><span class="n">weights</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">line</span><span class="p">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">)</span>
+
+    <span class="c1"># retrieve the feature vector x from data set D
+</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Append an additional constant feature 1 to x (Use np.concatenate)
+</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="n">y_hat</span> <span class="o">=</span> <span class="n">perceptron_prediction</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="c1"># retrieve the label y for x from data set D
+</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">weights</span><span class="p">,</span> <span class="n">is_mistake</span> <span class="o">=</span> <span class="n">perceptron_update_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
+
+<span class="k">return</span> <span class="n">line</span><span class="p">,</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="n">epochs</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Video Epoch "</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+<span class="n">anim</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="n">to_html5_video</span><span class="p">())</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Video Epoch 1
+</code></pre></div></div>
+
+<p><a href="https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/601d0227-0ee4-42f3-aa4e-cca6226928ea">Video Link</a></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="n">epochs</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Video Epoch "</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+<span class="n">anim</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="n">to_html5_video</span><span class="p">())</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Video Epoch 2
+</code></pre></div></div>
+
+<p><a href="https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/15ca216d-2674-42c1-ab48-7d28fb3f6aa3">Video Link</a></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="n">epochs</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Video Epoch "</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+<span class="n">anim</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="n">to_html5_video</span><span class="p">())</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Video Epoch 3
+</code></pre></div></div>
+
+<p><a href="https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/518cff16-be17-4d2b-92c3-5d6c41a9e937">Video Link</a></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="n">epochs</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Video Epoch "</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+<span class="n">anim</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="n">to_html5_video</span><span class="p">())</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Video Epoch 4
+</code></pre></div></div>
+
+<p><a href="https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/0d3c840a-da52-4d86-8965-84d3a5a4105f">Video Link</a></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="n">epochs</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Video Epoch "</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+<span class="n">anim</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="n">to_html5_video</span><span class="p">())</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Video Epoch 5
+</code></pre></div></div>
+
+<p><a href="https://github.com/tarun-bisht/tarun-bisht.github.io/assets/47741102/f5ed5f51-2916-4005-b149-f87dbbd63200">Video Link</a></p>
+
+<h3 id="perceptron-convergence-theorem">Perceptron Convergence Theorem</h3>
+
+<blockquote>
+  <p>For any finite set of linearly separable labeled examples, the Perceptron Learning
+Algorithm will halt after a finite number of iterations.</p>
+</blockquote>
+
+<ul>
+  <li>
+    <p>Under linear seperable assumptions of positive and negative samples the training procedure for perceptron converges in finite time.</p>
+  </li>
+  <li>
+    <p>Linear seperability means there exist a hyperplane \(w^*\)such that it divides data into two seperate regions.</p>
+  </li>
+</ul>
+
+\[y^t\langle w, x \rangle &gt; \gamma\]
+
+<p>for some \(\gamma &gt; 0\) where \(\gamma\) is margin, which is minimum distance of data points from seperating hyperplane.</p>
+
+<p>Perceptron is said to be converged when in has learned the seperating hyperplane between data points ie. points that are false classified is none, or mistake \(= 0\). If we can find the bounds of number of mistakes, which will denote that perceptron can do atmost these number of mistakes then we have also proved that training will converge after some finite steps as number of mistakes are finite.</p>
+
+<p>Consider arbitary round \(t \in \{1, 2, .., T\}\)</p>
+
+<p>We want to calculate the bound \(\langle w^*, w^{t+1}\rangle - \langle w^*, w^t\rangle\) ie. we are checking how close next updated weight\((w^{t+1})\) from \(w^*\) compared to current weight\((w^t)\)</p>
+
+<ul>
+  <li>If mistake occurs at round \(t\)</li>
+</ul>
+
+\[\langle w^*, w^{t+1}\rangle - \langle w^*, w^t\rangle = \langle w^*, w^t + x^t y^t \rangle - \langle w^*, w^t \rangle\]
+
+<p>RHS:</p>
+
+\[\langle w^*, w^t \rangle + \langle w^*, x^t y^t \rangle - \langle w^*, w^t \rangle\]
+
+\[\implies y^t \langle w^*, x^t \rangle &gt; \gamma\]
+
+<p>\begin{equation}
+\therefore \langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle &gt; \gamma \tag{A}
+\end{equation}</p>
+
+<ul>
+  <li>If mistake do not occur at round t</li>
+</ul>
+
+\[\langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle = \langle w^*, w^t \rangle - \langle w^*, w^t \rangle \implies 0\]
+
+<p>\begin{equation}
+\therefore \langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle = 0 \tag{B}
+\end{equation}</p>
+
+<ul>
+  <li>For T rounds \(\langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle\)</li>
+</ul>
+
+\[\sum_\limits{t=1}^\limits{T} \langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle = \sum_\limits{t \in \text{mistake}} \langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle + \sum_\limits{t \in \text{no mistake}} \langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle\]
+
+<p>RHS.</p>
+
+\[\implies &gt; \sum_\limits{t \in \text{mistake}}\gamma \ + 0\]
+
+<p>\begin{equation}
+\therefore \sum_\limits{t=1}^\limits{T} \langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle &gt; M \gamma \tag{C}
+\end{equation}</p>
+
+<p>LHS.</p>
+
+\[\sum_\limits{t=1}^{T} \langle w^*, w^{t+1} \rangle - \langle w^*, w^t \rangle\]
+
+<p>opening the sums, and after cancelling terms we get</p>
+
+\[\implies \langle w^*, w^{T+1} \rangle - \langle w^*, w^1 \rangle\]
+
+\[\because w^1 = \vec{0}\]
+
+\[\therefore \langle w^*, w^{T+1} \rangle\]
+
+<p>so,</p>
+
+<p>\begin{equation}
+\langle w^*, w^{T+1} \rangle &gt; M \gamma \tag{D}
+\end{equation}</p>
+
+<p>Now using cauchy Schwarz inequality</p>
+
+\[\langle w^*, w^{T+1} \rangle \leq \|w^*\|_2 \|w^{T+1}\|_2 -\textbf{eq(E)}\]
+
+<ul>
+  <li>Finding bound of \(\|w^{T+1}\|_2\)</li>
+</ul>
+
+<p>again consider we are at an arbitary round \(t \in [1, 2, 3..., T]\)</p>
+
+<ul>
+  <li>mistake occurs at round \(t\)</li>
+</ul>
+
+\[\|w^{t+1}\|_2 = \|w^t + x^t y^t\|_2^2\]
+
+<p>RHS.</p>
+
+\[\|w^t\|_2^2 + \|y^t x^t\|_2^2 + 2 \langle w^t, y^t x^t \rangle\]
+
+\[\|w^t\|_2^2 + \|y^t x^t \|_2^2 + 2 y^t \langle w^t, x^t \rangle\]
+
+<p>\(\because\) at \(t\) round mistake occurs</p>
+
+<p>\(\therefore y^t \langle w^t, x^t \rangle\) is negative</p>
+
+<p>using prediction rule \(y \langle w, x \rangle &gt; 0\) we have,</p>
+
+\[\therefore \|w^{t+1}\|_2^2 \leq \|w^t\|_2^2 + \|x^t\|_2^2\]
+
+\[\implies \|w^{t+1}\|_2^2 - \|w^t\|_2^2 \leq \|x^t\|_2^2\]
+
+<p>We assume that \(l2\) norm of sample is bounded by some real value \(R \in \mathbb{R}\), this will simplify expression.</p>
+
+<p>Let \(\|x^t\|_2^2 \leq R\)</p>
+
+\[\implies \|w^{t+1}\|_2^2 - \|w^t\|_2^2 \leq R^2\]
+
+<p>Summing \(\|w^{t+1}\|_2^2 - \|w^t\|_2^2 \ \ \ \forall \ T\)</p>
+
+\[\sum_\limits{t=1}^\limits{T} \|w^{t+1}\|_2^2 - \|w^t\|_2^2 = \sum_\limits{t \in \text{mistake}} \|w^{t+1}\|_2^2 - \|w^t\|_2^2 + \sum_\limits{t \in \text{no mistake}} \|w^{t+1}\|_2^2 - \|w^t\|_2^2\]
+
+<p>RHS.</p>
+
+\[\leq MR^2 + \sum_\limits{t \in \text{no mistake}} \|w^{t+1}\|_2^2 - \|w^t\|_2^2\]
+
+\[\implies MR^2\]
+
+\[\therefore \sum_\limits{t=1}^\limits{T} \|w^{t+1}\|_2^2 - \|w^t\|_2^2 \leq MR^2\]
+
+<p>expanding LHS and cancelling we get,</p>
+
+\[\|w^{T+1}\|_2^2 - \|w^1\|_2^2\]
+
+\[\because \|w^1\|_2^2 = \vec{0}\]
+
+\[\therefore \|w^{T+1}\|_2^2 \leq MR^2\]
+
+<p>from \(\textbf{eq(D)}\) and \(\textbf{eq(E)}\)</p>
+
+\[M \gamma &lt; \langle w^*, w^{T+1} \rangle \leq \|w^*\|_2 \|w^{T+1}\|_2\]
+
+\[\implies M \gamma \leq \|w^*\|_2 \|w^{T+1}\|_2\]
+
+<p>Squaring both sides</p>
+
+\[M^2 \gamma^2 \leq \|w^*\|_2^2 \|w^{T+1}\|_2^2\]
+
+<p>\begin{equation}
+\implies M \leq \frac{\lVert w^*\rVert_2^2 R^2}{\gamma^2} \tag{Z}
+\end{equation}</p>
+
+<p>Assuming \(\|w^*\|\) and \(R\) can be controlled we have</p>
+
+\[M \propto \frac{1}{\gamma^2}\]
+
+<p>ie. Mistakes are inversly proportional to distance of data points from seperating hyperplane.</p>
+
+<p>\(\textbf{eq(Z)}\) denote <strong>mistake bound of perceptron</strong>.</p>
+
+<p>As perceptron training depends on mistakes and mistakes are bounded therefore eq(A) training will also take finite time and perceptron will converge eventually.</p>
+
+<h3 id="problems-in-perceptron">Problems in Perceptron</h3>
+
+<ul>
+  <li>Not suitable when data is not linearly seperable.</li>
+</ul>
+
+<p><img src="/assets/blogs/perceptron/6.png" alt="png" /></p>
+
+<ul>
+  <li>Perceptron is very simple function while tasks in real world are very complex and connot be solved using it.</li>
+</ul>
+
+<blockquote>
+  <p><strong>SUMMARY:</strong> Perceptron was proposed by F. Rosenblatt which was inspired by brain. Perceptron learns optimal weights corresponding to a hyperplane that seperates data into two classes, used for binary classfication. Perceptron prediction rule = \(\langle w, x \rangle &gt; \theta\). While training perceptron we update perceptron weights to learn the seperating hyperplane. Weights updation rule when mistake occurs = \(w^{t+1} = w^t + x^ty^t\) . Perceptron will converge in finite steps as mistake bound for perceptron = \(M \leq \frac{\| w \|_2^2R^2}{\gamma^2}\) as number of mistakes are bounded so training is also bounded and it will converge in some finite steps. Perceptron only works when data is linearly seperable, and is not useful to learn complex boundaries.</p>
+</blockquote>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://www.ieor.iitb.ac.in/acad/courses/ie643">IE643- Deep Learning theory and practice</a> in IIT Bombay taught by Prof. P. Balamurugan</li>
+</ul>
+
+		</div>
+		<div class="post-tags">
+			<ul>
+				
+					<li>machine-learning</li>
+				
+					<li>deep-learning</li>
+				
+					<li>perceptron</li>
+				
+					<li>convergence</li>
+				
+			</ul>
+		</div>
+		
+	</div>
+	<div class="container">
+		
+	</div>
+</section>
+
+    <section class="social">
+    <ul animation="fade-down" animation-time="1s">
+        <li><a target="_blank" href="https://twitter.com/tarunresearches"><i class="fab fa-twitter"></i></a></li>
+        <li><a target="_blank" href="https://www.instagram.com/tarunresearches"><i class="fab fa-instagram"></i></a></li>
+        <li><a target="_blank" href="https://www.linkedin.com/in/tarunbisht"><i class="fab fa-linkedin-in"></i></a></li>
+        <li><a target="_blank" href="https://www.kaggle.com/tarunbisht11"><i class="fab fa-kaggle"></i></a></li>
+        <li><a target="_blank" href="https://github.com/tarun-bisht"><i class="fab fa-github"></i></a></li>
+        <li><a target="_blank" href="https://medium.com/@iamtarunbisht"><i class="fab fa-medium-m"></i></a></li>
+        <li><a target="_blank" href="https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA"><i class="fab fa-youtube"></i></a></li>
+    </ul>
+</section>
+    <footer>
+  <div class="image"></div>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/blogs/"> Blogs</a></li>
+      <li><a href="/projects/">Projects</a></li>
+      <li><a href="/resume/">Resume</a></li>
+      <li><a href="/cv/">Academic CV</a></li>
+      <li><a href="/contact/">Contact</a></li>
+      
+    </ul>
+  </nav>
+  <div class="copyright">
+    Copyright © 2025 All rights reserved
+  </div>
+</footer>
+
+    
+
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<script src="/assets/js/production.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</body>
+</html>

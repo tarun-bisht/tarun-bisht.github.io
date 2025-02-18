@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="color-scheme" content="dark light">
+
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<script src="/assets/js/dark_mode.min.js"></script>
+	<link rel="icon" href="/assets/images/favicon.ico">
+	<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>neural style transfer using tensorflow 2 | Tarun Bisht</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="neural style transfer using tensorflow 2" />
+<meta name="author" content="Tarun Bisht" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="When the style of one image is mixed with content of another image then it is called Style Transfer and we are using a neural network to do so call Neural Style Transfer. As we are dealing with images so we need a convolutional neural network. Neural Style Transfer was first published in the paper “A Neural Algorithm of Artistic Style” by Gatys et al., originally released in 2015 and in this session, we are implementing this paper using Tensorflow 2.0." />
+<meta property="og:description" content="When the style of one image is mixed with content of another image then it is called Style Transfer and we are using a neural network to do so call Neural Style Transfer. As we are dealing with images so we need a convolutional neural network. Neural Style Transfer was first published in the paper “A Neural Algorithm of Artistic Style” by Gatys et al., originally released in 2015 and in this session, we are implementing this paper using Tensorflow 2.0." />
+<link rel="canonical" href="https://tarunbisht.com/deep%20learning/2020/03/11/neural-style-transfer-using-tensorflow-2/" />
+<meta property="og:url" content="https://tarunbisht.com/deep%20learning/2020/03/11/neural-style-transfer-using-tensorflow-2/" />
+<meta property="og:site_name" content="Tarun Bisht" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-11T17:33:50+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="neural style transfer using tensorflow 2" />
+<meta name="twitter:site" content="@tarunresearches" />
+<meta name="twitter:creator" content="@Tarun Bisht" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"neural style transfer using tensorflow 2","dateModified":"2020-03-11T17:33:50+00:00","datePublished":"2020-03-11T17:33:50+00:00","description":"When the style of one image is mixed with content of another image then it is called Style Transfer and we are using a neural network to do so call Neural Style Transfer. As we are dealing with images so we need a convolutional neural network. Neural Style Transfer was first published in the paper “A Neural Algorithm of Artistic Style” by Gatys et al., originally released in 2015 and in this session, we are implementing this paper using Tensorflow 2.0.","url":"https://tarunbisht.com/deep%20learning/2020/03/11/neural-style-transfer-using-tensorflow-2/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/deep%20learning/2020/03/11/neural-style-transfer-using-tensorflow-2/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+	
+</head>
+<body>
+    
+    <section class="writing-header">
+	<div class="header">
+		<nav>
+	<div class="logo"></div>
+	<div class="menu-btn">
+		<div class="line1"></div>
+		<div class="line2"></div>
+		<div class="line3"></div>
+	</div>
+    <ul class="menu">
+        <li><a href="/"> Home</a></li>
+        <li><a href="/about/"> About</a></li>
+        <li><a href="/blogs/"> Blogs</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/cv/">CV</a></li>
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/contact/"> Contact</a></li>
+        <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
+	</ul>
+</nav>
+	</div>
+</section>
+
+<section class="writing-body">
+	<div class="container">
+    	<div class="markdown-html">
+			<h1 class="headline">neural style transfer using tensorflow 2</h1>
+            <p>When the style of one image is mixed with content of another image then it is called Style Transfer and we are using a neural network to do so call Neural Style Transfer. As we are dealing with images so we need a convolutional neural network.
+Neural Style Transfer was first published in the paper “A Neural Algorithm of Artistic Style” by Gatys et al.,
+ originally released in 2015 and in this session, we are implementing this paper using Tensorflow 2.0.</p>
+
+<p><!-- more --></p>
+
+<p><a href="https://arxiv.org/abs/1508.06576">arXiv paper link</a></p>
+
+<p><img src="https://cdn-images-1.medium.com/1*RE-1XL15oejnCSbgyj11vg.png" alt="Messi Stylized Image" /></p>
+
+<p>The convolutional neural network we will use is the VGG19 model. VGG19 is a convolutional neural network that is trained on more than a million images from the ImageNet database. The network is 19 layers deep and can classify images into 1000 object categories, such as a keyboard, mouse, pencil, and many animals.</p>
+
+<p>This model is suggested by the paper and it gives good results. Also, we will use pre-trained weights for models on the ImageNet dataset so that it’s hidden layers (deep layers) have learned of images i.e. When we give the model an image as input its hidden layer can build representations of the image. Lower layers in the network represent the low-level feature of the image while a higher layer in the network represents a complex and high-level features.</p>
+
+<p>In short, we are actually making an image of how convolutional networks are representing an image.</p>
+
+<p>Lower layers of the network will capture styles (low-level features) and higher layers will capture the content of the image (high-level features)</p>
+
+<h3 id="some-important-points">Some Important points</h3>
+
+<ul>
+  <li>
+    <p>Model we use is VGG19 with pre-trained weights and with no dense layers (these dense layers in model are used for classification so we do not need it since we are not dealing with classification).</p>
+  </li>
+  <li>
+    <p>We are using image representations for both style and content image by the network so make sure you understand convolutional neural networks and how its hidden convolutional layer represents a feature of the image.</p>
+  </li>
+  <li>
+    <p>Generated image= The image which the network will generate or output.</p>
+  </li>
+</ul>
+
+<p>For neural style transfer, we define a loss function and minimize it to generate a resultant image.</p>
+
+<p>Loss Function to minimize neural style transfer is given by</p>
+
+<p><img src="https://cdn-images-1.medium.com/max/800/1*JsqfM5hNn3cL9IJbMZR5kg.png" alt="Loss Function" /></p>
+
+<h3 id="steps-totackle">Steps to tackle</h3>
+
+<ul>
+  <li>
+    <p>Initialize generated image (G) with random values.</p>
+  </li>
+  <li>
+    <p>Use gradient descent or variant to minimize J(G)</p>
+  </li>
+  <li>
+    <p>Update generated image values by applying gradient calculated in the above step</p>
+  </li>
+</ul>
+
+<p><img src="https://cdn-images-1.medium.com/max/800/1*SKWcdg1TWFTPMgAOKOfsJg.png" alt="updating generated image" /></p>
+
+<h3 id="content-costfunction">Content Cost Function</h3>
+
+<ul>
+  <li>
+    <p>Let L be hidden layer to compute the content cost</p>
+  </li>
+  <li>
+    <p>Let a[L][C] and a[L][G] be activation of layer L for the image.</p>
+  </li>
+  <li>
+    <p>If both a[L][C] and a[L][G] are similar both images have the same content.</p>
+  </li>
+</ul>
+
+<p><img src="https://cdn-images-1.medium.com/max/800/1*9AcWLV_XJ8obhBl4ZI2-tQ.png" alt="Content Loss" /></p>
+
+<h3 id="style-costfunction">Style Cost Function</h3>
+
+<ul>
+  <li>
+    <p>Let we are using layer L activation to measure style.</p>
+  </li>
+  <li>
+    <p>Define style as the correlation between activation across channels</p>
+  </li>
+  <li>
+    <p>Let a<sup>[l]</sup><sub>ijk</sub>= activation at (i,j,k) where i=height, j=width, k=channel</p>
+  </li>
+  <li>
+    <p>Then we define the style matrix (gram matrix) denotes the correlation between channel K and K’</p>
+  </li>
+</ul>
+
+<p><img src="https://cdn-images-1.medium.com/max/800/1*aJSyMZzcrk16fBfXVRAQpQ.png" alt="Gram Matrix" /></p>
+
+<ul>
+  <li>In a more intuitive way, gram matrix can be seen as how similar two images are similar, Its dot product between two vectors of activation at layer L the lesser the angle between them or more closer the respective coordinates. So the more similar they are, the larger the dot product gets.</li>
+</ul>
+
+<p><img src="https://cdn-images-1.medium.com/max/800/1*Sr0aXBBTXkBw3pvx7bDfQQ.png" alt="Style Loss" /></p>
+
+<p>Now we have defined Content Loss and Style loss putting these in Total Loss equation and we get the total loss.</p>
+
+<h3 id="implementation">Implementation</h3>
+
+<p>Open <a href="https://colab.research.google.com/">https://colab.research.google.com</a> or an IPython notebook and start.</p>
+
+<p>Please Consider opening first to understand better</p>
+
+<p><a href="https://colab.research.google.com/drive/17D7J_ScGuIYh966Q0wfXqVcSX1J57VAk" title="https://colab.research.google.com/drive/17D7J_ScGuIYh966Q0wfXqVcSX1J57VAk"><strong>Google Colaboratory</strong><br />
+colab.research.google.com</a></p>
+
+<p>or</p>
+
+<p><strong><a href="https://github.com/tarun-bisht/tensorflow-scripts/tree/master/Neural%20Style%20Transfer">tarun-bisht/tensorflow-scripts</a></strong></p>
+
+<p>I have commented on every section to understand well. I am only posting some screenshots of the same notebook.</p>
+
+<p><strong>Installing Tensorflow 2.0</strong></p>
+
+<p><img src="https://miro.medium.com/max/366/1*XB5EXKMQ_LkopYQaUcw97Q.png" alt="Installing Tensorflow" /></p>
+
+<p><strong>Importing Dependencies</strong></p>
+
+<p><img src="https://miro.medium.com/max/537/1*j145QW66Sx48m7yofleFlg.png" alt="Importing Dependencies" /></p>
+
+<p><strong>Helper Functions</strong></p>
+
+<p><img src="https://miro.medium.com/max/452/1*76m4z4A-w_W4aRZNbWmiXQ.png" alt="Load Image from URL" /></p>
+
+<p><img src="https://miro.medium.com/max/577/1*sDoZqHIBcoGdQwyW6lxZyQ.png" alt="Plot Image to grid" /></p>
+
+<p><img src="https://miro.medium.com/max/289/1*UiNrhSxrLPIFCLCUN1PyVg.png" alt="plotting graph" /></p>
+
+<p><strong>Defining Layers from which we will get activations</strong></p>
+
+<p>Lower layers of a convolutional extract low-level feature from images and its progress to learn high-level features from images as we progress to a high level of the network. So we have used low layers for extracting style and color and take high-level layer for extracting the content of image.</p>
+
+<p><img src="https://miro.medium.com/max/1143/1*cjRS6i_ti2BQSN9cgnrdTg.png" alt="layers activation" /></p>
+
+<p><strong>Creating Model using Keras Functional API</strong></p>
+
+<p>Pooling is set to average pooling as suggested by the research paper of neural style transfer. Model is created by providing it input and output layers. The input layer is the default for VGG but output layer are now our content and style layers we defined.</p>
+
+<p><img src="https://miro.medium.com/max/1260/1*NIgIayPZtYVO1fF0sN8Hbw.png" alt="creating model" /></p>
+
+<p><strong>Preprocess Image to be sent as input in VGG Model</strong></p>
+
+<p>VGG model takes images as BGR format instead of RGB format so it needed to be preprocessed first</p>
+
+<p><img src="https://miro.medium.com/max/727/1*g0VVbIibOu4CIhnPqmtcLw.png" alt="processed content and style image" /></p>
+
+<p><img src="https://miro.medium.com/max/1321/1*vrCoDzOHm3axvD11wtqYGA.png" alt="Helper Function to Reprocess the preprocessed image" /></p>
+
+<p><strong>The Loss Function for Neural Style Transfer</strong></p>
+
+<p><img src="https://miro.medium.com/max/1229/1*hgN2V54E8Qty-PXCNW84hQ.png" alt="Content Loss" /></p>
+
+<p><img src="https://miro.medium.com/max/1283/1*1vaXbZd3L7Sh97C87efBKg.png" alt="Gram Matrix and Style Loss" /></p>
+
+<p><img src="https://miro.medium.com/max/1217/1*hWnn1pJEaAn0oF1Ko7Q3vw.png" alt="Total Loss" /></p>
+
+<p><strong>Optimizing Loss</strong></p>
+
+<p>Optimization Function optimize generated image values based on minimizing the total loss function</p>
+
+<p><img src="https://miro.medium.com/max/1278/1*ZzYdGOtkH_ZGX-S2w9yj0Q.png" alt="Optimizing Loss and generating images" /></p>
+
+<p>So, I Hope, this article is helpful for someone understanding and implementing neural style transfer. Thanks for being till last.</p>
+
+<h3 id="more-results">More Results</h3>
+
+<p><img src="https://miro.medium.com/max/601/1*sw3n6ndsqx0WCqbL9oDnHQ.png" alt="style1 image" /></p>
+
+<p><img src="https://miro.medium.com/max/601/1*yU_UJ4PkIEz-uAJGwVBwRw.png" alt="style2 image" /></p>
+
+<h3 id="full-code">Full Code</h3>
+
+<p><a href="https://github.com/tarun-bisht/tensorflow-scripts/tree/master/Neural%20Style%20Transfer" title="https://github.com/tarun-bisht/tensorflow-scripts/tree/master/Neural%20Style%20Transfer"><strong>tarun-bisht/tensorflow-scripts</strong></a></p>
+
+<p><a href="https://colab.research.google.com/drive/17D7J_ScGuIYh966Q0wfXqVcSX1J57VAk" title="https://colab.research.google.com/drive/17D7J_ScGuIYh966Q0wfXqVcSX1J57VAk"><strong>Google Colaboratory</strong></a></p>
+
+<p><a href="https://medium.com/@tarunbishttarun11/neural-style-transfer-in-tensorflow-2-0-2235cd3f6b8b"><strong>Medium Article Link</strong></a></p>
+
+		</div>
+		<div class="post-tags">
+			<ul>
+				
+					<li>style-image</li>
+				
+					<li>python</li>
+				
+					<li>tensorflow2</li>
+				
+					<li>intermediate</li>
+				
+			</ul>
+		</div>
+		
+	</div>
+	<div class="container">
+		
+	</div>
+</section>
+
+    <section class="social">
+    <ul animation="fade-down" animation-time="1s">
+        <li><a target="_blank" href="https://twitter.com/tarunresearches"><i class="fab fa-twitter"></i></a></li>
+        <li><a target="_blank" href="https://www.instagram.com/tarunresearches"><i class="fab fa-instagram"></i></a></li>
+        <li><a target="_blank" href="https://www.linkedin.com/in/tarunbisht"><i class="fab fa-linkedin-in"></i></a></li>
+        <li><a target="_blank" href="https://www.kaggle.com/tarunbisht11"><i class="fab fa-kaggle"></i></a></li>
+        <li><a target="_blank" href="https://github.com/tarun-bisht"><i class="fab fa-github"></i></a></li>
+        <li><a target="_blank" href="https://medium.com/@iamtarunbisht"><i class="fab fa-medium-m"></i></a></li>
+        <li><a target="_blank" href="https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA"><i class="fab fa-youtube"></i></a></li>
+    </ul>
+</section>
+    <footer>
+  <div class="image"></div>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/blogs/"> Blogs</a></li>
+      <li><a href="/projects/">Projects</a></li>
+      <li><a href="/resume/">Resume</a></li>
+      <li><a href="/cv/">Academic CV</a></li>
+      <li><a href="/contact/">Contact</a></li>
+      
+    </ul>
+  </nav>
+  <div class="copyright">
+    Copyright © 2025 All rights reserved
+  </div>
+</footer>
+
+    
+
+<script src="/assets/js/production.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</body>
+</html>

@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="color-scheme" content="dark light">
+
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<script src="/assets/js/dark_mode.min.js"></script>
+	<link rel="icon" href="/assets/images/favicon.ico">
+	<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Neural Style Transfer Part 2 : Fast Style Transfer | Tarun Bisht</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Neural Style Transfer Part 2 : Fast Style Transfer" />
+<meta name="author" content="Tarun Bisht" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Fast style transfer is style transfer technique which is 100 times faster than Gatys optimization-based style transfer technique. This technique can generate styled images in seconds and can be used to style videos too. It can handle even realtime webcam videos with a decent frame rate. Fast style transfer let us train once and generate infinite images. We train a model that converts input content image to styled image using perceptual loss. After training, we can use this model to generate style images in one pass of the network. This is the second part of neural style transfer series, In this part, we will cover both theory and its implementation in TensorFlow." />
+<meta property="og:description" content="Fast style transfer is style transfer technique which is 100 times faster than Gatys optimization-based style transfer technique. This technique can generate styled images in seconds and can be used to style videos too. It can handle even realtime webcam videos with a decent frame rate. Fast style transfer let us train once and generate infinite images. We train a model that converts input content image to styled image using perceptual loss. After training, we can use this model to generate style images in one pass of the network. This is the second part of neural style transfer series, In this part, we will cover both theory and its implementation in TensorFlow." />
+<link rel="canonical" href="https://tarunbisht.com/deep%20learning/2020/12/29/neural-style-transfer-part-2-fast-style-transfer/" />
+<meta property="og:url" content="https://tarunbisht.com/deep%20learning/2020/12/29/neural-style-transfer-part-2-fast-style-transfer/" />
+<meta property="og:site_name" content="Tarun Bisht" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-12-29T16:46:50+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Neural Style Transfer Part 2 : Fast Style Transfer" />
+<meta name="twitter:site" content="@tarunresearches" />
+<meta name="twitter:creator" content="@Tarun Bisht" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"Neural Style Transfer Part 2 : Fast Style Transfer","dateModified":"2020-12-29T16:46:50+00:00","datePublished":"2020-12-29T16:46:50+00:00","description":"Fast style transfer is style transfer technique which is 100 times faster than Gatys optimization-based style transfer technique. This technique can generate styled images in seconds and can be used to style videos too. It can handle even realtime webcam videos with a decent frame rate. Fast style transfer let us train once and generate infinite images. We train a model that converts input content image to styled image using perceptual loss. After training, we can use this model to generate style images in one pass of the network. This is the second part of neural style transfer series, In this part, we will cover both theory and its implementation in TensorFlow.","url":"https://tarunbisht.com/deep%20learning/2020/12/29/neural-style-transfer-part-2-fast-style-transfer/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/deep%20learning/2020/12/29/neural-style-transfer-part-2-fast-style-transfer/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+	
+</head>
+<body>
+    
+    <section class="writing-header">
+	<div class="header">
+		<nav>
+	<div class="logo"></div>
+	<div class="menu-btn">
+		<div class="line1"></div>
+		<div class="line2"></div>
+		<div class="line3"></div>
+	</div>
+    <ul class="menu">
+        <li><a href="/"> Home</a></li>
+        <li><a href="/about/"> About</a></li>
+        <li><a href="/blogs/"> Blogs</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/cv/">CV</a></li>
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/contact/"> Contact</a></li>
+        <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
+	</ul>
+</nav>
+	</div>
+</section>
+
+<section class="writing-body">
+	<div class="container">
+    	<div class="markdown-html">
+			<h1 class="headline">Neural Style Transfer Part 2 : Fast Style Transfer</h1>
+            <p>This is the second part of neural style transfer in this part we are dealing with another technique of style transfer which we can call Fast Style Transfer. This is follow up from the <a href="https://www.tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/">previous post</a> if you are directly reading its second part then I recommend you to read the previous part first as many topics are followed up from that post.</p>
+
+<p>In gatys style transfer, we are not training any network, we are just optimizing output image with respect to loss function(style_loss + content_loss) and optimization takes some number of rounds because of this it is a very slow process to generate the styled image. Using that technique for realtime videos 😭 forget about it.</p>
+
+<p>This seems to be an iterative process if we want to generate multiple images of the same style as we are optimizing output image for the same style image every time. If there is a way to learn this input-output mapping for a style image then we can generate images of that style in one go. 🤔 Yes, we have we can use an autoencoder to learn the mapping between the input image and styled output image by using the previously defined loss function to train it.</p>
+
+<p>Fast style transfer let us train once and generate infinite images and yes we can use this for styling videos, even realtime webcam videos too.</p>
+
+<h3 id="important-points">Important Points</h3>
+
+<p>Fast style transfer let us train once and generate infinite images. Most of the points that we discussed regarding the theory of loss function is same, the main difference here is we will focus more is training model and learning mapping using that loss function.</p>
+
+<p>Before reading this post brushup your knowledge about autoencoder especially convolutional autoencoders and residual layers (skip connections) in deep learning because I will not be explaining them but we will be implementing them here so cover up some basic knowledge about convolutional autoencoders and residual layers first this will help to understand implementation easily</p>
+
+<ul>
+  <li>
+    <p>We train a feedforward network that applies artistic styles to images using loss function defined in <a href="https://arxiv.org/abs/1508.06576">Gatys et al</a> paper, for more explanation refer to the <a href="https://www.tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/">previous post</a>.</p>
+  </li>
+  <li>
+    <p>Feedforward network which we will use is a residual autoencoder network that takes the content image as input and spits out a stylized image this is the same network that was used in <a href="https://arxiv.org/abs/1603.08155">original implementation</a></p>
+  </li>
+  <li>
+    <p>Model also uses instance normalization instead of batch normalization based on the paper <a href="https://arxiv.org/abs/1607.08022">Instance Normalization: The Missing Ingredient for Fast Stylization</a> as this provides better results.</p>
+  </li>
+  <li>
+    <p>We will be using vgg19 to calculate perceptual loss more working described on paper.</p>
+  </li>
+</ul>
+
+<p>If someone wants to try style transfer in video and images right now, I have created a <a href="https://github.com/tarun-bisht/fast-style-transfer">github repository</a> for the same purpose with instructions.</p>
+
+<h3 id="importing-necessary-modules">Importing Necessary Modules</h3>
+
+<p>Let’s start by importing all necessary modules:</p>
+
+<ul>
+  <li><code class="language-html highlighter-rouge">numpy</code>: for arrays manipulation</li>
+  <li><code class="language-html highlighter-rouge">tensorflow</code>: for tensor operations</li>
+  <li><code class="language-html highlighter-rouge">tensorflow.keras</code>: high-level neural network library for tensorflow for creating neural networks</li>
+  <li><code class="language-html highlighter-rouge">pillow</code>: for converting an image to numpy array and numpy array to image, saving out output image.</li>
+  <li><code class="language-html highlighter-rouge">time</code>: for calculating the time of each iteration</li>
+  <li><code class="language-html highlighter-rouge">matplotlib</code>: for displaying images and graphs in notebook</li>
+  <li><code class="language-html highlighter-rouge">request</code>, <code class="language-html highlighter-rouge">base64</code>, <code class="language-html highlighter-rouge">io</code>: for downloading and loading image from URL</li>
+  <li><code class="language-html highlighter-rouge">os</code>: operating system level commands</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="n">tf</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.applications</span> <span class="kn">import</span> <span class="n">vgg19</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.models</span> <span class="kn">import</span> <span class="n">load_model</span><span class="p">,</span><span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="n">matplotlib</span><span class="p">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">'figure.figsize'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">matplotlib</span><span class="p">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s">'axes.grid'</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="define-utility-functions">Define Utility Functions</h3>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">load_image</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">resize</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">img</span><span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="nb">open</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dim</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">resize</span><span class="p">:</span>
+            <span class="n">img</span><span class="o">=</span><span class="n">img</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">img</span><span class="p">.</span><span class="n">thumbnail</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+    <span class="n">img</span><span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">convert</span><span class="p">(</span><span class="s">"RGB"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The above function is used to load image from the path specified and convert it into numpy array</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">load_url_image</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">dim</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">resize</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">img_request</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">img</span><span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="nb">open</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">img_request</span><span class="p">.</span><span class="n">content</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">dim</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">resize</span><span class="p">:</span>
+            <span class="n">img</span><span class="o">=</span><span class="n">img</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">img</span><span class="p">.</span><span class="n">thumbnail</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+    <span class="n">img</span><span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">convert</span><span class="p">(</span><span class="s">"RGB"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>This function loads the image from URL and converts it into numpy array</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">array_to_img</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+    <span class="n">array</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">array</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="p">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">3</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">array</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span>
+        <span class="n">array</span><span class="o">=</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">Image</span><span class="p">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">show_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">3</span><span class="p">:</span>
+        <span class="n">image</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">image</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="o">=</span><span class="n">title</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">plot_images_grid</span><span class="p">(</span><span class="n">images</span><span class="p">,</span><span class="n">num_rows</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">num_cols</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">num_rows</span><span class="p">)</span>
+        <span class="n">fig</span><span class="p">,</span><span class="n">axes</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">num_cols</span><span class="p">),</span><span class="n">nrows</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">num_rows</span><span class="p">))</span>
+        <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">fig</span><span class="p">.</span><span class="n">set_size_inches</span><span class="p">((</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">image</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+            <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Above three functions are used for converting and plotting images:</p>
+
+<ul>
+  <li><code class="language-html highlighter-rouge">array_to_img</code>: Converts an array to image</li>
+  <li><code class="language-html highlighter-rouge">show_image</code>: plot single image</li>
+  <li><code class="language-html highlighter-rouge">plot_images_grid</code>: plots batches of images in grid</li>
+</ul>
+
+<h3 id="steps-for-fast-style-transfer">Steps for fast style transfer</h3>
+
+<p>The training model is an encoder-decoder architecture with residual layers. Input images are passed to encoder part and it propagates to decoder part. The output is the same size as input and spits generated image.</p>
+
+<p>This model is trained on a loss which is called perceptual loss, the loss is calculated in the same way as we calculate in gatys style transfer. Using a pre-trained model to extract feature maps from style and content layers defined and using them to calculate style loss and content loss. (For more detail read the <a href="https://www.tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/">previous post</a> it was explained there)</p>
+
+<p>As part of training the model we need training data, For training model, we need a dataset of different images(can be anything like a person, dog, car etc..) in bulk. In this post, we are using <a href="http://images.cocodataset.org/zips/train2014.zip">coco dataset</a> which have lots of images. I have also used <a href="https://www.kaggle.com/c/gan-getting-started">kaggle challenge dataset</a> which has images of different landscapes, you can check code kernel <a href="https://www.kaggle.com/tarunbisht11/generate-art-using-fast-style-transfer-in-a-second">here</a>. We also need a style image whose style we want to learn using autoencoder. We can use any painting or sketch (select one from the internet)</p>
+
+<p>For training, this model we send a batch of input training images of various contents into autoencoder which provides us output this output has to be our styled image, while training we pass these output images batches into our loss model (vgg19) in our case and features from different layers were extracted (content layers and style layers) these features are then used to calculate style loss and content loss, whose weighted sum produce perceptual loss that trains the network. The below image from paper describes it well.</p>
+
+<p><img src="https://miro.medium.com/max/1574/1*Um82GJ99gauIOh0U-S11hQ.png" alt="https://arxiv.org/abs/1603.08155" /></p>
+
+<p>After training, we can use that network for styling any image in one pass without the need of optimization</p>
+
+<p>The main highlights of the network:</p>
+
+<ul>
+  <li>Residual Layers</li>
+  <li>Encoder-Decoder Model</li>
+  <li>output from decoder is passed to loss model(VGG) to calculate the loss</li>
+  <li>training needs compute as we are passing these images to two networks on every step</li>
+</ul>
+
+<h3 id="define-loss">Define loss</h3>
+
+<p>For calculating style loss and content loss we need a pre-trained model, we are using vgg19 the original implementation uses vgg16.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">vgg</span><span class="o">=</span><span class="n">vgg19</span><span class="p">.</span><span class="n">VGG19</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s">'imagenet'</span><span class="p">,</span><span class="n">include_top</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">vgg</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Model: "vgg19"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, None, None, 3)]   0         
+_________________________________________________________________
+block1_conv1 (Conv2D)        (None, None, None, 64)    1792      
+_________________________________________________________________
+block1_conv2 (Conv2D)        (None, None, None, 64)    36928     
+_________________________________________________________________
+block1_pool (MaxPooling2D)   (None, None, None, 64)    0         
+_________________________________________________________________
+block2_conv1 (Conv2D)        (None, None, None, 128)   73856     
+_________________________________________________________________
+block2_conv2 (Conv2D)        (None, None, None, 128)   147584    
+_________________________________________________________________
+block2_pool (MaxPooling2D)   (None, None, None, 128)   0         
+_________________________________________________________________
+block3_conv1 (Conv2D)        (None, None, None, 256)   295168    
+_________________________________________________________________
+block3_conv2 (Conv2D)        (None, None, None, 256)   590080    
+_________________________________________________________________
+block3_conv3 (Conv2D)        (None, None, None, 256)   590080    
+_________________________________________________________________
+block3_conv4 (Conv2D)        (None, None, None, 256)   590080    
+_________________________________________________________________
+block3_pool (MaxPooling2D)   (None, None, None, 256)   0         
+_________________________________________________________________
+block4_conv1 (Conv2D)        (None, None, None, 512)   1180160   
+_________________________________________________________________
+block4_conv2 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block4_conv3 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block4_conv4 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block4_pool (MaxPooling2D)   (None, None, None, 512)   0         
+_________________________________________________________________
+block5_conv1 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_conv2 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_conv3 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_conv4 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_pool (MaxPooling2D)   (None, None, None, 512)   0         
+=================================================================
+Total params: 20,024,384
+Trainable params: 20,024,384
+Non-trainable params: 0
+_________________________________________________________________
+</code></pre></div></div>
+
+<p>Here we define layers that we will use to calculate the loss.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="n">content_layers</span><span class="o">=</span><span class="p">[</span><span class="s">'block4_conv2'</span><span class="p">]</span>
+
+<span class="n">style_layers</span><span class="o">=</span><span class="p">[</span><span class="s">'block1_conv1'</span><span class="p">,</span>
+            <span class="s">'block2_conv1'</span><span class="p">,</span>
+            <span class="s">'block3_conv1'</span><span class="p">,</span>
+            <span class="s">'block4_conv1'</span><span class="p">,</span>
+            <span class="s">'block5_conv1'</span><span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Let’s define a class that creates a loss model with some additional methods for accessing feature maps from the network. We have also used these functions in the <a href="https://www.tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/">previous post</a>, here we just encapsulated them inside a class.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+</pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">LossModel</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pretrained_model</span><span class="p">,</span><span class="n">content_layers</span><span class="p">,</span><span class="n">style_layers</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">model</span><span class="o">=</span><span class="n">pretrained_model</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">content_layers</span><span class="o">=</span><span class="n">content_layers</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">style_layers</span><span class="o">=</span><span class="n">style_layers</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">loss_model</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">get_model</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">model</span><span class="p">.</span><span class="n">trainable</span><span class="o">=</span><span class="bp">False</span>
+        <span class="n">layer_names</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">style_layers</span> <span class="o">+</span> <span class="bp">self</span><span class="p">.</span><span class="n">content_layers</span>
+        <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="p">.</span><span class="n">model</span><span class="p">.</span><span class="n">get_layer</span><span class="p">(</span><span class="n">name</span><span class="p">).</span><span class="n">output</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">layer_names</span><span class="p">]</span>
+        <span class="n">new_model</span><span class="o">=</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">model</span><span class="p">.</span><span class="nb">input</span><span class="p">,</span><span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_model</span>
+    
+    <span class="k">def</span> <span class="nf">get_activations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="o">*</span><span class="mf">255.0</span>
+        <span class="n">style_length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">style_layers</span><span class="p">)</span>
+        <span class="n">outputs</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">loss_model</span><span class="p">(</span><span class="n">vgg19</span><span class="p">.</span><span class="n">preprocess_input</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
+        <span class="n">style_output</span><span class="p">,</span><span class="n">content_output</span><span class="o">=</span><span class="n">outputs</span><span class="p">[:</span><span class="n">style_length</span><span class="p">],</span><span class="n">outputs</span><span class="p">[</span><span class="n">style_length</span><span class="p">:]</span>
+        <span class="n">content_dict</span><span class="o">=</span><span class="p">{</span><span class="n">name</span><span class="p">:</span><span class="n">value</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">content_layers</span><span class="p">,</span><span class="n">content_output</span><span class="p">)}</span>
+        <span class="n">style_dict</span><span class="o">=</span><span class="p">{</span><span class="n">name</span><span class="p">:</span><span class="n">value</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">style_layers</span><span class="p">,</span><span class="n">style_output</span><span class="p">)}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s">'content'</span><span class="p">:</span><span class="n">content_dict</span><span class="p">,</span><span class="s">'style'</span><span class="p">:</span><span class="n">style_dict</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now we create our loss model using the above class</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">loss_model</span> <span class="o">=</span> <span class="n">LossModel</span><span class="p">(</span><span class="n">vgg</span><span class="p">,</span> <span class="n">content_layers</span><span class="p">,</span> <span class="n">style_layers</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Let us define loss function for calculating content and style loss, below methods <code class="language-html highlighter-rouge">content_loss</code> and <code class="language-html highlighter-rouge">style _loss</code> calculates content and style loss respectively. With weighted averaging of these losses, we derive perceptual loss defined in <code class="language-html highlighter-rouge">preceptual_loss</code> function. The details of these loss functions are covered in the <a href="https://www.tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/">previous post</a>.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">content_loss</span><span class="p">(</span><span class="n">placeholder</span><span class="p">,</span><span class="n">content</span><span class="p">,</span><span class="n">weight</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">placeholder</span><span class="p">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">content</span><span class="p">.</span><span class="n">shape</span>
+    <span class="k">return</span> <span class="n">weight</span><span class="o">*</span><span class="n">tf</span><span class="p">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">square</span><span class="p">(</span><span class="n">placeholder</span><span class="o">-</span><span class="n">content</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">gram_matrix</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">gram</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'bijc,bijd-&gt;bcd'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">gram</span><span class="o">/</span><span class="n">tf</span><span class="p">.</span><span class="n">cast</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">tf</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">style_loss</span><span class="p">(</span><span class="n">placeholder</span><span class="p">,</span><span class="n">style</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">placeholder</span><span class="p">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">style</span><span class="p">.</span><span class="n">shape</span>
+    <span class="n">s</span><span class="o">=</span><span class="n">gram_matrix</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">=</span><span class="n">gram_matrix</span><span class="p">(</span><span class="n">placeholder</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">weight</span><span class="o">*</span><span class="n">tf</span><span class="p">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">square</span><span class="p">(</span><span class="n">s</span><span class="o">-</span><span class="n">p</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">preceptual_loss</span><span class="p">(</span><span class="n">predicted_activations</span><span class="p">,</span><span class="n">content_activations</span><span class="p">,</span>
+                    <span class="n">style_activations</span><span class="p">,</span><span class="n">content_weight</span><span class="p">,</span><span class="n">style_weight</span><span class="p">,</span>
+                    <span class="n">content_layers_weights</span><span class="p">,</span><span class="n">style_layer_weights</span><span class="p">):</span>
+    <span class="n">pred_content</span> <span class="o">=</span> <span class="n">predicted_activations</span><span class="p">[</span><span class="s">"content"</span><span class="p">]</span>
+    <span class="n">pred_style</span> <span class="o">=</span> <span class="n">predicted_activations</span><span class="p">[</span><span class="s">"style"</span><span class="p">]</span>
+    <span class="n">c_loss</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">add_n</span><span class="p">([</span><span class="n">content_loss</span><span class="p">(</span><span class="n">pred_content</span><span class="p">[</span><span class="n">name</span><span class="p">],</span><span class="n">content_activations</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                                  <span class="n">content_layers_weights</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pred_content</span><span class="p">.</span><span class="n">keys</span><span class="p">())])</span>
+    <span class="n">c_loss</span> <span class="o">=</span> <span class="n">c_loss</span><span class="o">*</span><span class="n">content_weight</span>
+    <span class="n">s_loss</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">add_n</span><span class="p">([</span><span class="n">style_loss</span><span class="p">(</span><span class="n">pred_style</span><span class="p">[</span><span class="n">name</span><span class="p">],</span><span class="n">style_activations</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                                <span class="n">style_layer_weights</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pred_style</span><span class="p">.</span><span class="n">keys</span><span class="p">())])</span>
+    <span class="n">s_loss</span> <span class="o">=</span> <span class="n">s_loss</span><span class="o">*</span><span class="n">style_weight</span>
+    <span class="k">return</span> <span class="n">c_loss</span><span class="o">+</span><span class="n">s_loss</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="create-an-autoencoder">Create an Autoencoder</h3>
+
+<p>Here we first defined all necessary layers for our network:</p>
+
+<ul>
+  <li><code class="language-html highlighter-rouge">ReflectionPadding2D</code>: for applying reflection padding to images in conv nets</li>
+  <li><code class="language-html highlighter-rouge">InstanceNormalization</code>: We are using instance normalization instead of batch normalization as it gives a better result. It normalizes inputs across the channel.</li>
+  <li><code class="language-html highlighter-rouge">ConvLayer</code>: Block of conv layer with padding-&gt; conv_layer-&gt; instance_normalization combined</li>
+  <li><code class="language-html highlighter-rouge">ResidualLayer</code>: Residual layer with two ConvLayer block</li>
+  <li><code class="language-html highlighter-rouge">UpsampleLayer</code>: upsample the bottleneck representation (if you have read about autoencoders you know what I mean) in autoencoder. It can be considered as deconvolutional layers.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">ReflectionPadding2D</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ReflectionPadding2D</span><span class="p">,</span> <span class="bp">self</span><span class="p">).</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">padding</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">padding</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_tensor</span><span class="p">):</span>
+        <span class="n">padding_width</span><span class="p">,</span> <span class="n">padding_height</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">padding</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="p">.</span><span class="n">pad</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">,</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">padding_height</span><span class="p">,</span> <span class="n">padding_height</span><span class="p">],</span>
+                                     <span class="p">[</span><span class="n">padding_width</span><span class="p">,</span> <span class="n">padding_width</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="p">],</span> <span class="s">'REFLECT'</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">InstanceNormalization</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">InstanceNormalization</span><span class="p">,</span> <span class="bp">self</span><span class="p">).</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="n">batch</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">.</span><span class="n">get_shape</span><span class="p">()]</span>
+        <span class="n">mu</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">moments</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">keepdims</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">shift</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">channels</span><span class="p">]))</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">ones</span><span class="p">([</span><span class="n">channels</span><span class="p">]))</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-3</span>
+        <span class="n">normalized</span> <span class="o">=</span> <span class="p">(</span><span class="n">inputs</span><span class="o">-</span><span class="n">mu</span><span class="p">)</span><span class="o">/</span><span class="n">tf</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">normalized</span> <span class="o">+</span> <span class="n">shift</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">ConvLayer</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filters</span><span class="p">,</span><span class="n">kernel_size</span><span class="p">,</span><span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ConvLayer</span><span class="p">,</span><span class="bp">self</span><span class="p">).</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">padding</span><span class="o">=</span><span class="n">ReflectionPadding2D</span><span class="p">([</span><span class="n">k</span><span class="o">//</span><span class="mi">2</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kernel_size</span><span class="p">])</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv2d</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span><span class="p">,</span><span class="n">kernel_size</span><span class="p">,</span><span class="n">strides</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">bn</span><span class="o">=</span><span class="n">InstanceNormalization</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">padding</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">bn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">ResidualLayer</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filters</span><span class="p">,</span><span class="n">kernel_size</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ResidualLayer</span><span class="p">,</span><span class="bp">self</span><span class="p">).</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv2d_1</span><span class="o">=</span><span class="n">ConvLayer</span><span class="p">(</span><span class="n">filters</span><span class="p">,</span><span class="n">kernel_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv2d_2</span><span class="o">=</span><span class="n">ConvLayer</span><span class="p">(</span><span class="n">filters</span><span class="p">,</span><span class="n">kernel_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">add</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Add</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="n">residual</span><span class="o">=</span><span class="n">inputs</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">conv2d_1</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">conv2d_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">add</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">residual</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">x</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">UpsampleLayer</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filters</span><span class="p">,</span><span class="n">kernel_size</span><span class="p">,</span><span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">upsample</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UpsampleLayer</span><span class="p">,</span><span class="bp">self</span><span class="p">).</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">upsample</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">UpSampling2D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">upsample</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">padding</span><span class="o">=</span><span class="n">ReflectionPadding2D</span><span class="p">([</span><span class="n">k</span><span class="o">//</span><span class="mi">2</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kernel_size</span><span class="p">])</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv2d</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span><span class="p">,</span><span class="n">kernel_size</span><span class="p">,</span><span class="n">strides</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">bn</span><span class="o">=</span><span class="n">InstanceNormalization</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">upsample</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">padding</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">bn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Using these layers defined above let’s create a convolutional autoencoder.</p>
+
+<p>Architecture:</p>
+
+<ul>
+  <li>3 X ConvLayer</li>
+  <li>5 X ResidualLayer</li>
+  <li>3 X UpsampleLayer</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+</pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">StyleTransferModel</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StyleTransferModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">).</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'StyleTransferModel'</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv2d_1</span><span class="o">=</span> <span class="n">ConvLayer</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">),</span><span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s">"conv2d_1_32"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv2d_2</span><span class="o">=</span> <span class="n">ConvLayer</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s">"conv2d_2_64"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conv2d_3</span><span class="o">=</span> <span class="n">ConvLayer</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s">"conv2d_3_128"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">res_1</span><span class="o">=</span><span class="n">ResidualLayer</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">name</span><span class="o">=</span><span class="s">"res_1_128"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">res_2</span><span class="o">=</span><span class="n">ResidualLayer</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">name</span><span class="o">=</span><span class="s">"res_2_128"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">res_3</span><span class="o">=</span><span class="n">ResidualLayer</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">name</span><span class="o">=</span><span class="s">"res_3_128"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">res_4</span><span class="o">=</span><span class="n">ResidualLayer</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">name</span><span class="o">=</span><span class="s">"res_4_128"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">res_5</span><span class="o">=</span><span class="n">ResidualLayer</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">name</span><span class="o">=</span><span class="s">"res_5_128"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">deconv2d_1</span><span class="o">=</span> <span class="n">UpsampleLayer</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">name</span><span class="o">=</span><span class="s">"deconv2d_1_64"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">deconv2d_2</span><span class="o">=</span> <span class="n">UpsampleLayer</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">name</span><span class="o">=</span><span class="s">"deconv2d_2_32"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">deconv2d_3</span><span class="o">=</span> <span class="n">ConvLayer</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">),</span><span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s">"deconv2d_3_3"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">layers</span><span class="p">.</span><span class="n">ReLU</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">conv2d_1</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">conv2d_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">conv2d_3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">res_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">res_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">res_3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">res_4</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">res_5</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">deconv2d_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">deconv2d_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">deconv2d_3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">nn</span><span class="p">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">255.0</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="c1">## used to print shapes of each layer to check if input shape == output shape
+</span>    <span class="c1">## I don't know any better solution to this right now
+</span>    <span class="k">def</span> <span class="nf">print_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">inputs</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">conv2d_1</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">conv2d_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">conv2d_3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">res_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">res_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">res_3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">res_4</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">res_5</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">deconv2d_1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">deconv2d_2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">deconv2d_3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>define input shape and batch_size here</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Create style model using <code class="language-html highlighter-rouge">StyleTransferModel</code> class</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">style_model</span> <span class="o">=</span> <span class="n">StyleTransferModel</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Here we check the shape of all layers and verify input shape and output shape</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">style_model</span><span class="p">.</span><span class="n">print_shape</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">*</span><span class="n">input_shape</span><span class="p">)))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>(1, 256, 256, 3)
+(1, 256, 256, 32)
+(1, 128, 128, 64)
+(1, 64, 64, 128)
+(1, 64, 64, 128)
+(1, 64, 64, 128)
+(1, 64, 64, 128)
+(1, 64, 64, 128)
+(1, 64, 64, 128)
+(1, 128, 128, 64)
+(1, 256, 256, 32)
+(1, 256, 256, 3)
+</code></pre></div></div>
+
+<h3 id="training-model">Training model</h3>
+
+<p>Here we have defined an optimizer for training, we are using Adam optimizer with learning rate 1e-3</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">optimizers</span><span class="p">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span><span class="n">style_activations</span><span class="p">,</span><span class="n">steps_per_epoch</span><span class="p">,</span><span class="n">style_model</span><span class="p">,</span><span class="n">loss_model</span><span class="p">,</span><span class="n">optimizer</span><span class="p">,</span>
+               <span class="n">checkpoint_path</span><span class="o">=</span><span class="s">"./"</span><span class="p">,</span><span class="n">content_weight</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span> <span class="n">style_weight</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
+               <span class="n">total_variation_weight</span><span class="o">=</span><span class="mf">0.004</span><span class="p">):</span>
+    <span class="n">batch_losses</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">steps</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">save_path</span><span class="o">=</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">,</span><span class="sa">f</span><span class="s">"model_checkpoint.ckpt"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Model Checkpoint Path: "</span><span class="p">,</span><span class="n">save_path</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">input_image_batch</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">steps</span><span class="o">-</span><span class="mi">1</span> <span class="o">&gt;=</span> <span class="n">steps_per_epoch</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="p">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">tape</span><span class="p">:</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="n">style_model</span><span class="p">(</span><span class="n">input_image_batch</span><span class="p">)</span>
+            <span class="n">outputs</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+            <span class="n">pred_activations</span><span class="o">=</span><span class="n">loss_model</span><span class="p">.</span><span class="n">get_activations</span><span class="p">(</span><span class="n">outputs</span><span class="o">/</span><span class="mf">255.0</span><span class="p">)</span>
+            <span class="n">content_activations</span><span class="o">=</span><span class="n">loss_model</span><span class="p">.</span><span class="n">get_activations</span><span class="p">[</span><span class="n">input_image_batch</span><span class="p">](</span><span class="s">"content"</span><span class="p">)</span>
+            <span class="n">curr_loss</span><span class="o">=</span><span class="n">preceptual_loss</span><span class="p">(</span><span class="n">pred_activations</span><span class="p">,</span><span class="n">content_activations</span><span class="p">,</span><span class="n">style_activations</span><span class="p">,</span><span class="n">content_weight</span><span class="p">,</span>
+                                      <span class="n">style_weight</span><span class="p">,</span><span class="n">content_layers_weights</span><span class="p">,</span><span class="n">style_layers_weights</span><span class="p">)</span>
+            <span class="n">curr_loss</span> <span class="o">+=</span> <span class="n">total_variation_weight</span><span class="o">*</span><span class="n">tf</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">total_variation</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="n">batch_losses</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">curr_loss</span><span class="p">)</span>
+        <span class="n">grad</span> <span class="o">=</span> <span class="n">tape</span><span class="p">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">curr_loss</span><span class="p">,</span><span class="n">style_model</span><span class="p">.</span><span class="n">trainable_variables</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="p">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span><span class="n">style_model</span><span class="p">.</span><span class="n">trainable_variables</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">steps</span> <span class="o">%</span> <span class="mi">1000</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"checkpoint saved "</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s">" "</span><span class="p">)</span>
+            <span class="n">style_model</span><span class="p">.</span><span class="n">save_weights</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Loss: </span><span class="si">{</span><span class="n">tf</span><span class="p">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">batch_losses</span><span class="p">).</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="n">steps</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="p">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">batch_losses</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>In the above function, we have defined a single training step. Inside the function:</p>
+
+<ul>
+  <li>first, we defined save_path for model checkpointing</li>
+  <li>for number of steps_per_epoch we run a training loop</li>
+  <li>for every step, we forward pass a batch of image pass it to our loss model</li>
+  <li>get content_layer activations for the batch of images</li>
+  <li>together with style activations from style image and content activations we calculate the perceptual loss</li>
+  <li>we add some total variation loss to image for smoothening</li>
+  <li>calculate gradients of the loss function with respect to the model’s trainable parameters</li>
+  <li>finally backpropagates to optimize</li>
+  <li>at every 1000 steps saving checkpoints</li>
+</ul>
+
+<h3 id="configure-dataset-for-training">Configure Dataset for training</h3>
+
+<p>Downloading coco dataset for training,  we can use any other image dataset with images in bulk. Below line downloads coco dataset using wget in zip format. Further, we create a directory where we unzip that downloaded zip file.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>wget &lt;http://images.cocodataset.org/zips/train2014.zip&gt;
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>--2020-07-12 08:14:59--  http://images.cocodataset.org/zips/train2014.zip
+Resolving images.cocodataset.org (images.cocodataset.org)... 52.216.224.88
+Connecting to images.cocodataset.org (images.cocodataset.org)|52.216.224.88|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 13510573713 (13G) [application/zip]
+Saving to: ‘train2014.zip’
+
+train2014.zip       100%[===================&gt;]  12.58G  25.0MB/s    in 6m 56s  
+
+2020-07-12 08:21:55 (31.0 MB/s) - ‘train2014.zip’ saved [13510573713/13510573713]
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="nb">mkdir </span>coco
+unzip <span class="nt">-qq</span> train2014.zip <span class="nt">-d</span> coco
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>For training, the model lets create tensorflow dataset which loads all images from the path specified resize them to be of the same size for efficient batch training and implements batching and prefetching. Below class creates tfdataset for training.</p>
+
+<p>Note we are training model with fixed-size images but we can generate images of any size because all layers in model are convolutional layers.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre></td><td class="code"><pre><span class="k">class</span> <span class="nc">TensorflowDatasetLoader</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dataset_path</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">image_size</span><span class="o">=</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span><span class="n">num_images</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">images_paths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">).</span><span class="n">glob</span><span class="p">(</span><span class="s">"*.jpg"</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">images_paths</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_images</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">images_paths</span> <span class="o">=</span> <span class="n">images_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">num_images</span><span class="p">]</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">Dataset</span><span class="p">.</span><span class="n">from_tensor_slices</span><span class="p">(</span><span class="n">images_paths</span><span class="p">).</span><span class="nb">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">path</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">load_tf_image</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">image_size</span><span class="p">),</span>
+            <span class="n">num_parallel_calls</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">experimental</span><span class="p">.</span><span class="n">AUTOTUNE</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">.</span><span class="n">batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span><span class="n">drop_remainder</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">.</span><span class="n">repeat</span><span class="p">()</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">.</span><span class="n">prefetch</span><span class="p">(</span><span class="n">buffer_size</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">experimental</span><span class="p">.</span><span class="n">AUTOTUNE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span>
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">length</span>
+    <span class="k">def</span> <span class="nf">load_tf_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">image_path</span><span class="p">,</span><span class="n">dim</span><span class="p">):</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">decode_jpeg</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">image</span><span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">image</span><span class="p">,</span><span class="n">dim</span><span class="p">)</span>
+        <span class="n">image</span><span class="o">=</span> <span class="n">image</span><span class="o">/</span><span class="mf">255.0</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">convert_image_dtype</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">tf</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">image</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>using the above class lets create tfdataset from coco dataset images. We specify the path to images folder (where all images reside) and batch size</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">loader</span><span class="o">=</span><span class="n">TensorflowDatasetLoader</span><span class="p">(</span><span class="s">"coco/train2014/"</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">loader</span><span class="p">.</span><span class="n">dataset</span><span class="p">.</span><span class="n">element_spec</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>TensorSpec(shape=(4, 256, 256, 3), dtype=tf.float32, name=None)
+</code></pre></div></div>
+
+<p>plot some images to see how images in dataset looks</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">plot_images_grid</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">loader</span><span class="p">.</span><span class="n">dataset</span><span class="p">.</span><span class="n">take</span><span class="p">(</span><span class="mi">1</span><span class="p">))))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="/assets/blogs/style-transfer/output_61_0.png" alt="png" /></p>
+
+<p>Now lets load style image from URL using <code class="language-html highlighter-rouge">load_url_image</code> and plot it.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="c1"># setting up style image
+</span>
+<span class="n">url</span><span class="o">=</span><span class="s">"https://www.edvardmunch.org/images/paintings/the-scream.jpg"</span>
+<span class="n">style_image</span><span class="o">=</span><span class="n">load_url_image</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="n">input_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="n">resize</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">style_image</span><span class="o">=</span><span class="n">style_image</span><span class="o">/</span><span class="mf">255.0</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">show_image</span><span class="p">(</span><span class="n">style_image</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="/assets/blogs/style-transfer/output_64_0.png" alt="png" /></p>
+
+<p>Next, we extract style layers feature maps of style image using loss model</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">style_image</span><span class="o">=</span><span class="n">style_image</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">style_image_batch</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">repeat</span><span class="p">([</span><span class="n">style_image</span><span class="p">],</span><span class="n">batch_size</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">style_activations</span><span class="o">=</span><span class="n">loss_model</span><span class="p">.</span><span class="n">get_activations</span><span class="p">[</span><span class="n">style_image_batch</span><span class="p">](</span><span class="s">"style"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="training-model-1">Training model</h3>
+
+<p>define content weight, style weight and total variation weight these are hyperparameters which we can tune to change the strength of style and content in the output image</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">content_weight</span><span class="o">=</span><span class="mf">1e1</span>
+<span class="n">style_weight</span><span class="o">=</span><span class="mf">1e2</span>
+<span class="n">total_variation_weight</span><span class="o">=</span><span class="mf">0.004</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now define the number of epochs to train, steps per epochs and model checkpoint path</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">epochs</span><span class="o">=</span><span class="mi">2</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">num_images</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">loader</span><span class="p">)</span>
+<span class="n">steps_per_epochs</span><span class="o">=</span><span class="n">num_images</span><span class="o">//</span><span class="n">batch_size</span>
+<span class="k">print</span><span class="p">(</span><span class="n">steps_per_epochs</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>20695
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">save_path</span> <span class="o">=</span> <span class="s">"./scream"</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">os</span><span class="p">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Enable mixed-precision training it offers significant computational speedup by performing operations in half-precision format.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="k">try</span><span class="p">:</span>
+    <span class="n">policy</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">mixed_precision</span><span class="p">.</span><span class="n">experimental</span><span class="p">.</span><span class="n">Policy</span><span class="p">(</span><span class="s">'mixed_float16'</span><span class="p">)</span>
+    <span class="n">tf</span><span class="p">.</span><span class="n">keras</span><span class="p">.</span><span class="n">mixed_precision</span><span class="p">.</span><span class="n">experimental</span><span class="p">.</span><span class="n">set_policy</span><span class="p">(</span><span class="n">policy</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>if the previous checkpoint exists at that path load that checkpoint and continue further training else we train from scratch</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span><span class="s">"model_checkpoint.ckpt.index"</span><span class="p">)):</span>
+    <span class="n">style_model</span><span class="p">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span><span class="s">"model_checkpoint.ckpt"</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"resuming training ..."</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"training scratch ..."</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>training scratch ...
+</code></pre></div></div>
+
+<p>Finally, we start training the model. At each epoch, we are calling <code class="language-html highlighter-rouge">train_step</code> function which runs till number of steps per epochs defined and after every epoch save model checkpoint for further inferencing and training.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre><span class="n">epoch_losses</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">epochs</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"epoch: </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="n">batch_loss</span><span class="o">=</span><span class="n">train_step</span><span class="p">(</span><span class="n">loader</span><span class="p">.</span><span class="n">dataset</span><span class="p">,</span><span class="n">style_activations</span><span class="p">,</span><span class="n">steps_per_epochs</span><span class="p">,</span><span class="n">style_model</span><span class="p">,</span><span class="n">loss_model</span><span class="p">,</span><span class="n">optimizer</span><span class="p">,</span>
+                          <span class="n">save_path</span><span class="p">,</span>
+                          <span class="n">content_weight</span><span class="p">,</span><span class="n">style_weight</span><span class="p">,</span><span class="n">total_variation_weight</span><span class="p">,</span>
+                          <span class="n">content_layers_weights</span><span class="p">,</span><span class="n">style_layers_weights</span><span class="p">)</span>
+    <span class="n">style_model</span><span class="p">.</span><span class="n">save_weights</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span><span class="s">"model_checkpoint.ckpt"</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Model Checkpointed at: "</span><span class="p">,</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span><span class="s">"model_checkpoint.ckpt"</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"loss: </span><span class="si">{</span><span class="n">batch_loss</span><span class="p">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="n">epoch_losses</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">batch_loss</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>epoch: 1
+Model Checkpoint Path:  ./scream/model_checkpoint.ckpt
+checkpoint saved  Loss: 6567731.5
+checkpoint saved  Loss: 6464426.5
+checkpoint saved  Loss: 6402768.0
+checkpoint saved  Loss: 6336974.5
+checkpoint saved  Loss: 6281922.5
+checkpoint saved  Loss: 6232056.0
+checkpoint saved  Loss: 6191586.5
+checkpoint saved  Loss: 6155332.0
+checkpoint saved  Loss: 6119712.5
+checkpoint saved  Loss: 6085571.5
+checkpoint saved  Loss: 6062698.0
+checkpoint saved  Loss: 6036787.0
+checkpoint saved  Loss: 6011265.5
+checkpoint saved  Loss: 5988809.5
+checkpoint saved  Loss: 5969908.0
+checkpoint saved  Loss: 5950925.0
+checkpoint saved  Loss: 5931179.5
+checkpoint saved  Loss: 5912791.5
+checkpoint saved  Loss: 5894602.0
+checkpoint saved  Loss: 5880713.0
+Model Checkpointed at:  ./scream
+loss: 5869695.5
+epoch: 2
+Model Checkpoint Path:  ./scream/model_checkpoint.ckpt
+checkpoint saved  Loss: 5520494.5
+checkpoint saved  Loss: 5532450.5
+checkpoint saved  Loss: 5529669.0
+checkpoint saved  Loss: 5524684.0
+checkpoint saved  Loss: 5518524.5
+checkpoint saved  Loss: 5508913.5
+checkpoint saved  Loss: 5503493.5
+checkpoint saved  Loss: 5501864.0
+checkpoint saved  Loss: 5497016.0
+checkpoint saved  Loss: 5491713.0
+checkpoint saved  Loss: 5491244.5
+checkpoint saved  Loss: 5484620.0
+checkpoint saved  Loss: 5482881.0
+checkpoint saved  Loss: 5476766.5
+checkpoint saved  Loss: 5472491.0
+checkpoint saved  Loss: 5466294.5
+checkpoint saved  Loss: 5459984.0
+checkpoint saved  Loss: 5454912.5
+checkpoint saved  Loss: 5449535.5
+checkpoint saved  Loss: 5446370.0
+Model Checkpointed at:  ./scream
+loss: 5442546.5
+</code></pre></div></div>
+
+<p>After training model lets plot loss concerning epochs and check loss summary</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">epoch_losses</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">"Epochs"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">"Loss"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Training Process"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="/assets/blogs/style-transfer/output_82_0.png" alt="png" /></p>
+
+<p>Now its time to generate some style images. We start first by loading the saved model checkpoint into autoencoder.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span><span class="s">"model_checkpoint.ckpt.index"</span><span class="p">)):</span>
+    <span class="n">style_model</span><span class="p">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span><span class="s">"model_checkpoint.ckpt"</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"loading weights ..."</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"no weights found ..."</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>loading weights ...
+</code></pre></div></div>
+
+<p>load an image for styling and convert it to float.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">test_image_url</span><span class="o">=</span><span class="s">"https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/chicago-skyline-on-a-clear-day-royalty-free-image-115891582-1557159569.jpg"</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">test_image</span><span class="o">=</span><span class="n">load_url_image</span><span class="p">(</span><span class="n">test_image_url</span><span class="p">,</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span><span class="mi">480</span><span class="p">))</span>
+<span class="n">test_image</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">test_image</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">test_image</span><span class="o">=</span><span class="n">test_image</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>In one forward pass of the model, we get generated styled image</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">predicted_image</span><span class="o">=</span><span class="n">style_model</span><span class="p">(</span><span class="n">test_image</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Clamp generated image pixels between 0 to 255 and convert it to uint8. We got our generated style image, plot it and check how its looks also save it and share with friends</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">predicted_image</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">clip</span><span class="p">(</span><span class="n">predicted_image</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span>
+<span class="n">predicted_image</span><span class="o">=</span><span class="n">predicted_image</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">test_output</span><span class="o">=</span><span class="n">test_image</span><span class="p">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+<span class="n">test_output</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">test_output</span><span class="p">).</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">predicted_output</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">predicted_image</span><span class="p">).</span><span class="n">numpy</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">plot_images_grid</span><span class="p">([</span><span class="n">test_output</span><span class="p">,</span><span class="n">predicted_output</span><span class="p">])</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="/assets/blogs/style-transfer/output_94_0.png" alt="png" /></p>
+
+<p>If you do not have enough compute power use colab or kaggle kernels they provide free GPU even TPU for training these models, Once trained we can use trained checkpoints to do style transfer in any system with GPU or CPU.</p>
+
+<p>Using <code class="language-html highlighter-rouge">opencv</code> we can easily create styled videos too.</p>
+
+<h3 id="results">Results</h3>
+
+<p>Some Image results</p>
+
+<p><img src="/assets/blogs/style-transfer/js_candy.jpg" alt="jpg" /></p>
+
+<p><img src="/assets/blogs/style-transfer/heather-gill-7Frxnyv7Ntg-unsplash-udine.jpg" alt="jpg" /></p>
+
+<p><img src="/assets/blogs/style-transfer/kido.jpg" alt="jpg" /></p>
+
+<p><img src="/assets/blogs/style-transfer/styled_candy.jpg" alt="jpg" /></p>
+
+<p>Here we have realtime video stylization in action</p>
+
+<p><img src="/assets/blogs/style-transfer/webcam.gif" alt="webcam output" /></p>
+
+<p>Below is a youtube video which shows video stylization in action</p>
+
+<div style="margin:1rem 0;">
+  <a href="http://www.youtube.com/watch?v=GrS4rWifdko"><img src="/assets/blogs/style-transfer/video.gif" alt="Pithoragarh style transfer" /></a>
+</div>
+
+<p>Now generate different images and videos, play with it and share exciting results.</p>
+
+<p>If someone wants to try style transfer in video and images right now, I have created a <a href="https://github.com/tarun-bisht/fast-style-transfer">github repository</a> for the same purpose with instructions.</p>
+
+<p>Thanks for reading. ✌✌✌</p>
+
+<h3 id="references">References</h3>
+
+<ul>
+  <li><a href="https://arxiv.org/abs/1607.08022">Instance Normalization: The Missing Ingredient for Fast Stylization</a></li>
+  <li><a href="https://arxiv.org/abs/1603.08155">Perceptual Losses for Real-Time Style Transfer and Super-Resolution</a></li>
+  <li><a href="https://arxiv.org/abs/1508.06576">A Neural Algorithm of Artistic Style</a></li>
+</ul>
+
+<h3 id="important-links">Important links</h3>
+
+<ul>
+  <li><a href="https://github.com/tarun-bisht/fast-style-transfer">Github Repository</a></li>
+  <li><a href="https://github.com/tarun-bisht/blogs-notebooks/blob/master/style-transfer/Neural%20Style%20Transfer%20Part%202.ipynb">Google Colab Notebook</a></li>
+  <li><a href="http://www.youtube.com/watch?v=GrS4rWifdko">Youtube Video</a></li>
+</ul>
+
+		</div>
+		<div class="post-tags">
+			<ul>
+				
+					<li>python</li>
+				
+					<li>art</li>
+				
+					<li>intermediate</li>
+				
+					<li>tensorflow</li>
+				
+					<li>vgg</li>
+				
+					<li>style-transfer</li>
+				
+			</ul>
+		</div>
+		
+	</div>
+	<div class="container">
+		
+	</div>
+</section>
+
+    <section class="social">
+    <ul animation="fade-down" animation-time="1s">
+        <li><a target="_blank" href="https://twitter.com/tarunresearches"><i class="fab fa-twitter"></i></a></li>
+        <li><a target="_blank" href="https://www.instagram.com/tarunresearches"><i class="fab fa-instagram"></i></a></li>
+        <li><a target="_blank" href="https://www.linkedin.com/in/tarunbisht"><i class="fab fa-linkedin-in"></i></a></li>
+        <li><a target="_blank" href="https://www.kaggle.com/tarunbisht11"><i class="fab fa-kaggle"></i></a></li>
+        <li><a target="_blank" href="https://github.com/tarun-bisht"><i class="fab fa-github"></i></a></li>
+        <li><a target="_blank" href="https://medium.com/@iamtarunbisht"><i class="fab fa-medium-m"></i></a></li>
+        <li><a target="_blank" href="https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA"><i class="fab fa-youtube"></i></a></li>
+    </ul>
+</section>
+    <footer>
+  <div class="image"></div>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/blogs/"> Blogs</a></li>
+      <li><a href="/projects/">Projects</a></li>
+      <li><a href="/resume/">Resume</a></li>
+      <li><a href="/cv/">Academic CV</a></li>
+      <li><a href="/contact/">Contact</a></li>
+      
+    </ul>
+  </nav>
+  <div class="copyright">
+    Copyright © 2025 All rights reserved
+  </div>
+</footer>
+
+    
+
+<script src="/assets/js/production.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</body>
+</html>

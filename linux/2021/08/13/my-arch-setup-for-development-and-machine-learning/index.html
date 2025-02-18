@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="color-scheme" content="dark light">
+
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<script src="/assets/js/dark_mode.min.js"></script>
+	<link rel="icon" href="/assets/images/favicon.ico">
+	<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>how i set up my arch linux system for development and machine learning | Tarun Bisht</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="how i set up my arch linux system for development and machine learning" />
+<meta name="author" content="Tarun Bisht" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In this post, I am sharing how I set up my Arch Linux system for machine learning and development. If I boot up a fresh arch install I do these steps and set up the machine for my work and productivity. There are very few guides to set up a development and machine learning arch Linux based systems and I hope this post will be helpful to someone setting up an arch Linux working environment." />
+<meta property="og:description" content="In this post, I am sharing how I set up my Arch Linux system for machine learning and development. If I boot up a fresh arch install I do these steps and set up the machine for my work and productivity. There are very few guides to set up a development and machine learning arch Linux based systems and I hope this post will be helpful to someone setting up an arch Linux working environment." />
+<link rel="canonical" href="https://tarunbisht.com/linux/2021/08/13/my-arch-setup-for-development-and-machine-learning/" />
+<meta property="og:url" content="https://tarunbisht.com/linux/2021/08/13/my-arch-setup-for-development-and-machine-learning/" />
+<meta property="og:site_name" content="Tarun Bisht" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-08-13T08:12:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="how i set up my arch linux system for development and machine learning" />
+<meta name="twitter:site" content="@tarunresearches" />
+<meta name="twitter:creator" content="@Tarun Bisht" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"how i set up my arch linux system for development and machine learning","dateModified":"2021-08-13T08:12:00+00:00","datePublished":"2021-08-13T08:12:00+00:00","description":"In this post, I am sharing how I set up my Arch Linux system for machine learning and development. If I boot up a fresh arch install I do these steps and set up the machine for my work and productivity. There are very few guides to set up a development and machine learning arch Linux based systems and I hope this post will be helpful to someone setting up an arch Linux working environment.","url":"https://tarunbisht.com/linux/2021/08/13/my-arch-setup-for-development-and-machine-learning/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/linux/2021/08/13/my-arch-setup-for-development-and-machine-learning/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+	
+</head>
+<body>
+    
+    <section class="writing-header">
+	<div class="header">
+		<nav>
+	<div class="logo"></div>
+	<div class="menu-btn">
+		<div class="line1"></div>
+		<div class="line2"></div>
+		<div class="line3"></div>
+	</div>
+    <ul class="menu">
+        <li><a href="/"> Home</a></li>
+        <li><a href="/about/"> About</a></li>
+        <li><a href="/blogs/"> Blogs</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/cv/">CV</a></li>
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/contact/"> Contact</a></li>
+        <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
+	</ul>
+</nav>
+	</div>
+</section>
+
+<section class="writing-body">
+	<div class="container">
+    	<div class="markdown-html">
+			<h1 class="headline">how i set up my arch linux system for development and machine learning</h1>
+            <p>In this post, I am sharing how I set up my Arch Linux system for machine learning and development. If I boot up a fresh arch install I do these steps and set up the machine for my work and productivity. There are very few guides to set up a development and machine learning arch Linux based environment and I hope this post will guide you to set up your Arch Linux working environment. Softwares and extensions which I installed in this post can be tweaked based on your needs and preferences. All the below steps works well for me. If you are starting your Arch journey then you can start with Manjaro which is an arch based distro which I am personally using as my daily device.</p>
+
+<h2 id="why-arch-linux">Why Arch Linux</h2>
+
+<ul>
+  <li>Most technologies somehow utilize linux in their development cycle example setting up a cloud server, web server etc. so learning linux will give you an upper hand. Arch Linux lets you to better understand how Linux works.</li>
+  <li>Arch Linux is a rolling release distribution that means the new kernel version or application version rolls out as soon as they are released.</li>
+  <li>The most convincing reason is AUR (arch user repository) which mostly have any application that one might think of and easy to install. This feature distinguishes arch Linux from other Linux distros.</li>
+  <li>It is way more performant than windows and ubuntu, if the lightweight desktop environment is used like Xfce then it also consume less RAM.</li>
+</ul>
+
+<h2 id="update-mirrors">Update Mirrors</h2>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="nb">sudo </span>pacman-mirrors <span class="nt">--fasttrack</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="update-system">Update System</h2>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="nb">sudo </span>pacman <span class="nt">-Syyu</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="install-yay">Install yay</h2>
+
+<p>yay(yet another yogurt) is an AUR helper that lets to install a new package from AUR, update and remove installed AUR packages.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="code"><pre>pacman <span class="nt">-S</span> <span class="nt">--needed</span> base-devel
+git clone &lt;https://aur.archlinux.org/yay.git&gt;
+<span class="nb">cd </span>yay
+makepkg <span class="nt">-si</span>
+<span class="nb">cd</span> ..
+<span class="nb">rm</span> <span class="nt">-rf</span> yay
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="install-auto-cpufreq">Install auto-cpufreq</h2>
+
+<p>If you are in power restricted devices like laptops, Linux might not give the battery backup that you expected. Most CPUs are not power-optimized for Linux, installing this package will automatically adjust CPU speed &amp; power based on usage. It allows us to improve battery life without making any compromises. We do not have to configure anything just install it and see the difference. It’s a must install tool on my laptop.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="nb">sudo </span>pacman <span class="nt">-S</span> auto-cpufreq
+systemctl <span class="nb">enable </span>auto-cpufreq
+systemctl start auto-cpufreq
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="install-necessary-software">Install necessary software</h2>
+
+<p>Now install all your productivity applications, favourite applications, IDE’s, code editors, Spotify etc. With the power of AUR, all these things are in your reach, no need to hop around just search AUR and find your application.</p>
+
+<p>In fresh installation, I install these applications:</p>
+
+<ul>
+  <li>chrome</li>
+  <li>brave browser</li>
+  <li>slack</li>
+  <li>discord</li>
+  <li>kde-connect</li>
+  <li>vscode</li>
+  <li>vim</li>
+  <li>miniconda</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>yay <span class="nt">-S</span> chrome brave-bin slack-desktop discord spotify kdeconnect vim
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>I install miniconda from its website instead of AUR as it already set up all things automatically also miniconda package I once installed from AUR was conflicting with python installed.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="nb">cd </span>Downloads
+wget &lt;https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh&gt;
+<span class="nb">sudo chmod</span> +x Miniconda3-latest-Linux-x86_64.sh
+./Miniconda3-latest-Linux-x86_64.sh
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>now proceed to the installation process and now you have conda setup just restart the terminal and check conda version if its working or not. By default installing this way will add the path to the <code class="language-html highlighter-rouge">.bashrc</code> file.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>conda <span class="nt">--version</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="setting-up-vscode">Setting up VSCode</h2>
+
+<p>Installing vscode</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="nb">sudo </span>pacman <span class="nt">-S</span> vscode
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>By default I could not access vscode marketplace for extensions it always says <em>we cannot connect to extension marketplace</em>. I installed code-marketplace package from AUR and it fixed the issue.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>yay <span class="nt">-S</span> code-marketplace
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Next, I install language extensions for C, C++, Python and Rust other language extensions I add based on the use case.</p>
+
+<p>Next, I install my favourite vscode extensions for productivity, these extensions I add anytime when setting up freshly installed vscode.</p>
+
+<ul>
+  <li>error lens</li>
+  <li>auto rename tag</li>
+  <li>git lens</li>
+  <li>live sass compiler</li>
+  <li>live share</li>
+  <li>prettier</li>
+  <li>css-auto-prefix</li>
+  <li>live server</li>
+  <li>bracket pair colorizer</li>
+  <li>arepl</li>
+  <li>better comments</li>
+  <li>dash</li>
+  <li>python docstring generator</li>
+</ul>
+
+<h2 id="setting-up-conda">Setting up conda</h2>
+
+<p>With the installation of miniconda, when we open a new instance of the terminal base environment is activated by default which I do not like. I want to activate conda environment when I needed them. We can disable this default behaviour with the following command.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>disable default activation of base environment: conda run conda config <span class="nt">--set</span> auto_activate_base <span class="nb">false</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="machine-learning-setup">Machine Learning setup</h2>
+
+<h3 id="installing-nvidia-drivers">Installing nvidia drivers</h3>
+
+<ul>
+  <li>First install nvidia latest drivers using</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="nb">sudo </span>pacman <span class="nt">-S</span> nvidia nvidia-utils
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>If you are using manjaro with proprietory drivers then no need to do the above step as Nvidia drivers are already installed.</p>
+
+<ul>
+  <li>Check nvidia drivers are installed correctly and version</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  nvidia-smi
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="instaling-pytorch-and-tensorflow">Instaling PyTorch and TensorFlow</h3>
+
+<p>We can install packages using pip or conda based on preference. PyTorch has very good installation instruction and is easy to setup just use latest installation instruction from its <a href="https://pytorch.org/get-started/locally/">website</a> for conda and pip. For TensorFlow we can use conda which will install all dependencies along with cuda and cudnn but we might not get latest version of library. I prefer installing TensorFlow using pip because conda TensorFlow packare is outdated and I was not able to create tensors in GPU while creating tensors the process gets stuck without any errors. Installing TensorFlow via pip require some additional steps.</p>
+
+<ul>
+  <li>Create an environment using conda:</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>conda create <span class="nt">--name</span> envname
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>Activate created environment</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>conda activate envname
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="pytorch-cuda-setup">PyTorch CUDA setup</h4>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>conda <span class="nb">install </span>pytorch torchvision torchaudio <span class="nv">cudatoolkit</span><span class="o">=</span>10.2 <span class="nt">-c</span> pytorch
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>for latest instructions visit <a href="https://pytorch.org/get-started/locally/">pytorch</a> official site.</p>
+
+<h4 id="tensorflow-cuda-setup">TensorFlow CUDA setup</h4>
+
+<p><strong>Using conda</strong></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>conda <span class="nb">install </span>tensorflow-gpu
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><strong>Using pip</strong></p>
+
+<p>With this method we have to also install <code class="language-html highlighter-rouge">cuda-toolkit</code> and <code class="language-html highlighter-rouge">cudnn</code> these packages can be found in pacman.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="nb">sudo </span>pacman <span class="nt">-S</span> cuda-toolkit cudnn
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>After installing restart the system and then verify cuda install</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>nvcc <span class="nt">-V</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now activate virtual conda environment and install Tensorflow using pip</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>conda <span class="nb">install </span>pip
+pip <span class="nb">install </span>tensorflow-gpu
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h4 id="verify-cuda-detection-by-pytorch-and-tensorflow">Verify cuda detection by PyTorch and TensorFlow</h4>
+
+<p>We can verify detection of cuda by TensorFlow and PyTorch using a small python code snippet and check its output</p>
+
+<p><strong>PyTorch</strong></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">torch</span>
+<span class="k">print</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">cuda</span><span class="p">.</span><span class="n">is_available</span><span class="p">())</span> <span class="c1"># should be True</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><strong>TensorFlow</strong></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>import tensorflow as tf
+print<span class="o">(</span>tf.config.list_physical_devices<span class="o">(</span><span class="s2">"GPU"</span><span class="o">))</span> <span class="c"># should be list of GPUS</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="installing-docker">Installing Docker</h2>
+
+<p>Docker can be found in community repo of archlinux and can be installed using pacman.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="nb">sudo </span>pacman <span class="nt">-S</span> docker
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now we have to enable and start docker service</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="nb">sudo </span>systemctl start docker.service
+<span class="nb">sudo </span>systemctl <span class="nb">enable </span>docker.service
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Currently we need to run docker commands with sudo and root password to solve this we need to add current user account to docker group</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="nb">sudo </span>usermod <span class="nt">-aG</span> docker <span class="nv">$USER</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Install Docker compose</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="nb">sudo </span>pacman <span class="nt">-S</span> docker-compose
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>After this command reboot the machine. After rebooting check if docker runs succesfully by running docker hello world.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>docker run hello-world
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="jekyll-setup">Jekyll setup</h2>
+
+<p>I have my website build using jekyll, so I need jekyll to test changes to website in local before deployment.</p>
+
+<ul>
+  <li>install ruby</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="nb">sudo </span>pacman <span class="nt">-S</span> ruby
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>install jekyll</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  gem <span class="nb">install </span>jekyll
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>export gems path to bashrc
+open .bashrc file and add these lines at last</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre>  <span class="nb">export </span><span class="nv">GEM_HOME</span><span class="o">=</span><span class="s2">"/home/username/.local/share/gem/ruby/3.0.0/gems/"</span>
+  <span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="s2">"/home/username/.local/share/gem/ruby/3.0.0/bin/:</span><span class="nv">$PATH</span><span class="s2">"</span>
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="installing-rust">Installing Rust</h2>
+
+<p>Rust is installed and managed by the rustup tool it makes the process easier to install and manage rust versions.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>curl <span class="nt">--proto</span> <span class="s1">'=https'</span> <span class="nt">--tlsv1</span>.2 &lt;https://sh.rustup.rs&gt; <span class="nt">-sSf</span> | sh
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="setting-up-github-ssh">Setting up GitHub ssh</h2>
+
+<p>Github has now removed support for password-based authentication for git operations, so accessing git through the command line will not be possible after August 2021. Github will no longer accept account passwords when authenticating Git operations on GitHub.com. We have to use a token-based authentication or access via ssh. I use ssh based authentication for git operations in Github.com.</p>
+
+<ul>
+  <li>generating public private key pair</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>- ssh-keygen <span class="nt">-t</span> ed25519 <span class="nt">-C</span> <span class="s2">"your email here"</span>
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>
+    <p>upload public key to github &gt; settings &gt; ssh and gpg keys. Public key will have pub extension just copy the contents of that file and paste in the textbox provided.</p>
+  </li>
+  <li>
+    <p>adding ssh key to ssh-agent</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  ssh-add .ssh/generated_keyname
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>test connection is working fine or not</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  ssh <span class="nt">-T</span> git@github.com
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>it will print out your username in console.</p>
+
+<h2 id="change-time-format-to-rtc-for-dual-boot-users-with-windows">Change time format to RTC (for dual boot users with windows)</h2>
+
+<p>If you are using arch desktop in dual boot settings with windows then time can change if you hop between different boots. The below command will enable RTC convention instead of UTC for time and date in linux which windows uses by default.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>timedatectl set-local-rtc 1 <span class="nt">--adjust-system-clock</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="auto-mount-hard-drives-or-partitions">Auto Mount Hard drives or partitions</h2>
+
+<p>If you have system with more than one hard drives, like in my case I have two hard drives a M.2 SSD in which linux is installed and a mechanical hard drive for backup and media contents. By default linux will not mount hard drive or partitions automatically other than swap, root and home, so some applications that rely on these drives for saving and loading data will fail on startup as they will not able to access that location. I usually auto mount my backup and media drives to load my music automatically configure backup at startup.</p>
+
+<ul>
+  <li>Create a folder where we want to mount the drive. In my case I want to mount my drives in folder named <em>media</em></li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="nb">sudo mkdir</span> /media
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>Create subfolders inside that folder to mount multiple partitions.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre>  <span class="nb">sudo mkdir</span> /media/multimedia
+  <span class="nb">sudo mkdir</span> /media/backup
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>I want to mount my backup drive in /media/backup and multimedia drive in /media/multimedia</p>
+<ul>
+  <li>Check disk and partitions in system</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="nb">sudo </span>fdisk <span class="nt">-l</span>
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>Find UUID of drive which we want to auto mount</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="nb">sudo </span>blkid
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>Copy UUID’s of required drives for auto mounting</li>
+  <li>Open fstab file and add entry for drives</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="nb">sudo </span>nano /etc/fstab
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The entry we have to add in the file should be of form</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="syntax"><code><span class="nv">UUID</span><span class="o">=</span><span class="s2">"PASTE HERE"</span>&lt;tab&gt;/media/folder_name&lt;tab&gt;filesystem&lt;tab&gt;defaults&lt;tab&gt;0&lt;tab&gt;0
+</code></pre></div></div>
+
+<p>here is an example</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="nv">UUID</span><span class="o">=</span>01D4653A0E0898E0 /media/multimedia ext4 defaults 0 0
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>For more info about editing fstab file and details of different parameters visit <a href="https://www.howtogeek.com/444814/how-to-write-an-fstab-file-on-linux/">this link</a></p>
+
+<p>If you are mounting windows ntfs drive, it might not give write permissions to that drive, to solve this issue we have to follow some additional steps.</p>
+
+<ul>
+  <li>
+    <p>Disable fast startup in windows
+The option can be found inside <code class="language-html highlighter-rouge">Control Panel &gt; Power Options &gt; Choose what the power button do &gt; Turn off fast startup</code></p>
+  </li>
+  <li>
+    <p>Install ntfs-3g</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="nb">sudo </span>pacman <span class="nt">-S</span> ntfs-3g
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>Find your ntfs drive to enable write access</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="nb">sudo </span>blkid
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>this command lists all drive partitions in the device, from this select the ntfs drive to enable write access.</p>
+
+<ul>
+  <li>Enable write access</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="nb">sudo </span>ntfsfix /dev/sda3
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>replace <code class="language-html highlighter-rouge">/dev/sda3</code> with your partition.</p>
+
+<p>We can also automount windows ntfs partition with the help og ntfs-3g that will also enable read and write in that partition. The syntax for this is same as for mounting <code class="language-html highlighter-rouge">ext4</code> filesystem, just replace paritition filesystem with <code class="language-html highlighter-rouge">ntfs-3g</code> in the above syntax, here is an example</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="nv">UUID</span><span class="o">=</span>0CC84430C84419FA /media/data ntfs-3g rw 0 0
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="installing-ms-office-fonts">Installing MS Office fonts</h2>
+
+<p>MS fonts like ARIAL, Times of Roman etc. can be easily installed using a single command.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>yay <span class="nt">-S</span> ttf-ms-fonts
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h2 id="enabling-emoji-support">Enabling emoji support</h2>
+
+<p>By default linux will not display emoji instead it will display a black square. To enable emoji support follow steps below.</p>
+
+<ul>
+  <li>Install noto fonts emoji</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  yay <span class="nt">-S</span> noto-fonts-emoji
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>create a config file named emoji.conf inside /etc/fonts/conf.d/</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre>  <span class="nb">sudo </span>nano /etc/fonts/conf.d/emoji.conf
+  
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>Edit contents of config file</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+</pre></td><td class="code"><pre>  &lt;?xml <span class="nv">version</span><span class="o">=</span><span class="s2">"1.0"</span>?&gt;
+  &lt;<span class="o">!</span>DOCTYPE fontconfig SYSTEM <span class="s2">"fonts.dtd"</span><span class="o">&gt;</span>
+  &lt;fontconfig&gt;
+
+      &lt;<span class="nb">alias</span><span class="o">&gt;</span>
+          &lt;family&gt;sans-serif&lt;/family&gt;
+          &lt;prefer&gt;
+          &lt;family&gt;Your favorite sans-serif font name&lt;/family&gt;
+          &lt;family&gt;Noto Color Emoji&lt;/family&gt;
+          &lt;family&gt;Noto Emoji&lt;/family&gt;
+          &lt;/prefer&gt;
+      &lt;/alias&gt;
+
+      &lt;<span class="nb">alias</span><span class="o">&gt;</span>
+          &lt;family&gt;serif&lt;/family&gt;
+          &lt;prefer&gt;
+          &lt;family&gt;Your favorite serif font name&lt;/family&gt;
+          &lt;family&gt;Noto Color Emoji&lt;/family&gt;
+          &lt;family&gt;Noto Emoji&lt;/family&gt;
+          &lt;/prefer&gt;
+      &lt;/alias&gt;
+
+      &lt;<span class="nb">alias</span><span class="o">&gt;</span>
+      &lt;family&gt;monospace&lt;/family&gt;
+      &lt;prefer&gt;
+          &lt;family&gt;Your favorite monospace font name&lt;/family&gt;
+          &lt;family&gt;Noto Color Emoji&lt;/family&gt;
+          &lt;family&gt;Noto Emoji&lt;/family&gt;
+          &lt;/prefer&gt;
+      &lt;/alias&gt;
+
+&lt;/fontconfig&gt;
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>If you want to use emoji then installing a emoji picker will help.</p>
+<ul>
+  <li>Install emoji picker</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>yay <span class="nt">-S</span> ibus-uniemoji
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<ul>
+  <li>Create a keyboard shortcut to open emoji picker with shortcut. Use command <code class="language-html highlighter-rouge">ibus emoji</code> and set your favourite key combination for opening emoji picker. I am using <kbd>Alt + .</kbd> as shortcut.</li>
+</ul>
+
+		</div>
+		<div class="post-tags">
+			<ul>
+				
+					<li>linux</li>
+				
+					<li>arch-linux</li>
+				
+					<li>manjaro</li>
+				
+					<li>arch-setup</li>
+				
+					<li>ml-setup</li>
+				
+			</ul>
+		</div>
+		
+	</div>
+	<div class="container">
+		
+	</div>
+</section>
+
+    <section class="social">
+    <ul animation="fade-down" animation-time="1s">
+        <li><a target="_blank" href="https://twitter.com/tarunresearches"><i class="fab fa-twitter"></i></a></li>
+        <li><a target="_blank" href="https://www.instagram.com/tarunresearches"><i class="fab fa-instagram"></i></a></li>
+        <li><a target="_blank" href="https://www.linkedin.com/in/tarunbisht"><i class="fab fa-linkedin-in"></i></a></li>
+        <li><a target="_blank" href="https://www.kaggle.com/tarunbisht11"><i class="fab fa-kaggle"></i></a></li>
+        <li><a target="_blank" href="https://github.com/tarun-bisht"><i class="fab fa-github"></i></a></li>
+        <li><a target="_blank" href="https://medium.com/@iamtarunbisht"><i class="fab fa-medium-m"></i></a></li>
+        <li><a target="_blank" href="https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA"><i class="fab fa-youtube"></i></a></li>
+    </ul>
+</section>
+    <footer>
+  <div class="image"></div>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/blogs/"> Blogs</a></li>
+      <li><a href="/projects/">Projects</a></li>
+      <li><a href="/resume/">Resume</a></li>
+      <li><a href="/cv/">Academic CV</a></li>
+      <li><a href="/contact/">Contact</a></li>
+      
+    </ul>
+  </nav>
+  <div class="copyright">
+    Copyright © 2025 All rights reserved
+  </div>
+</footer>
+
+    
+
+<script src="/assets/js/production.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</body>
+</html>

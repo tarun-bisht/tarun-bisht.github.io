@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="color-scheme" content="dark light">
+
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<script src="/assets/js/dark_mode.min.js"></script>
+	<link rel="icon" href="/assets/images/favicon.ico">
+	<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>deepdream using tensorflow an introduction to generative deep learning | Tarun Bisht</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="deepdream using tensorflow an introduction to generative deep learning" />
+<meta name="author" content="Tarun Bisht" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="DeepDream is image modification algorithm an example of generative deep learning that uses representation learned by convolution neural networks to modify images. It was released by Google in 2015. The popularity of deepdream caused due to its crappy artifacts in images, from eyes to feathers to dog faces. It was initially created to help scientists and engineers to see what a deep neural network is seeing when it looks given input." />
+<meta property="og:description" content="DeepDream is image modification algorithm an example of generative deep learning that uses representation learned by convolution neural networks to modify images. It was released by Google in 2015. The popularity of deepdream caused due to its crappy artifacts in images, from eyes to feathers to dog faces. It was initially created to help scientists and engineers to see what a deep neural network is seeing when it looks given input." />
+<link rel="canonical" href="https://tarunbisht.com/deep%20learning/2020/05/05/deepdream-using-tensorflow-an-introduction-to-generative-deep-learning/" />
+<meta property="og:url" content="https://tarunbisht.com/deep%20learning/2020/05/05/deepdream-using-tensorflow-an-introduction-to-generative-deep-learning/" />
+<meta property="og:site_name" content="Tarun Bisht" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-05-05T17:01:50+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="deepdream using tensorflow an introduction to generative deep learning" />
+<meta name="twitter:site" content="@tarunresearches" />
+<meta name="twitter:creator" content="@Tarun Bisht" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"deepdream using tensorflow an introduction to generative deep learning","dateModified":"2020-05-05T17:01:50+00:00","datePublished":"2020-05-05T17:01:50+00:00","description":"DeepDream is image modification algorithm an example of generative deep learning that uses representation learned by convolution neural networks to modify images. It was released by Google in 2015. The popularity of deepdream caused due to its crappy artifacts in images, from eyes to feathers to dog faces. It was initially created to help scientists and engineers to see what a deep neural network is seeing when it looks given input.","url":"https://tarunbisht.com/deep%20learning/2020/05/05/deepdream-using-tensorflow-an-introduction-to-generative-deep-learning/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/deep%20learning/2020/05/05/deepdream-using-tensorflow-an-introduction-to-generative-deep-learning/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+	
+</head>
+<body>
+    
+    <section class="writing-header">
+	<div class="header">
+		<nav>
+	<div class="logo"></div>
+	<div class="menu-btn">
+		<div class="line1"></div>
+		<div class="line2"></div>
+		<div class="line3"></div>
+	</div>
+    <ul class="menu">
+        <li><a href="/"> Home</a></li>
+        <li><a href="/about/"> About</a></li>
+        <li><a href="/blogs/"> Blogs</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/cv/">CV</a></li>
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/contact/"> Contact</a></li>
+        <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
+	</ul>
+</nav>
+	</div>
+</section>
+
+<section class="writing-body">
+	<div class="container">
+    	<div class="markdown-html">
+			<h1 class="headline">deepdream using tensorflow an introduction to generative deep learning</h1>
+            <p>DeepDream is image modification algorithm an example of generative deep learning that uses representation learned by convolution neural networks to modify images. It was released by Google in 2015. The popularity of deepdream caused due to its crappy artifacts in images, from eyes to feathers to dog faces. It was initially created to help scientists and engineers to see what a deep neural network is seeing when it looks given input.
+<!-- more --></p>
+
+<p>DeepDream is based on one of the techniques of visualizing learnings of convnets. Using that technique we can visualize patterns that activate a given layer of convolutional neural network or visual pattern that each filter respond to in convolutional layers. This is done by applying gradient ascent in input space, which maximizes the response of the specific filter in convnets.</p>
+
+<h3 id="gradient-ascent">Gradient Ascent</h3>
+
+<p>gradient ascent is opposite of gradient descent. Both are optimization algorithms. As gradient descent finds out minima of a function gradient ascent finds out maxima of a function. The process of gradient ascent is same as gradient descent we first find out gradient(derivative) of function with respect to our training parameters and then change training parameters so as to maximize instead of minimizing by moving it in opposite direction of gradient descent.</p>
+
+<p>For visualizing patterns learned by convnets we have to maximize the response of specific filters. In simple words, we have a response(activations) of the specific filter in a convolutional layer and we change our input space to maximize that filter’s response by using gradient ascent.</p>
+
+<h3 id="steps-to-create-deepdream">Steps to create Deepdream</h3>
+
+<ul>
+  <li>we start with an image and pass it to a pretrained convolutional neural network like inception or vgg</li>
+  <li>we try to maximize activation of entire layer rather than specific filter for this we define a simple loss function which will maximize activations of layers on maximizing that loss function. So we use mean of activations of layers as loss function.</li>
+  <li>finally we will change our input space(image) by applying that gradient to image which eventually will maximize out loss function.</li>
+  <li>additional steps like tiling and octaves are needed in order to work with large images so that it can be fit efficiently
+on RAM and provide better results.</li>
+</ul>
+
+<p>Implementing deepdream teaches a lot of other concepts of deep learning. It breaks the rule of traditional <em>model.fit</em> in every deep learning problem. Also playing with result is quite interesting so get ready for deepdream.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">input_img_path</span><span class="o">=</span><span class="s">"starry.jpg"</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Starting with our input image in which deepdream patterns will be shown as output. First we will define path of our input image.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="n">tf</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.applications</span> <span class="kn">import</span> <span class="n">inception_v3</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.models</span> <span class="kn">import</span> <span class="n">load_model</span><span class="p">,</span><span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">IPython.display</span> <span class="k">as</span> <span class="n">display</span>
+<span class="kn">import</span> <span class="nn">time</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Next we will import all dependencies which we will need for creating deepdream.</p>
+
+<ul>
+  <li><strong>numpy :</strong> for arrays manipulation</li>
+  <li><strong>tensorflow :</strong> for tensor operations</li>
+  <li><strong>tensorflow.keras :</strong> high level neural network library for tensorflow for creating neural networks</li>
+  <li><strong>pillow :</strong> for converting an image to numpy array and numpy array to image, saving out output image.</li>
+  <li><strong>Ipython.display :</strong> for displaying images in notebook</li>
+  <li><strong>time :</strong> for calculating time of each iteration</li>
+</ul>
+
+<p>We are using Inception pretrained model for this as it produces better outputs of deepdreams and original implementation also used Inception model.</p>
+
+<blockquote>
+  <p>Dreams in Inception movie.😁😁</p>
+</blockquote>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">load_image</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span><span class="n">max_dim</span><span class="o">=</span><span class="mi">512</span><span class="p">):</span>
+    <span class="n">img</span><span class="o">=</span><span class="n">Image</span><span class="p">.</span><span class="nb">open</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+    <span class="n">img</span><span class="o">=</span><span class="n">img</span><span class="p">.</span><span class="n">convert</span><span class="p">(</span><span class="s">"RGB"</span><span class="p">)</span>
+    <span class="n">img</span><span class="p">.</span><span class="n">thumbnail</span><span class="p">([</span><span class="n">max_dim</span><span class="p">,</span><span class="n">max_dim</span><span class="p">])</span>
+    <span class="n">img</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">img</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function</p>
+
+<ul>
+  <li>loads image from path</li>
+  <li>convert it into RGB format</li>
+  <li>resize it with max dimension specified while maintaining aspect ratio</li>
+  <li>converting an image to numpy array and creating a batch of a single image since neural networks expects the input to be in batches.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">deprocess_inception_image</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="mi">255</span><span class="o">*</span><span class="p">(</span><span class="n">img</span><span class="o">+</span><span class="mf">1.0</span><span class="p">)</span><span class="o">/</span><span class="mf">2.0</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function cancels out effects of preprocessing applied by inception’s preprocess_input function. preprocess_input function for inception model scales down pixels of image to be in range -1 to 1 so this function will scale pixels to be in range 0 to 255</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">array_to_img</span><span class="p">(</span><span class="n">array</span><span class="p">,</span><span class="n">deprocessing</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">deprocessing</span><span class="p">:</span>
+        <span class="n">array</span><span class="o">=</span><span class="n">deprocess_inception_image</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="p">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">3</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">array</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span>
+        <span class="n">array</span><span class="o">=</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">Image</span><span class="p">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function will convert array to image. if deprocessing is true it will first deprocess inception preprocessing and then convert array to image</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">show_image</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+    <span class="n">image</span><span class="o">=</span><span class="n">array_to_img</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">.</span><span class="n">display</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function will show image in notebook by first converting array to image</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">input_image</span><span class="o">=</span><span class="n">load_image</span><span class="p">(</span><span class="n">input_img_path</span><span class="p">,</span><span class="n">max_dim</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">input_image</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">show_image</span><span class="p">(</span><span class="n">input_image</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>(1, 338, 512, 3)
+</code></pre></div></div>
+
+<p><img src="https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/deep_dream_10ec0c4529c1aafed" alt="png" /></p>
+
+<p>Now lets load our input image and display it.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">preprocessed_image</span><span class="o">=</span><span class="n">inception_v3</span><span class="p">.</span><span class="n">preprocess_input</span><span class="p">(</span><span class="n">input_image</span><span class="p">)</span>
+<span class="n">show_image</span><span class="p">(</span><span class="n">deprocess_inception_image</span><span class="p">(</span><span class="n">preprocessed_image</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/deep_dream_29905fe4cd8a5744b" alt="png" /></p>
+
+<p>Also check if our deprocess_image function is working as expected</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">deep_dream_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">layer_names</span><span class="p">):</span>
+    <span class="n">model</span><span class="p">.</span><span class="n">trainable</span><span class="o">=</span><span class="bp">False</span>
+    <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">model</span><span class="p">.</span><span class="n">get_layer</span><span class="p">(</span><span class="n">name</span><span class="p">).</span><span class="n">output</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">layer_names</span><span class="p">]</span>
+    <span class="n">new_model</span><span class="o">=</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">model</span><span class="p">.</span><span class="nb">input</span><span class="p">,</span><span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_model</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function creates a deepdream model. Since we are not training our model so set trainable to false. Our deepdream model takes input as image and outputs the activations of layers which we will use to embed patterns learned by that layers into our input image</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">inception</span><span class="o">=</span><span class="n">inception_v3</span><span class="p">.</span><span class="n">InceptionV3</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s">"imagenet"</span><span class="p">,</span><span class="n">include_top</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">inception</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Model: "inception_v3"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_1 (InputLayer)            [(None, None, None,  0                                            
+__________________________________________________________________________________________________
+conv2d (Conv2D)                 (None, None, None, 3 864         input_1[0][0]                    
+__________________________________________________________________________________________________
+batch_normalization (BatchNorma (None, None, None, 3 96          conv2d[0][0]                     
+__________________________________________________________________________________________________
+activation (Activation)         (None, None, None, 3 0           batch_normalization[0][0]        
+__________________________________________________________________________________________________
+conv2d_1 (Conv2D)               (None, None, None, 3 9216        activation[0][0]                 
+__________________________________________________________________________________________________
+batch_normalization_1 (BatchNor (None, None, None, 3 96          conv2d_1[0][0]                   
+__________________________________________________________________________________________________
+activation_1 (Activation)       (None, None, None, 3 0           batch_normalization_1[0][0]      
+__________________________________________________________________________________________________
+conv2d_2 (Conv2D)               (None, None, None, 6 18432       activation_1[0][0]               
+__________________________________________________________________________________________________
+batch_normalization_2 (BatchNor (None, None, None, 6 192         conv2d_2[0][0]                   
+__________________________________________________________________________________________________
+activation_2 (Activation)       (None, None, None, 6 0           batch_normalization_2[0][0]      
+__________________________________________________________________________________________________
+max_pooling2d (MaxPooling2D)    (None, None, None, 6 0           activation_2[0][0]               
+__________________________________________________________________________________________________
+conv2d_3 (Conv2D)               (None, None, None, 8 5120        max_pooling2d[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_3 (BatchNor (None, None, None, 8 240         conv2d_3[0][0]                   
+__________________________________________________________________________________________________
+activation_3 (Activation)       (None, None, None, 8 0           batch_normalization_3[0][0]      
+__________________________________________________________________________________________________
+conv2d_4 (Conv2D)               (None, None, None, 1 138240      activation_3[0][0]               
+__________________________________________________________________________________________________
+batch_normalization_4 (BatchNor (None, None, None, 1 576         conv2d_4[0][0]                   
+__________________________________________________________________________________________________
+activation_4 (Activation)       (None, None, None, 1 0           batch_normalization_4[0][0]      
+__________________________________________________________________________________________________
+max_pooling2d_1 (MaxPooling2D)  (None, None, None, 1 0           activation_4[0][0]               
+__________________________________________________________________________________________________
+conv2d_8 (Conv2D)               (None, None, None, 6 12288       max_pooling2d_1[0][0]            
+__________________________________________________________________________________________________
+batch_normalization_8 (BatchNor (None, None, None, 6 192         conv2d_8[0][0]                   
+__________________________________________________________________________________________________
+activation_8 (Activation)       (None, None, None, 6 0           batch_normalization_8[0][0]      
+__________________________________________________________________________________________________
+conv2d_6 (Conv2D)               (None, None, None, 4 9216        max_pooling2d_1[0][0]            
+__________________________________________________________________________________________________
+conv2d_9 (Conv2D)               (None, None, None, 9 55296       activation_8[0][0]               
+__________________________________________________________________________________________________
+batch_normalization_6 (BatchNor (None, None, None, 4 144         conv2d_6[0][0]                   
+__________________________________________________________________________________________________
+batch_normalization_9 (BatchNor (None, None, None, 9 288         conv2d_9[0][0]                   
+__________________________________________________________________________________________________
+activation_6 (Activation)       (None, None, None, 4 0           batch_normalization_6[0][0]      
+__________________________________________________________________________________________________
+activation_9 (Activation)       (None, None, None, 9 0           batch_normalization_9[0][0]      
+__________________________________________________________________________________________________
+average_pooling2d (AveragePooli (None, None, None, 1 0           max_pooling2d_1[0][0]            
+__________________________________________________________________________________________________
+conv2d_5 (Conv2D)               (None, None, None, 6 12288       max_pooling2d_1[0][0]            
+__________________________________________________________________________________________________
+conv2d_7 (Conv2D)               (None, None, None, 6 76800       activation_6[0][0]               
+__________________________________________________________________________________________________
+conv2d_10 (Conv2D)              (None, None, None, 9 82944       activation_9[0][0]               
+__________________________________________________________________________________________________
+conv2d_11 (Conv2D)              (None, None, None, 3 6144        average_pooling2d[0][0]          
+__________________________________________________________________________________________________
+batch_normalization_5 (BatchNor (None, None, None, 6 192         conv2d_5[0][0]                   
+__________________________________________________________________________________________________
+batch_normalization_7 (BatchNor (None, None, None, 6 192         conv2d_7[0][0]                   
+__________________________________________________________________________________________________
+batch_normalization_10 (BatchNo (None, None, None, 9 288         conv2d_10[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_11 (BatchNo (None, None, None, 3 96          conv2d_11[0][0]                  
+__________________________________________________________________________________________________
+activation_5 (Activation)       (None, None, None, 6 0           batch_normalization_5[0][0]      
+__________________________________________________________________________________________________
+activation_7 (Activation)       (None, None, None, 6 0           batch_normalization_7[0][0]      
+__________________________________________________________________________________________________
+activation_10 (Activation)      (None, None, None, 9 0           batch_normalization_10[0][0]     
+__________________________________________________________________________________________________
+activation_11 (Activation)      (None, None, None, 3 0           batch_normalization_11[0][0]     
+__________________________________________________________________________________________________
+mixed0 (Concatenate)            (None, None, None, 2 0           activation_5[0][0]               
+                                                                 activation_7[0][0]               
+                                                                 activation_10[0][0]              
+                                                                 activation_11[0][0]              
+__________________________________________________________________________________________________
+conv2d_15 (Conv2D)              (None, None, None, 6 16384       mixed0[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_15 (BatchNo (None, None, None, 6 192         conv2d_15[0][0]                  
+__________________________________________________________________________________________________
+activation_15 (Activation)      (None, None, None, 6 0           batch_normalization_15[0][0]     
+__________________________________________________________________________________________________
+conv2d_13 (Conv2D)              (None, None, None, 4 12288       mixed0[0][0]                     
+__________________________________________________________________________________________________
+conv2d_16 (Conv2D)              (None, None, None, 9 55296       activation_15[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_13 (BatchNo (None, None, None, 4 144         conv2d_13[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_16 (BatchNo (None, None, None, 9 288         conv2d_16[0][0]                  
+__________________________________________________________________________________________________
+activation_13 (Activation)      (None, None, None, 4 0           batch_normalization_13[0][0]     
+__________________________________________________________________________________________________
+activation_16 (Activation)      (None, None, None, 9 0           batch_normalization_16[0][0]     
+__________________________________________________________________________________________________
+average_pooling2d_1 (AveragePoo (None, None, None, 2 0           mixed0[0][0]                     
+__________________________________________________________________________________________________
+conv2d_12 (Conv2D)              (None, None, None, 6 16384       mixed0[0][0]                     
+__________________________________________________________________________________________________
+conv2d_14 (Conv2D)              (None, None, None, 6 76800       activation_13[0][0]              
+__________________________________________________________________________________________________
+conv2d_17 (Conv2D)              (None, None, None, 9 82944       activation_16[0][0]              
+__________________________________________________________________________________________________
+conv2d_18 (Conv2D)              (None, None, None, 6 16384       average_pooling2d_1[0][0]        
+__________________________________________________________________________________________________
+batch_normalization_12 (BatchNo (None, None, None, 6 192         conv2d_12[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_14 (BatchNo (None, None, None, 6 192         conv2d_14[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_17 (BatchNo (None, None, None, 9 288         conv2d_17[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_18 (BatchNo (None, None, None, 6 192         conv2d_18[0][0]                  
+__________________________________________________________________________________________________
+activation_12 (Activation)      (None, None, None, 6 0           batch_normalization_12[0][0]     
+__________________________________________________________________________________________________
+activation_14 (Activation)      (None, None, None, 6 0           batch_normalization_14[0][0]     
+__________________________________________________________________________________________________
+activation_17 (Activation)      (None, None, None, 9 0           batch_normalization_17[0][0]     
+__________________________________________________________________________________________________
+activation_18 (Activation)      (None, None, None, 6 0           batch_normalization_18[0][0]     
+__________________________________________________________________________________________________
+mixed1 (Concatenate)            (None, None, None, 2 0           activation_12[0][0]              
+                                                                 activation_14[0][0]              
+                                                                 activation_17[0][0]              
+                                                                 activation_18[0][0]              
+__________________________________________________________________________________________________
+conv2d_22 (Conv2D)              (None, None, None, 6 18432       mixed1[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_22 (BatchNo (None, None, None, 6 192         conv2d_22[0][0]                  
+__________________________________________________________________________________________________
+activation_22 (Activation)      (None, None, None, 6 0           batch_normalization_22[0][0]     
+__________________________________________________________________________________________________
+conv2d_20 (Conv2D)              (None, None, None, 4 13824       mixed1[0][0]                     
+__________________________________________________________________________________________________
+conv2d_23 (Conv2D)              (None, None, None, 9 55296       activation_22[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_20 (BatchNo (None, None, None, 4 144         conv2d_20[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_23 (BatchNo (None, None, None, 9 288         conv2d_23[0][0]                  
+__________________________________________________________________________________________________
+activation_20 (Activation)      (None, None, None, 4 0           batch_normalization_20[0][0]     
+__________________________________________________________________________________________________
+activation_23 (Activation)      (None, None, None, 9 0           batch_normalization_23[0][0]     
+__________________________________________________________________________________________________
+average_pooling2d_2 (AveragePoo (None, None, None, 2 0           mixed1[0][0]                     
+__________________________________________________________________________________________________
+conv2d_19 (Conv2D)              (None, None, None, 6 18432       mixed1[0][0]                     
+__________________________________________________________________________________________________
+conv2d_21 (Conv2D)              (None, None, None, 6 76800       activation_20[0][0]              
+__________________________________________________________________________________________________
+conv2d_24 (Conv2D)              (None, None, None, 9 82944       activation_23[0][0]              
+__________________________________________________________________________________________________
+conv2d_25 (Conv2D)              (None, None, None, 6 18432       average_pooling2d_2[0][0]        
+__________________________________________________________________________________________________
+batch_normalization_19 (BatchNo (None, None, None, 6 192         conv2d_19[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_21 (BatchNo (None, None, None, 6 192         conv2d_21[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_24 (BatchNo (None, None, None, 9 288         conv2d_24[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_25 (BatchNo (None, None, None, 6 192         conv2d_25[0][0]                  
+__________________________________________________________________________________________________
+activation_19 (Activation)      (None, None, None, 6 0           batch_normalization_19[0][0]     
+__________________________________________________________________________________________________
+activation_21 (Activation)      (None, None, None, 6 0           batch_normalization_21[0][0]     
+__________________________________________________________________________________________________
+activation_24 (Activation)      (None, None, None, 9 0           batch_normalization_24[0][0]     
+__________________________________________________________________________________________________
+activation_25 (Activation)      (None, None, None, 6 0           batch_normalization_25[0][0]     
+__________________________________________________________________________________________________
+mixed2 (Concatenate)            (None, None, None, 2 0           activation_19[0][0]              
+                                                                 activation_21[0][0]              
+                                                                 activation_24[0][0]              
+                                                                 activation_25[0][0]              
+__________________________________________________________________________________________________
+conv2d_27 (Conv2D)              (None, None, None, 6 18432       mixed2[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_27 (BatchNo (None, None, None, 6 192         conv2d_27[0][0]                  
+__________________________________________________________________________________________________
+activation_27 (Activation)      (None, None, None, 6 0           batch_normalization_27[0][0]     
+__________________________________________________________________________________________________
+conv2d_28 (Conv2D)              (None, None, None, 9 55296       activation_27[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_28 (BatchNo (None, None, None, 9 288         conv2d_28[0][0]                  
+__________________________________________________________________________________________________
+activation_28 (Activation)      (None, None, None, 9 0           batch_normalization_28[0][0]     
+__________________________________________________________________________________________________
+conv2d_26 (Conv2D)              (None, None, None, 3 995328      mixed2[0][0]                     
+__________________________________________________________________________________________________
+conv2d_29 (Conv2D)              (None, None, None, 9 82944       activation_28[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_26 (BatchNo (None, None, None, 3 1152        conv2d_26[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_29 (BatchNo (None, None, None, 9 288         conv2d_29[0][0]                  
+__________________________________________________________________________________________________
+activation_26 (Activation)      (None, None, None, 3 0           batch_normalization_26[0][0]     
+__________________________________________________________________________________________________
+activation_29 (Activation)      (None, None, None, 9 0           batch_normalization_29[0][0]     
+__________________________________________________________________________________________________
+max_pooling2d_2 (MaxPooling2D)  (None, None, None, 2 0           mixed2[0][0]                     
+__________________________________________________________________________________________________
+mixed3 (Concatenate)            (None, None, None, 7 0           activation_26[0][0]              
+                                                                 activation_29[0][0]              
+                                                                 max_pooling2d_2[0][0]            
+__________________________________________________________________________________________________
+conv2d_34 (Conv2D)              (None, None, None, 1 98304       mixed3[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_34 (BatchNo (None, None, None, 1 384         conv2d_34[0][0]                  
+__________________________________________________________________________________________________
+activation_34 (Activation)      (None, None, None, 1 0           batch_normalization_34[0][0]     
+__________________________________________________________________________________________________
+conv2d_35 (Conv2D)              (None, None, None, 1 114688      activation_34[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_35 (BatchNo (None, None, None, 1 384         conv2d_35[0][0]                  
+__________________________________________________________________________________________________
+activation_35 (Activation)      (None, None, None, 1 0           batch_normalization_35[0][0]     
+__________________________________________________________________________________________________
+conv2d_31 (Conv2D)              (None, None, None, 1 98304       mixed3[0][0]                     
+__________________________________________________________________________________________________
+conv2d_36 (Conv2D)              (None, None, None, 1 114688      activation_35[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_31 (BatchNo (None, None, None, 1 384         conv2d_31[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_36 (BatchNo (None, None, None, 1 384         conv2d_36[0][0]                  
+__________________________________________________________________________________________________
+activation_31 (Activation)      (None, None, None, 1 0           batch_normalization_31[0][0]     
+__________________________________________________________________________________________________
+activation_36 (Activation)      (None, None, None, 1 0           batch_normalization_36[0][0]     
+__________________________________________________________________________________________________
+conv2d_32 (Conv2D)              (None, None, None, 1 114688      activation_31[0][0]              
+__________________________________________________________________________________________________
+conv2d_37 (Conv2D)              (None, None, None, 1 114688      activation_36[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_32 (BatchNo (None, None, None, 1 384         conv2d_32[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_37 (BatchNo (None, None, None, 1 384         conv2d_37[0][0]                  
+__________________________________________________________________________________________________
+activation_32 (Activation)      (None, None, None, 1 0           batch_normalization_32[0][0]     
+__________________________________________________________________________________________________
+activation_37 (Activation)      (None, None, None, 1 0           batch_normalization_37[0][0]     
+__________________________________________________________________________________________________
+average_pooling2d_3 (AveragePoo (None, None, None, 7 0           mixed3[0][0]                     
+__________________________________________________________________________________________________
+conv2d_30 (Conv2D)              (None, None, None, 1 147456      mixed3[0][0]                     
+__________________________________________________________________________________________________
+conv2d_33 (Conv2D)              (None, None, None, 1 172032      activation_32[0][0]              
+__________________________________________________________________________________________________
+conv2d_38 (Conv2D)              (None, None, None, 1 172032      activation_37[0][0]              
+__________________________________________________________________________________________________
+conv2d_39 (Conv2D)              (None, None, None, 1 147456      average_pooling2d_3[0][0]        
+__________________________________________________________________________________________________
+batch_normalization_30 (BatchNo (None, None, None, 1 576         conv2d_30[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_33 (BatchNo (None, None, None, 1 576         conv2d_33[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_38 (BatchNo (None, None, None, 1 576         conv2d_38[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_39 (BatchNo (None, None, None, 1 576         conv2d_39[0][0]                  
+__________________________________________________________________________________________________
+activation_30 (Activation)      (None, None, None, 1 0           batch_normalization_30[0][0]     
+__________________________________________________________________________________________________
+activation_33 (Activation)      (None, None, None, 1 0           batch_normalization_33[0][0]     
+__________________________________________________________________________________________________
+activation_38 (Activation)      (None, None, None, 1 0           batch_normalization_38[0][0]     
+__________________________________________________________________________________________________
+activation_39 (Activation)      (None, None, None, 1 0           batch_normalization_39[0][0]     
+__________________________________________________________________________________________________
+mixed4 (Concatenate)            (None, None, None, 7 0           activation_30[0][0]              
+                                                                 activation_33[0][0]              
+                                                                 activation_38[0][0]              
+                                                                 activation_39[0][0]              
+__________________________________________________________________________________________________
+conv2d_44 (Conv2D)              (None, None, None, 1 122880      mixed4[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_44 (BatchNo (None, None, None, 1 480         conv2d_44[0][0]                  
+__________________________________________________________________________________________________
+activation_44 (Activation)      (None, None, None, 1 0           batch_normalization_44[0][0]     
+__________________________________________________________________________________________________
+conv2d_45 (Conv2D)              (None, None, None, 1 179200      activation_44[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_45 (BatchNo (None, None, None, 1 480         conv2d_45[0][0]                  
+__________________________________________________________________________________________________
+activation_45 (Activation)      (None, None, None, 1 0           batch_normalization_45[0][0]     
+__________________________________________________________________________________________________
+conv2d_41 (Conv2D)              (None, None, None, 1 122880      mixed4[0][0]                     
+__________________________________________________________________________________________________
+conv2d_46 (Conv2D)              (None, None, None, 1 179200      activation_45[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_41 (BatchNo (None, None, None, 1 480         conv2d_41[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_46 (BatchNo (None, None, None, 1 480         conv2d_46[0][0]                  
+__________________________________________________________________________________________________
+activation_41 (Activation)      (None, None, None, 1 0           batch_normalization_41[0][0]     
+__________________________________________________________________________________________________
+activation_46 (Activation)      (None, None, None, 1 0           batch_normalization_46[0][0]     
+__________________________________________________________________________________________________
+conv2d_42 (Conv2D)              (None, None, None, 1 179200      activation_41[0][0]              
+__________________________________________________________________________________________________
+conv2d_47 (Conv2D)              (None, None, None, 1 179200      activation_46[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_42 (BatchNo (None, None, None, 1 480         conv2d_42[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_47 (BatchNo (None, None, None, 1 480         conv2d_47[0][0]                  
+__________________________________________________________________________________________________
+activation_42 (Activation)      (None, None, None, 1 0           batch_normalization_42[0][0]     
+__________________________________________________________________________________________________
+activation_47 (Activation)      (None, None, None, 1 0           batch_normalization_47[0][0]     
+__________________________________________________________________________________________________
+average_pooling2d_4 (AveragePoo (None, None, None, 7 0           mixed4[0][0]                     
+__________________________________________________________________________________________________
+conv2d_40 (Conv2D)              (None, None, None, 1 147456      mixed4[0][0]                     
+__________________________________________________________________________________________________
+conv2d_43 (Conv2D)              (None, None, None, 1 215040      activation_42[0][0]              
+__________________________________________________________________________________________________
+conv2d_48 (Conv2D)              (None, None, None, 1 215040      activation_47[0][0]              
+__________________________________________________________________________________________________
+conv2d_49 (Conv2D)              (None, None, None, 1 147456      average_pooling2d_4[0][0]        
+__________________________________________________________________________________________________
+batch_normalization_40 (BatchNo (None, None, None, 1 576         conv2d_40[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_43 (BatchNo (None, None, None, 1 576         conv2d_43[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_48 (BatchNo (None, None, None, 1 576         conv2d_48[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_49 (BatchNo (None, None, None, 1 576         conv2d_49[0][0]                  
+__________________________________________________________________________________________________
+activation_40 (Activation)      (None, None, None, 1 0           batch_normalization_40[0][0]     
+__________________________________________________________________________________________________
+activation_43 (Activation)      (None, None, None, 1 0           batch_normalization_43[0][0]     
+__________________________________________________________________________________________________
+activation_48 (Activation)      (None, None, None, 1 0           batch_normalization_48[0][0]     
+__________________________________________________________________________________________________
+activation_49 (Activation)      (None, None, None, 1 0           batch_normalization_49[0][0]     
+__________________________________________________________________________________________________
+mixed5 (Concatenate)            (None, None, None, 7 0           activation_40[0][0]              
+                                                                 activation_43[0][0]              
+                                                                 activation_48[0][0]              
+                                                                 activation_49[0][0]              
+__________________________________________________________________________________________________
+conv2d_54 (Conv2D)              (None, None, None, 1 122880      mixed5[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_54 (BatchNo (None, None, None, 1 480         conv2d_54[0][0]                  
+__________________________________________________________________________________________________
+activation_54 (Activation)      (None, None, None, 1 0           batch_normalization_54[0][0]     
+__________________________________________________________________________________________________
+conv2d_55 (Conv2D)              (None, None, None, 1 179200      activation_54[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_55 (BatchNo (None, None, None, 1 480         conv2d_55[0][0]                  
+__________________________________________________________________________________________________
+activation_55 (Activation)      (None, None, None, 1 0           batch_normalization_55[0][0]     
+__________________________________________________________________________________________________
+conv2d_51 (Conv2D)              (None, None, None, 1 122880      mixed5[0][0]                     
+__________________________________________________________________________________________________
+conv2d_56 (Conv2D)              (None, None, None, 1 179200      activation_55[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_51 (BatchNo (None, None, None, 1 480         conv2d_51[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_56 (BatchNo (None, None, None, 1 480         conv2d_56[0][0]                  
+__________________________________________________________________________________________________
+activation_51 (Activation)      (None, None, None, 1 0           batch_normalization_51[0][0]     
+__________________________________________________________________________________________________
+activation_56 (Activation)      (None, None, None, 1 0           batch_normalization_56[0][0]     
+__________________________________________________________________________________________________
+conv2d_52 (Conv2D)              (None, None, None, 1 179200      activation_51[0][0]              
+__________________________________________________________________________________________________
+conv2d_57 (Conv2D)              (None, None, None, 1 179200      activation_56[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_52 (BatchNo (None, None, None, 1 480         conv2d_52[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_57 (BatchNo (None, None, None, 1 480         conv2d_57[0][0]                  
+__________________________________________________________________________________________________
+activation_52 (Activation)      (None, None, None, 1 0           batch_normalization_52[0][0]     
+__________________________________________________________________________________________________
+activation_57 (Activation)      (None, None, None, 1 0           batch_normalization_57[0][0]     
+__________________________________________________________________________________________________
+average_pooling2d_5 (AveragePoo (None, None, None, 7 0           mixed5[0][0]                     
+__________________________________________________________________________________________________
+conv2d_50 (Conv2D)              (None, None, None, 1 147456      mixed5[0][0]                     
+__________________________________________________________________________________________________
+conv2d_53 (Conv2D)              (None, None, None, 1 215040      activation_52[0][0]              
+__________________________________________________________________________________________________
+conv2d_58 (Conv2D)              (None, None, None, 1 215040      activation_57[0][0]              
+__________________________________________________________________________________________________
+conv2d_59 (Conv2D)              (None, None, None, 1 147456      average_pooling2d_5[0][0]        
+__________________________________________________________________________________________________
+batch_normalization_50 (BatchNo (None, None, None, 1 576         conv2d_50[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_53 (BatchNo (None, None, None, 1 576         conv2d_53[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_58 (BatchNo (None, None, None, 1 576         conv2d_58[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_59 (BatchNo (None, None, None, 1 576         conv2d_59[0][0]                  
+__________________________________________________________________________________________________
+activation_50 (Activation)      (None, None, None, 1 0           batch_normalization_50[0][0]     
+__________________________________________________________________________________________________
+activation_53 (Activation)      (None, None, None, 1 0           batch_normalization_53[0][0]     
+__________________________________________________________________________________________________
+activation_58 (Activation)      (None, None, None, 1 0           batch_normalization_58[0][0]     
+__________________________________________________________________________________________________
+activation_59 (Activation)      (None, None, None, 1 0           batch_normalization_59[0][0]     
+__________________________________________________________________________________________________
+mixed6 (Concatenate)            (None, None, None, 7 0           activation_50[0][0]              
+                                                                 activation_53[0][0]              
+                                                                 activation_58[0][0]              
+                                                                 activation_59[0][0]              
+__________________________________________________________________________________________________
+conv2d_64 (Conv2D)              (None, None, None, 1 147456      mixed6[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_64 (BatchNo (None, None, None, 1 576         conv2d_64[0][0]                  
+__________________________________________________________________________________________________
+activation_64 (Activation)      (None, None, None, 1 0           batch_normalization_64[0][0]     
+__________________________________________________________________________________________________
+conv2d_65 (Conv2D)              (None, None, None, 1 258048      activation_64[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_65 (BatchNo (None, None, None, 1 576         conv2d_65[0][0]                  
+__________________________________________________________________________________________________
+activation_65 (Activation)      (None, None, None, 1 0           batch_normalization_65[0][0]     
+__________________________________________________________________________________________________
+conv2d_61 (Conv2D)              (None, None, None, 1 147456      mixed6[0][0]                     
+__________________________________________________________________________________________________
+conv2d_66 (Conv2D)              (None, None, None, 1 258048      activation_65[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_61 (BatchNo (None, None, None, 1 576         conv2d_61[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_66 (BatchNo (None, None, None, 1 576         conv2d_66[0][0]                  
+__________________________________________________________________________________________________
+activation_61 (Activation)      (None, None, None, 1 0           batch_normalization_61[0][0]     
+__________________________________________________________________________________________________
+activation_66 (Activation)      (None, None, None, 1 0           batch_normalization_66[0][0]     
+__________________________________________________________________________________________________
+conv2d_62 (Conv2D)              (None, None, None, 1 258048      activation_61[0][0]              
+__________________________________________________________________________________________________
+conv2d_67 (Conv2D)              (None, None, None, 1 258048      activation_66[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_62 (BatchNo (None, None, None, 1 576         conv2d_62[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_67 (BatchNo (None, None, None, 1 576         conv2d_67[0][0]                  
+__________________________________________________________________________________________________
+activation_62 (Activation)      (None, None, None, 1 0           batch_normalization_62[0][0]     
+__________________________________________________________________________________________________
+activation_67 (Activation)      (None, None, None, 1 0           batch_normalization_67[0][0]     
+__________________________________________________________________________________________________
+average_pooling2d_6 (AveragePoo (None, None, None, 7 0           mixed6[0][0]                     
+__________________________________________________________________________________________________
+conv2d_60 (Conv2D)              (None, None, None, 1 147456      mixed6[0][0]                     
+__________________________________________________________________________________________________
+conv2d_63 (Conv2D)              (None, None, None, 1 258048      activation_62[0][0]              
+__________________________________________________________________________________________________
+conv2d_68 (Conv2D)              (None, None, None, 1 258048      activation_67[0][0]              
+__________________________________________________________________________________________________
+conv2d_69 (Conv2D)              (None, None, None, 1 147456      average_pooling2d_6[0][0]        
+__________________________________________________________________________________________________
+batch_normalization_60 (BatchNo (None, None, None, 1 576         conv2d_60[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_63 (BatchNo (None, None, None, 1 576         conv2d_63[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_68 (BatchNo (None, None, None, 1 576         conv2d_68[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_69 (BatchNo (None, None, None, 1 576         conv2d_69[0][0]                  
+__________________________________________________________________________________________________
+activation_60 (Activation)      (None, None, None, 1 0           batch_normalization_60[0][0]     
+__________________________________________________________________________________________________
+activation_63 (Activation)      (None, None, None, 1 0           batch_normalization_63[0][0]     
+__________________________________________________________________________________________________
+activation_68 (Activation)      (None, None, None, 1 0           batch_normalization_68[0][0]     
+__________________________________________________________________________________________________
+activation_69 (Activation)      (None, None, None, 1 0           batch_normalization_69[0][0]     
+__________________________________________________________________________________________________
+mixed7 (Concatenate)            (None, None, None, 7 0           activation_60[0][0]              
+                                                                 activation_63[0][0]              
+                                                                 activation_68[0][0]              
+                                                                 activation_69[0][0]              
+__________________________________________________________________________________________________
+conv2d_72 (Conv2D)              (None, None, None, 1 147456      mixed7[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_72 (BatchNo (None, None, None, 1 576         conv2d_72[0][0]                  
+__________________________________________________________________________________________________
+activation_72 (Activation)      (None, None, None, 1 0           batch_normalization_72[0][0]     
+__________________________________________________________________________________________________
+conv2d_73 (Conv2D)              (None, None, None, 1 258048      activation_72[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_73 (BatchNo (None, None, None, 1 576         conv2d_73[0][0]                  
+__________________________________________________________________________________________________
+activation_73 (Activation)      (None, None, None, 1 0           batch_normalization_73[0][0]     
+__________________________________________________________________________________________________
+conv2d_70 (Conv2D)              (None, None, None, 1 147456      mixed7[0][0]                     
+__________________________________________________________________________________________________
+conv2d_74 (Conv2D)              (None, None, None, 1 258048      activation_73[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_70 (BatchNo (None, None, None, 1 576         conv2d_70[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_74 (BatchNo (None, None, None, 1 576         conv2d_74[0][0]                  
+__________________________________________________________________________________________________
+activation_70 (Activation)      (None, None, None, 1 0           batch_normalization_70[0][0]     
+__________________________________________________________________________________________________
+activation_74 (Activation)      (None, None, None, 1 0           batch_normalization_74[0][0]     
+__________________________________________________________________________________________________
+conv2d_71 (Conv2D)              (None, None, None, 3 552960      activation_70[0][0]              
+__________________________________________________________________________________________________
+conv2d_75 (Conv2D)              (None, None, None, 1 331776      activation_74[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_71 (BatchNo (None, None, None, 3 960         conv2d_71[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_75 (BatchNo (None, None, None, 1 576         conv2d_75[0][0]                  
+__________________________________________________________________________________________________
+activation_71 (Activation)      (None, None, None, 3 0           batch_normalization_71[0][0]     
+__________________________________________________________________________________________________
+activation_75 (Activation)      (None, None, None, 1 0           batch_normalization_75[0][0]     
+__________________________________________________________________________________________________
+max_pooling2d_3 (MaxPooling2D)  (None, None, None, 7 0           mixed7[0][0]                     
+__________________________________________________________________________________________________
+mixed8 (Concatenate)            (None, None, None, 1 0           activation_71[0][0]              
+                                                                 activation_75[0][0]              
+                                                                 max_pooling2d_3[0][0]            
+__________________________________________________________________________________________________
+conv2d_80 (Conv2D)              (None, None, None, 4 573440      mixed8[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_80 (BatchNo (None, None, None, 4 1344        conv2d_80[0][0]                  
+__________________________________________________________________________________________________
+activation_80 (Activation)      (None, None, None, 4 0           batch_normalization_80[0][0]     
+__________________________________________________________________________________________________
+conv2d_77 (Conv2D)              (None, None, None, 3 491520      mixed8[0][0]                     
+__________________________________________________________________________________________________
+conv2d_81 (Conv2D)              (None, None, None, 3 1548288     activation_80[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_77 (BatchNo (None, None, None, 3 1152        conv2d_77[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_81 (BatchNo (None, None, None, 3 1152        conv2d_81[0][0]                  
+__________________________________________________________________________________________________
+activation_77 (Activation)      (None, None, None, 3 0           batch_normalization_77[0][0]     
+__________________________________________________________________________________________________
+activation_81 (Activation)      (None, None, None, 3 0           batch_normalization_81[0][0]     
+__________________________________________________________________________________________________
+conv2d_78 (Conv2D)              (None, None, None, 3 442368      activation_77[0][0]              
+__________________________________________________________________________________________________
+conv2d_79 (Conv2D)              (None, None, None, 3 442368      activation_77[0][0]              
+__________________________________________________________________________________________________
+conv2d_82 (Conv2D)              (None, None, None, 3 442368      activation_81[0][0]              
+__________________________________________________________________________________________________
+conv2d_83 (Conv2D)              (None, None, None, 3 442368      activation_81[0][0]              
+__________________________________________________________________________________________________
+average_pooling2d_7 (AveragePoo (None, None, None, 1 0           mixed8[0][0]                     
+__________________________________________________________________________________________________
+conv2d_76 (Conv2D)              (None, None, None, 3 409600      mixed8[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_78 (BatchNo (None, None, None, 3 1152        conv2d_78[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_79 (BatchNo (None, None, None, 3 1152        conv2d_79[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_82 (BatchNo (None, None, None, 3 1152        conv2d_82[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_83 (BatchNo (None, None, None, 3 1152        conv2d_83[0][0]                  
+__________________________________________________________________________________________________
+conv2d_84 (Conv2D)              (None, None, None, 1 245760      average_pooling2d_7[0][0]        
+__________________________________________________________________________________________________
+batch_normalization_76 (BatchNo (None, None, None, 3 960         conv2d_76[0][0]                  
+__________________________________________________________________________________________________
+activation_78 (Activation)      (None, None, None, 3 0           batch_normalization_78[0][0]     
+__________________________________________________________________________________________________
+activation_79 (Activation)      (None, None, None, 3 0           batch_normalization_79[0][0]     
+__________________________________________________________________________________________________
+activation_82 (Activation)      (None, None, None, 3 0           batch_normalization_82[0][0]     
+__________________________________________________________________________________________________
+activation_83 (Activation)      (None, None, None, 3 0           batch_normalization_83[0][0]     
+__________________________________________________________________________________________________
+batch_normalization_84 (BatchNo (None, None, None, 1 576         conv2d_84[0][0]                  
+__________________________________________________________________________________________________
+activation_76 (Activation)      (None, None, None, 3 0           batch_normalization_76[0][0]     
+__________________________________________________________________________________________________
+mixed9_0 (Concatenate)          (None, None, None, 7 0           activation_78[0][0]              
+                                                                 activation_79[0][0]              
+__________________________________________________________________________________________________
+concatenate (Concatenate)       (None, None, None, 7 0           activation_82[0][0]              
+                                                                 activation_83[0][0]              
+__________________________________________________________________________________________________
+activation_84 (Activation)      (None, None, None, 1 0           batch_normalization_84[0][0]     
+__________________________________________________________________________________________________
+mixed9 (Concatenate)            (None, None, None, 2 0           activation_76[0][0]              
+                                                                 mixed9_0[0][0]                   
+                                                                 concatenate[0][0]                
+                                                                 activation_84[0][0]              
+__________________________________________________________________________________________________
+conv2d_89 (Conv2D)              (None, None, None, 4 917504      mixed9[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_89 (BatchNo (None, None, None, 4 1344        conv2d_89[0][0]                  
+__________________________________________________________________________________________________
+activation_89 (Activation)      (None, None, None, 4 0           batch_normalization_89[0][0]     
+__________________________________________________________________________________________________
+conv2d_86 (Conv2D)              (None, None, None, 3 786432      mixed9[0][0]                     
+__________________________________________________________________________________________________
+conv2d_90 (Conv2D)              (None, None, None, 3 1548288     activation_89[0][0]              
+__________________________________________________________________________________________________
+batch_normalization_86 (BatchNo (None, None, None, 3 1152        conv2d_86[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_90 (BatchNo (None, None, None, 3 1152        conv2d_90[0][0]                  
+__________________________________________________________________________________________________
+activation_86 (Activation)      (None, None, None, 3 0           batch_normalization_86[0][0]     
+__________________________________________________________________________________________________
+activation_90 (Activation)      (None, None, None, 3 0           batch_normalization_90[0][0]     
+__________________________________________________________________________________________________
+conv2d_87 (Conv2D)              (None, None, None, 3 442368      activation_86[0][0]              
+__________________________________________________________________________________________________
+conv2d_88 (Conv2D)              (None, None, None, 3 442368      activation_86[0][0]              
+__________________________________________________________________________________________________
+conv2d_91 (Conv2D)              (None, None, None, 3 442368      activation_90[0][0]              
+__________________________________________________________________________________________________
+conv2d_92 (Conv2D)              (None, None, None, 3 442368      activation_90[0][0]              
+__________________________________________________________________________________________________
+average_pooling2d_8 (AveragePoo (None, None, None, 2 0           mixed9[0][0]                     
+__________________________________________________________________________________________________
+conv2d_85 (Conv2D)              (None, None, None, 3 655360      mixed9[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_87 (BatchNo (None, None, None, 3 1152        conv2d_87[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_88 (BatchNo (None, None, None, 3 1152        conv2d_88[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_91 (BatchNo (None, None, None, 3 1152        conv2d_91[0][0]                  
+__________________________________________________________________________________________________
+batch_normalization_92 (BatchNo (None, None, None, 3 1152        conv2d_92[0][0]                  
+__________________________________________________________________________________________________
+conv2d_93 (Conv2D)              (None, None, None, 1 393216      average_pooling2d_8[0][0]        
+__________________________________________________________________________________________________
+batch_normalization_85 (BatchNo (None, None, None, 3 960         conv2d_85[0][0]                  
+__________________________________________________________________________________________________
+activation_87 (Activation)      (None, None, None, 3 0           batch_normalization_87[0][0]     
+__________________________________________________________________________________________________
+activation_88 (Activation)      (None, None, None, 3 0           batch_normalization_88[0][0]     
+__________________________________________________________________________________________________
+activation_91 (Activation)      (None, None, None, 3 0           batch_normalization_91[0][0]     
+__________________________________________________________________________________________________
+activation_92 (Activation)      (None, None, None, 3 0           batch_normalization_92[0][0]     
+__________________________________________________________________________________________________
+batch_normalization_93 (BatchNo (None, None, None, 1 576         conv2d_93[0][0]                  
+__________________________________________________________________________________________________
+activation_85 (Activation)      (None, None, None, 3 0           batch_normalization_85[0][0]     
+__________________________________________________________________________________________________
+mixed9_1 (Concatenate)          (None, None, None, 7 0           activation_87[0][0]              
+                                                                 activation_88[0][0]              
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, None, None, 7 0           activation_91[0][0]              
+                                                                 activation_92[0][0]              
+__________________________________________________________________________________________________
+activation_93 (Activation)      (None, None, None, 1 0           batch_normalization_93[0][0]     
+__________________________________________________________________________________________________
+mixed10 (Concatenate)           (None, None, None, 2 0           activation_85[0][0]              
+                                                                 mixed9_1[0][0]                   
+                                                                 concatenate_1[0][0]              
+                                                                 activation_93[0][0]              
+==================================================================================================
+Total params: 21,802,784
+Trainable params: 21,768,352
+Non-trainable params: 34,432
+__________________________________________________________________________________________________
+</code></pre></div></div>
+
+<p>Now since we are using inception model so lets create a inception model using keras and print its layers</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">layers_contributions</span><span class="o">=</span><span class="p">[</span><span class="s">'mixed3'</span><span class="p">,</span> <span class="s">'mixed5'</span><span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Lets describe layers whose patterns we want to embed into our input image. Here we are using <em>mixed3</em> and <em>mixed5</em> layers which are concatenation of different convolution layers.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">dream_model</span><span class="o">=</span><span class="n">deep_dream_model</span><span class="p">(</span><span class="n">inception</span><span class="p">,</span><span class="n">layers_contributions</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now we will create dream model using <em>deep_dream_model</em> function which we had defined earlier</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="n">deep_outputs</span><span class="o">=</span><span class="n">dream_model</span><span class="p">(</span><span class="n">preprocessed_image</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span><span class="n">outputs</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">layers_contributions</span><span class="p">,</span><span class="n">deep_outputs</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">layer_name</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">.</span><span class="n">numpy</span><span class="p">().</span><span class="n">mean</span><span class="p">())</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>mixed3
+(1, 19, 30, 768)
+0.44434533
+mixed5
+(1, 19, 30, 768)
+0.16857202
+</code></pre></div></div>
+
+<p>Lets test how we can extract and manipulate activations of layers which we have defined in <em>layers_contributions</em> using our deep dream model</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">model_output</span><span class="o">=</span> <span class="k">lambda</span> <span class="n">model</span><span class="p">,</span><span class="n">inputs</span><span class="p">:</span><span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now lets define a helper function which will return output of model on providing input. Above we have defined a <em>lambda</em> function which takes model and input image as parameter and return output of model <em>ie..</em>  activations of layers which we have defined in <em>layers_contributions</em></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">get_loss</span><span class="p">(</span><span class="n">activations</span><span class="p">):</span>
+    <span class="n">loss</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">activation</span> <span class="ow">in</span> <span class="n">activations</span><span class="p">:</span>
+        <span class="n">loss</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">activation</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="p">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function defines our loss function which we will maximize using gradient ascent. It is simply sum of mean of activations</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">get_loss_and_gradient</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">inputs</span><span class="p">,</span><span class="n">total_variation_weight</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">tf</span><span class="p">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">tape</span><span class="p">:</span>
+        <span class="n">tape</span><span class="p">.</span><span class="n">watch</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">activations</span><span class="o">=</span><span class="n">model_output</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">loss</span><span class="o">=</span><span class="n">get_loss</span><span class="p">(</span><span class="n">activations</span><span class="p">)</span>
+        <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="o">+</span><span class="n">total_variation_weight</span><span class="o">*</span><span class="n">tf</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">total_variation</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">grads</span><span class="o">=</span><span class="n">tape</span><span class="p">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">grads</span> <span class="o">/=</span> <span class="n">tf</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">reduce_std</span><span class="p">(</span><span class="n">grads</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-8</span>
+    <span class="k">return</span> <span class="n">loss</span><span class="p">,</span><span class="n">grads</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function returns gradient (derivative) of our loss function with respect to our input image. We use tensorflow <em>GradientTape</em> to calculate gradients. First we have to watch our input image since it is not tensorflow variable then we get our model outputs which are activations of layers in <em>layers_contributions</em> and we will use these activations to find loss and finally find out gradient using <em>tape.gradient</em> method we also standardized our gradients by dividing it with standard deviation of gradients. A small number <em>1e-8</em> is also added to prevent accidentally division by 0.</p>
+
+<p>There is also <em>total_variation_weight</em> parameter this will be used for adding some amount of <em>total_variation</em> loss into our loss function.</p>
+
+<p>The total variation loss is the sum of the absolute differences for neighbouring pixel-values in the input images. This measures how much noise is in the images.</p>
+
+<p><em>total variation loss</em> is not necessary for deep dream outputs but can be used to smooth out result. play with <em>total_variation_weight</em> parameter to find result of your liking.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">run_gradient_ascent</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">inputs</span><span class="p">,</span><span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">steps_per_epoch</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">total_variation_weight</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">start</span><span class="o">=</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"epoch: </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s">"</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s">' '</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps_per_epoch</span><span class="p">):</span>
+            <span class="n">loss</span><span class="p">,</span><span class="n">grads</span><span class="o">=</span><span class="n">get_loss_and_gradient</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">total_variation_weight</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">img</span> <span class="o">+</span> <span class="n">grads</span><span class="o">*</span><span class="n">weight</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'='</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="n">end</span><span class="o">=</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Time elapsed: </span><span class="si">{</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">:</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="s">sec"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span><span class="p">.</span><span class="n">numpy</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now we have gradients of loss with respect to input image, we define a function that will do gradient ascent by changing our input image in direction of gradients. This will maximize input space which will eventually increase activations of layers.
+This function also takes <em>epochs</em> as parameter which is number of iteration for which we want to process image. <em>weight</em> parameter is strength of patterns embeds to image. Method also prints stats of each epoch</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">image_array</span><span class="o">=</span><span class="n">run_gradient_ascent</span><span class="p">(</span><span class="n">dream_model</span><span class="p">,</span><span class="n">preprocessed_image</span><span class="p">,</span><span class="n">epochs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">steps_per_epoch</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>epoch: 1 ====================================================================================================
+
+epoch: 2 ====================================================================================================
+
+Time elapsed: 62.779686sec
+</code></pre></div></div>
+
+<p>Now its time to create deep dream image, we apply gradient ascent for some epochs and save our image into a variable which is a numpy array</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">show_image</span><span class="p">(</span><span class="n">deprocess_inception_image</span><span class="p">(</span><span class="n">image_array</span><span class="p">))</span>
+<span class="n">resultant_image</span><span class="o">=</span><span class="n">array_to_img</span><span class="p">(</span><span class="n">image_array</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">resultant_image</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="s">"deep_dream_simple.jpg"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/deep_dream_3e52bb8d7841697e1" alt="png" /></p>
+
+<p>Now we are ready to see how our input image looks like. We first deprocess our numpy array and then convert it to image and finally save output image to hard drive as image.</p>
+
+<h2 id="deep-dreaming-using-octaves">Deep Dreaming using octaves</h2>
+
+<p>To improve quality of patterns in image we can use octaves technique. In this technique input image is processed at different scale. Each different size image is an octave this improve quality of patterns on image.</p>
+
+<h3 id="steps">Steps</h3>
+
+<ul>
+  <li>first base shape of image is saved to a variable</li>
+  <li>input image is then scaled to different sizes smaller and greater than base shape</li>
+  <li>these octaves (different scaled images) are then passed to <em>run_gradient_ascent</em> function to apply gradient ascent to each octave.</li>
+  <li>finally resultant image is again resized to base shape</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">run_gradient_ascent_with_octaves</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">inputs</span><span class="p">,</span><span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">steps_per_epoch</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">num_octaves</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">octave_size</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">total_variation_weight</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">img</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&lt;=</span><span class="mi">4</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;=</span><span class="mi">3</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+        <span class="n">base_shape</span><span class="o">=</span><span class="n">img</span><span class="p">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">base_shape</span><span class="o">=</span><span class="n">img</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">num_octaves</span><span class="p">,</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'Processing Octave: </span><span class="si">{</span><span class="n">n</span><span class="o">*-</span><span class="mi">1</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+        <span class="n">new_shape</span><span class="o">=</span><span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">dim</span> <span class="o">*</span> <span class="p">(</span><span class="n">octave_size</span><span class="o">**</span><span class="n">n</span><span class="p">))</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">base_shape</span><span class="p">])</span>
+        <span class="n">img</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">new_shape</span><span class="p">)</span>
+        <span class="n">img</span><span class="o">=</span><span class="n">run_gradient_ascent</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">epochs</span><span class="p">,</span><span class="n">steps_per_epoch</span><span class="p">,</span><span class="n">weight</span><span class="p">,</span><span class="n">total_variation_weight</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">base_shape</span><span class="p">).</span><span class="n">numpy</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function runs gradient ascent using octave technique. It takes <em>num_octaves</em> parameter which is number of octaves you want to process. Default is 2 that means it process 2 octaves and 1 original image.</p>
+
+<p>Image is resized using tensorflow <em>image.resize</em> function. New shape is calculated by raising height and width of image to power of octave number to process. As you can notice loops starts from <em>-num_octaves to 0 (excluding 1)</em>. Negative power will scale down the image from its base shape. We can also run loop from <em>-num_octaves to +num_octave</em> but as image size increases it consume more RAM.</p>
+
+<p><em>octave_size</em> parameter tells by what factor we want to scale images</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">image_array</span><span class="o">=</span><span class="n">run_gradient_ascent_with_octaves</span><span class="p">(</span><span class="n">dream_model</span><span class="p">,</span><span class="n">preprocessed_image</span><span class="p">,</span><span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">steps_per_epoch</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">num_octaves</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">octave_size</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Processing Octave: 3
+epoch: 1 ====================================================================================================
+
+Time elapsed: 25.796944sec
+Processing Octave: 2
+epoch: 1 ====================================================================================================
+
+Time elapsed: 27.048554sec
+Processing Octave: 1
+epoch: 1 ====================================================================================================
+
+Time elapsed: 27.536671sec
+Processing Octave: 0
+epoch: 1 ====================================================================================================
+
+Time elapsed: 31.441849sec
+</code></pre></div></div>
+
+<p>Now its time to create deep dream image, It takes more time to create deep dream but it worth.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">show_image</span><span class="p">(</span><span class="n">deprocess_inception_image</span><span class="p">(</span><span class="n">image_array</span><span class="p">))</span>
+<span class="n">image</span><span class="o">=</span><span class="n">array_to_img</span><span class="p">(</span><span class="n">image_array</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">image</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="s">"deep_dream_with_octave.jpg"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/deep_dream_4c563e15f644beece" alt="png" /></p>
+
+<p>And this time we got some exciting results.</p>
+
+<h2 id="deep-dreaming-using-image-tiling">Deep Dreaming using Image Tiling</h2>
+
+<p>As we start processing bigger images we need more RAM to put it into memory for calculating gradients. Also we cannot process more octaves using above techniques.</p>
+
+<p>This issue can be fixed by using image tilings, In this technique we split image into tiles and gradient is calculated for each tile seperately.</p>
+
+<p>By tiling images into small sizes and processing these tiles solves the issue as we have to process small tiles of image not the entire image.</p>
+
+<p>While tiling we make sure that it is random else we get seam in our image after processing.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="c1"># Randomly rolls the image to avoid tiled boundaries
+</span>
+<span class="k">def</span> <span class="nf">random_image_tiling</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">maxdim</span><span class="p">):</span>
+    <span class="n">shift</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">minval</span><span class="o">=-</span><span class="n">maxdim</span><span class="p">,</span> <span class="n">maxval</span><span class="o">=</span><span class="n">maxdim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">shift_r</span><span class="p">,</span><span class="n">shift_d</span><span class="o">=</span><span class="n">shift</span>
+    <span class="n">img_rolled</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">roll</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">[</span><span class="n">shift_r</span><span class="p">,</span><span class="n">shift_d</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">shift_r</span><span class="p">,</span> <span class="n">shift_d</span><span class="p">,</span> <span class="n">img_rolled</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function takes image as input and randomly rolls the image to avoid tiled boundaries. It returns shifted image and positions from where image was shifted. We have used tensorflow <em>roll</em> function to shift images. It create roll of an array along different axis from shift positions specified.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">shift_r</span><span class="p">,</span><span class="n">shift_d</span><span class="p">,</span><span class="n">img_tiled</span><span class="o">=</span><span class="n">random_image_tiling</span><span class="p">(</span><span class="n">input_image</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">512</span><span class="p">)</span>
+<span class="n">show_image</span><span class="p">(</span><span class="n">img_tiled</span><span class="p">.</span><span class="n">numpy</span><span class="p">())</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/deep_dream_5ccaac83447e81783" alt="png" /></p>
+
+<p>lets test of how random tiled image function transforms our image and randomly roll it so that we do not get same tile everytime we process and seam across image.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">get_loss_and_grads_with_tiling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">inputs</span><span class="p">,</span><span class="n">tile_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span><span class="n">total_variation_weight</span><span class="o">=</span><span class="mf">0.004</span><span class="p">):</span>
+    <span class="n">shift_r</span><span class="p">,</span><span class="n">shift_d</span><span class="p">,</span><span class="n">rolled_image</span><span class="o">=</span><span class="n">random_image_tiling</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">tile_size</span><span class="p">)</span>
+    <span class="n">grads</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">rolled_image</span><span class="p">)</span>
+    <span class="c1"># create a tensor from 0 to rolled_image width with step of tile size
+</span>    <span class="n">x_range</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">rolled_image</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tile_size</span><span class="p">](:</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># check if x_range is not empty
+</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">tf</span><span class="p">.</span><span class="n">cast</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_range</span><span class="p">),</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="n">x_range</span><span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+    <span class="c1"># create a tensor from 0 to rolled_image height with step of tile size
+</span>    <span class="n">y_range</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="nb">range</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">rolled_image</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">tile_size</span><span class="p">](:</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># check if y_range is not empty
+</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">tf</span><span class="p">.</span><span class="n">cast</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_range</span><span class="p">),</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="n">y_range</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">x_range</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">y_range</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">tf</span><span class="p">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">tape</span><span class="p">:</span>
+                <span class="n">tape</span><span class="p">.</span><span class="n">watch</span><span class="p">(</span><span class="n">rolled_image</span><span class="p">)</span>
+                <span class="c1"># here we create tile from rolled image of size=tile_size
+</span>                <span class="n">image_tile</span><span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">rolled_image</span><span class="p">[</span><span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">+</span><span class="n">tile_size</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">y</span><span class="o">+</span><span class="n">tile_size</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">activations</span><span class="o">=</span><span class="n">model_output</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">image_tile</span><span class="p">)</span>
+                <span class="n">loss</span><span class="o">=</span><span class="n">get_loss</span><span class="p">(</span><span class="n">activations</span><span class="p">)</span>
+                <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="o">+</span><span class="n">total_variation_weight</span><span class="o">*</span><span class="n">tf</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">total_variation</span><span class="p">(</span><span class="n">image_tile</span><span class="p">)</span>
+            <span class="n">grads</span><span class="o">=</span><span class="n">grads</span><span class="o">+</span><span class="n">tape</span><span class="p">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span><span class="n">rolled_image</span><span class="p">)</span>
+    <span class="n">grads</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">roll</span><span class="p">(</span><span class="n">grads</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">shift_r</span><span class="p">,</span><span class="o">-</span><span class="n">shift_d</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1">#reverse shifting of rolled image
+</span>    <span class="n">grads</span> <span class="o">/=</span> <span class="n">tf</span><span class="p">.</span><span class="n">math</span><span class="p">.</span><span class="n">reduce_std</span><span class="p">(</span><span class="n">grads</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-8</span>
+    <span class="k">return</span> <span class="n">loss</span><span class="p">,</span><span class="n">grads</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Lets define a way to get gradients from tiled image. In above function we first get random rolled image and its rolling positions using <em>random_image_tiling</em> function. We then have some logic to create a tile from rolled image of size <em>tile_size</em> specified. This tile image is then passed to model and loss is calculated finally gradients are calculated for that tile and added to <em>grads</em> tensor. We process small tiles of rolled image till we have iterated whole image (rolled image) and all gradients of each tile are summed together. Then we reverse the shiftings of rolled image back to original image and finally scaling and returning the gradients.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">run_gradient_ascent_with_octave_tiling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">inputs</span><span class="p">,</span><span class="n">steps_per_octave</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">num_octaves</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">octave_size</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span><span class="n">tile_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">total_variation_weight</span><span class="o">=</span><span class="mf">0.0004</span><span class="p">):</span>
+    <span class="n">img</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">weight</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&lt;=</span><span class="mi">4</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;=</span><span class="mi">3</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+        <span class="n">base_shape</span><span class="o">=</span><span class="n">img</span><span class="p">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">base_shape</span><span class="o">=</span><span class="n">img</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">start</span><span class="o">=</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">num_octaves</span><span class="p">,</span><span class="n">num_octaves</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'Processing Octave: </span><span class="si">{</span><span class="n">n</span><span class="o">+</span><span class="n">num_octaves</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+        <span class="n">new_shape</span><span class="o">=</span><span class="nb">tuple</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">dim</span><span class="o">*</span><span class="p">(</span><span class="n">octave_size</span><span class="o">**</span><span class="n">n</span><span class="p">))</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">base_shape</span><span class="p">])</span>
+        <span class="n">img</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">new_shape</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps_per_octave</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'='</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+            <span class="n">loss</span><span class="p">,</span><span class="n">grads</span><span class="o">=</span><span class="n">get_loss_and_grads_with_tiling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">tile_size</span><span class="p">,</span><span class="n">total_variation_weight</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">img</span> <span class="o">+</span> <span class="n">grads</span><span class="o">*</span><span class="n">weight</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    <span class="n">end</span><span class="o">=</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Time elapsed: </span><span class="si">{</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">:.</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="s"> sec"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">base_shape</span><span class="p">).</span><span class="n">numpy</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above funtion is same as <em>run_gradient_ascent_with_octave</em> but instead of using <em>get_loss_and_grads</em> function here we have used <em>get_loss_and_grads_with_tiling</em> to get gradients using tiling images strategy.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">image_array</span><span class="o">=</span><span class="n">run_gradient_ascent_with_octave_tiling</span><span class="p">(</span><span class="n">dream_model</span><span class="p">,</span><span class="n">preprocessed_image</span><span class="p">,</span><span class="n">steps_per_octave</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">num_octaves</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">octave_size</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span><span class="n">tile_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">total_variation_weight</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Processing Octave: 1
+====================================================================================================
+
+Processing Octave: 2
+====================================================================================================
+
+Processing Octave: 3
+====================================================================================================
+
+Processing Octave: 4
+====================================================================================================
+
+Processing Octave: 5
+====================================================================================================
+
+Processing Octave: 6
+====================================================================================================
+
+Processing Octave: 7
+====================================================================================================
+
+Time elapsed: 270.3 sec
+</code></pre></div></div>
+
+<p>Now its time to create deep dream image. Time taken to create dream depends on size of input image passed. It also uses octave technique previously discussed to improve quality of image but now we can process more octaves.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">show_image</span><span class="p">(</span><span class="n">deprocess_inception_image</span><span class="p">(</span><span class="n">image_array</span><span class="p">))</span>
+<span class="n">image</span><span class="o">=</span><span class="n">array_to_img</span><span class="p">(</span><span class="n">image_array</span><span class="p">,</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">image</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="s">"deep_dream_with_octave_tiling.jpg"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/deep_dream_6f2e0c8cf112caee2" alt="png" /></p>
+
+<p>and this time we got some more exciting results also we can create bigger resolution dream.</p>
+
+<p>So finally we are ready to see some deep dreams of neural networks. Play with it and share exciting results.</p>
+
+<p><a href="http://www.youtube.com/watch?v=wmDjFQDh5BY"><img src="http://img.youtube.com/vi/wmDjFQDh5BY/0.jpg" alt="deepdream result videp" /></a></p>
+
+<p>Thanks for reading till last. ✌✌✌</p>
+
+<p><a href="https://github.com/tarun-bisht/blogs-notebooks/tree/master/deepdream">IPython Notebook Link</a></p>
+
+<h2 id="references">References</h2>
+
+<p><a href="https://www.tensorflow.org/tutorials/generative/deepdream">Tensorflow Tutorials</a>
+<a href="https://livebook.manning.com/book/deep-learning-with-python/chapter-8/76">Keras Book</a></p>
+
+		</div>
+		<div class="post-tags">
+			<ul>
+				
+					<li>python</li>
+				
+					<li>intermediate</li>
+				
+					<li>tensorflow</li>
+				
+					<li>inception</li>
+				
+			</ul>
+		</div>
+		
+	</div>
+	<div class="container">
+		
+	</div>
+</section>
+
+    <section class="social">
+    <ul animation="fade-down" animation-time="1s">
+        <li><a target="_blank" href="https://twitter.com/tarunresearches"><i class="fab fa-twitter"></i></a></li>
+        <li><a target="_blank" href="https://www.instagram.com/tarunresearches"><i class="fab fa-instagram"></i></a></li>
+        <li><a target="_blank" href="https://www.linkedin.com/in/tarunbisht"><i class="fab fa-linkedin-in"></i></a></li>
+        <li><a target="_blank" href="https://www.kaggle.com/tarunbisht11"><i class="fab fa-kaggle"></i></a></li>
+        <li><a target="_blank" href="https://github.com/tarun-bisht"><i class="fab fa-github"></i></a></li>
+        <li><a target="_blank" href="https://medium.com/@iamtarunbisht"><i class="fab fa-medium-m"></i></a></li>
+        <li><a target="_blank" href="https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA"><i class="fab fa-youtube"></i></a></li>
+    </ul>
+</section>
+    <footer>
+  <div class="image"></div>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/blogs/"> Blogs</a></li>
+      <li><a href="/projects/">Projects</a></li>
+      <li><a href="/resume/">Resume</a></li>
+      <li><a href="/cv/">Academic CV</a></li>
+      <li><a href="/contact/">Contact</a></li>
+      
+    </ul>
+  </nav>
+  <div class="copyright">
+    Copyright © 2025 All rights reserved
+  </div>
+</footer>
+
+    
+
+<script src="/assets/js/production.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</body>
+</html>

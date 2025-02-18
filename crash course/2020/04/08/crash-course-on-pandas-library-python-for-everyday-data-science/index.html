@@ -1,0 +1,1991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="color-scheme" content="dark light">
+
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<script src="/assets/js/dark_mode.min.js"></script>
+	<link rel="icon" href="/assets/images/favicon.ico">
+	<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>crash course on pandas library python for everyday data science | Tarun Bisht</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="crash course on pandas library python for everyday data science" />
+<meta name="author" content="Tarun Bisht" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="pandas is a fast, powerful, flexible and easy to use open-source data analysis and manipulation tool, built on top of the python programming language. This post acts as a cheat-sheet for using the pandas library in python for everyday data science. It contains some important functions and submodules of pandas library which are used day to day in data science and machine learning." />
+<meta property="og:description" content="pandas is a fast, powerful, flexible and easy to use open-source data analysis and manipulation tool, built on top of the python programming language. This post acts as a cheat-sheet for using the pandas library in python for everyday data science. It contains some important functions and submodules of pandas library which are used day to day in data science and machine learning." />
+<link rel="canonical" href="https://tarunbisht.com/crash%20course/2020/04/08/crash-course-on-pandas-library-python-for-everyday-data-science/" />
+<meta property="og:url" content="https://tarunbisht.com/crash%20course/2020/04/08/crash-course-on-pandas-library-python-for-everyday-data-science/" />
+<meta property="og:site_name" content="Tarun Bisht" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-08T15:16:50+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="crash course on pandas library python for everyday data science" />
+<meta name="twitter:site" content="@tarunresearches" />
+<meta name="twitter:creator" content="@Tarun Bisht" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"crash course on pandas library python for everyday data science","dateModified":"2020-04-08T15:16:50+00:00","datePublished":"2020-04-08T15:16:50+00:00","description":"pandas is a fast, powerful, flexible and easy to use open-source data analysis and manipulation tool, built on top of the python programming language. This post acts as a cheat-sheet for using the pandas library in python for everyday data science. It contains some important functions and submodules of pandas library which are used day to day in data science and machine learning.","url":"https://tarunbisht.com/crash%20course/2020/04/08/crash-course-on-pandas-library-python-for-everyday-data-science/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/crash%20course/2020/04/08/crash-course-on-pandas-library-python-for-everyday-data-science/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+	
+</head>
+<body>
+    
+    <section class="writing-header">
+	<div class="header">
+		<nav>
+	<div class="logo"></div>
+	<div class="menu-btn">
+		<div class="line1"></div>
+		<div class="line2"></div>
+		<div class="line3"></div>
+	</div>
+    <ul class="menu">
+        <li><a href="/"> Home</a></li>
+        <li><a href="/about/"> About</a></li>
+        <li><a href="/blogs/"> Blogs</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/cv/">CV</a></li>
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/contact/"> Contact</a></li>
+        <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
+	</ul>
+</nav>
+	</div>
+</section>
+
+<section class="writing-body">
+	<div class="container">
+    	<div class="markdown-html">
+			<h1 class="headline">crash course on pandas library python for everyday data science</h1>
+            <p>pandas is a fast, powerful, flexible and easy to use open-source data analysis and manipulation tool, built on top of the python programming language. This post acts as a cheat-sheet for using the pandas library in python for everyday data science. It contains some important functions and submodules of pandas library which are used day to day in data science and machine learning.
+<!-- more --></p>
+
+<h3 id="installing-pandas">Installing pandas</h3>
+
+<p>pandas can be installed easily by using pip. First, create a virtual environment and activate it. Then run the command below to install pandas.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre>pip <span class="nb">install </span>pandas
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="importing-the-library">Importing the library</h3>
+
+<p>Create a python project or open an existing project and import pandas using</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">pandas</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>we can also use an alias pd to use pandas into the project by importing pandas as pd</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<h3 id="reading-and-visualizing-csv-files">Reading and Visualizing CSV files</h3>
+
+<p><em>data = pd.read_csv(“path_to_csv_file”)</em></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">"corona.csv"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>this will read and load CSV file from memory and creates a pandas DataFrame object.</p>
+
+<p><em>data.head(number_of_columns)</em></p>
+
+<p>this will help to visualize how loaded data looks. It is stored in the DataFrame object which is pandas way to structure CSV data in the form of tables. ex:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1">#shows first 5 rows of dataframe</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name of State / UT</th>
+      <th>Total Confirmed cases *</th>
+      <th>Cured/Discharged/Migrated</th>
+      <th>Death</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>Andhra Pradesh</td>
+      <td>19</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Andaman and Nicobar Islands</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Bihar</td>
+      <td>11</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Chandigarh</td>
+      <td>8</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Chhattisgarh</td>
+      <td>7</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Similarly, this will help to visualize the last part of data in DataFrame</p>
+
+<p><em>data.tail(numbers_of_columns)</em></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name of State / UT</th>
+      <th>Total Confirmed cases *</th>
+      <th>Cured/Discharged/Migrated</th>
+      <th>Death</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>22</td>
+      <td>Tamil Nadu</td>
+      <td>50</td>
+      <td>4</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>Telengana</td>
+      <td>69</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>Uttarakhand</td>
+      <td>7</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>Uttar Pradesh</td>
+      <td>75</td>
+      <td>11</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>West Bengal</td>
+      <td>19</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="getting-shape-or-dimensions-and-size-of-loaded-data">Getting shape or dimensions and size of loaded data</h3>
+
+<p>shape property gives out the shape or dimension of DataFrame as a tuple of the form (number_of_rows, number_of_columns)</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">shape</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>(27, 4)
+</code></pre></div></div>
+
+<p>size gives out the number of elements or number of unique cells in DataFrame.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">size</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>108
+</code></pre></div></div>
+
+<p>len on the DataFrame object gives out the number of rows in DataFrame.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>27
+</code></pre></div></div>
+
+<h3 id="retrieving-data-from-dataframe">Retrieving data from DataFrame</h3>
+
+<p><em>data[‘column_name’]</em></p>
+
+<p><em>data[[‘column_1’,’column_2’,’column_3’]]</em></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre> <span class="n">data</span><span class="p">[</span><span class="s">'Death'</span><span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>0     0
+1     0
+2     1
+3     0
+4     0
+5     2
+6     0
+7     5
+8     0
+9     1
+10    2
+11    3
+12    1
+13    0
+14    2
+15    8
+16    0
+17    0
+18    0
+19    0
+20    1
+21    0
+22    1
+23    1
+24    0
+25    0
+26    1
+Name: Death, dtype: int64
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">[[</span><span class="s">'Name of State / UT'</span><span class="p">,</span><span class="s">'Death'</span><span class="p">]]</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name of State / UT</th>
+      <th>Death</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>Andhra Pradesh</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Andaman and Nicobar Islands</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Bihar</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Chandigarh</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Chhattisgarh</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Delhi</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Goa</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>Gujarat</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>Haryana</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>Himachal Pradesh</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Jammu and Kashmir</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>Karnataka</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>Kerala</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>Ladakh</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>Madhya Pradesh</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>Maharashtra</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>Manipur</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>Mizoram</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>Odisha</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>Puducherry</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>Punjab</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>Rajasthan</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>Tamil Nadu</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>Telengana</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>Uttarakhand</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>Uttar Pradesh</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>West Bengal</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>sort and return DataFrame column specified</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s">'Total Confirmed cases *'</span><span class="p">])</span> <span class="c1">#sort and return DataFrame column</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name of State / UT</th>
+      <th>Total Confirmed cases *</th>
+      <th>Cured/Discharged/Migrated</th>
+      <th>Death</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>19</td>
+      <td>Puducherry</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>Mizoram</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>Manipur</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>Odisha</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>Himachal Pradesh</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Goa</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Chhattisgarh</td>
+      <td>7</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>Uttarakhand</td>
+      <td>7</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Chandigarh</td>
+      <td>8</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Andaman and Nicobar Islands</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Bihar</td>
+      <td>11</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>Ladakh</td>
+      <td>13</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>Andhra Pradesh</td>
+      <td>19</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>West Bengal</td>
+      <td>19</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Jammu and Kashmir</td>
+      <td>31</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>Madhya Pradesh</td>
+      <td>33</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>Haryana</td>
+      <td>33</td>
+      <td>17</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>Punjab</td>
+      <td>38</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>Tamil Nadu</td>
+      <td>50</td>
+      <td>4</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Delhi</td>
+      <td>53</td>
+      <td>6</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>Rajasthan</td>
+      <td>57</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>Gujarat</td>
+      <td>58</td>
+      <td>1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>Telengana</td>
+      <td>69</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>Uttar Pradesh</td>
+      <td>75</td>
+      <td>11</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>Karnataka</td>
+      <td>80</td>
+      <td>5</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>Maharashtra</td>
+      <td>193</td>
+      <td>25</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>Kerala</td>
+      <td>194</td>
+      <td>19</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h4 id="using-loc-and-iloc">Using loc and iloc</h4>
+
+<p>pandas DataFrame provides powerful properties loc and iloc to retrieve data from DataFrame. This is the most widely used technique if we have lots of features to retrieve.</p>
+
+<p>loc selects things by using the label</p>
+
+<p>loc has following valid inputs -</p>
+
+<ol>
+  <li>
+    <p>A single label, e.g. 5 or ‘a’ (Note that 5 is interpreted as a label of the index. This use is not an integer position along with the index.).</p>
+  </li>
+  <li>
+    <p>A list or array of labels [‘a’, ‘b’, ‘c’].</p>
+  </li>
+  <li>
+    <p>A slice object with labels’ a ‘ : ‘ f ‘(Note that contrary to usual python slices, both the start and the stop are included.)</p>
+  </li>
+</ol>
+
+<p><em>data.loc[row_needed,column_needed]   #loc with input type 1</em></p>
+
+<p><em>data.loc[[row_needed(multiple)],column_needed]   #loc with input type 2</em></p>
+
+<p><em>data.loc[row_range_needed,column_range_needed]   #loc with input type 3</em></p>
+
+<p>Example:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'Total Confirmed cases *'</span><span class="p">]</span> <span class="c1">#selects all rows from column Total Confirmed cases</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>0      19
+1       9
+2      11
+3       8
+4       7
+5      53
+6       5
+7      58
+8      33
+9       3
+10     31
+11     80
+12    194
+13     13
+14     33
+15    193
+16      1
+17      1
+18      3
+19      1
+20     38
+21     57
+22     50
+23     69
+24      7
+25     75
+26     19
+Name: Total Confirmed cases *, dtype: int64
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s">'Total Confirmed cases *'</span><span class="p">,</span><span class="s">'Death'</span><span class="p">]]</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Total Confirmed cases *</th>
+      <th>Death</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>19</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>9</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>11</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>8</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>7</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>53</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>5</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>58</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>33</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>31</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>80</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>194</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>13</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>33</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>193</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>38</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>57</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>50</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>69</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>7</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>75</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>19</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'Total Confirmed cases *'</span><span class="p">:</span><span class="s">'Death'</span><span class="p">]</span> <span class="c1">#( including death column [refer input type 3])</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Total Confirmed cases *</th>
+      <th>Cured/Discharged/Migrated</th>
+      <th>Death</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>19</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>11</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>8</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>7</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>53</td>
+      <td>6</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>58</td>
+      <td>1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>33</td>
+      <td>17</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>31</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>80</td>
+      <td>5</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>194</td>
+      <td>19</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>13</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>33</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>193</td>
+      <td>25</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>38</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>57</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>50</td>
+      <td>4</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>69</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>7</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>75</td>
+      <td>11</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>19</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p><strong>note: using loc slices contrary to usual python slices, both the start and the stop is included, when present in the index ie.. in ‘ a ‘ : ‘ c ‘ both ‘ a ‘ and ‘ c ‘ row are inclusive.</strong></p>
+
+<p>iloc selects rows and columns using integer positions</p>
+
+<p>iloc has the following valid inputs -</p>
+
+<p>1: An integer e.g. 5.</p>
+
+<p>2: A list or array of integers [ 4, 3, 0 ].</p>
+
+<p>3: A slice object with ints 1 : 7.</p>
+
+<p>4: A boolean array.</p>
+
+<p><em>data.iloc[row_index_needed,column_index_needed] #iloc with type 1</em></p>
+
+<p><em>data.iloc[[row_index_needed(multiple)],column_index_needed] #iloc with type 2</em></p>
+
+<p><em>data.iloc[row_index_range_needed,column_index_range_needed] #iloc with type 3</em></p>
+
+<p>Example:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>   <span class="c1">#selects all rows of column with index 1</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>0      19
+1       9
+2      11
+3       8
+4       7
+5      53
+6       5
+7      58
+8      33
+9       3
+10     31
+11     80
+12    194
+13     13
+14     33
+15    193
+16      1
+17      1
+18      3
+19      1
+20     38
+21     57
+22     50
+23     69
+24      7
+25     75
+26     19
+Name: Total Confirmed cases *, dtype: int64
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]]</span>   <span class="c1">#selects every row of column with index 1 and 4</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Total Confirmed cases *</th>
+      <th>Death</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>19</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>9</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>11</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>8</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>7</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>53</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>5</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>58</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>33</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>31</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>80</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>194</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>13</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>33</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>193</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>38</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>57</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>50</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>69</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>7</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>75</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>19</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>  <span class="c1">#selects every row of column with index 1 and 2 only</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Total Confirmed cases *</th>
+      <th>Cured/Discharged/Migrated</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>19</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>9</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>11</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>8</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>7</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>53</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>5</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>58</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>33</td>
+      <td>17</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>31</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>80</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>194</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>13</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>33</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>193</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>38</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>57</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>50</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>69</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>7</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>75</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>19</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,:]</span>  <span class="c1">#selects rows 0 to 2 and every column</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name of State / UT</th>
+      <th>Total Confirmed cases *</th>
+      <th>Cured/Discharged/Migrated</th>
+      <th>Death</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>Andhra Pradesh</td>
+      <td>19</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>Andaman and Nicobar Islands</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Bihar</td>
+      <td>11</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>both iloc and loc also take callables as valid input. Callables are functions that return row and column needed to select. This is useful when we have to filter some information before selecting it.</p>
+
+<p><em>data.loc[callable_function]</em></p>
+
+<p><em>data.iloc[callable_function]</em></p>
+
+<p>Example</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">data</span><span class="p">:</span><span class="n">data</span><span class="p">[</span><span class="s">"Name of State / UT"</span><span class="p">]</span> <span class="o">==</span> <span class="s">'Uttarakhand'</span><span class="p">]</span> <span class="c1">#selects all rows and columns with country India</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name of State / UT</th>
+      <th>Total Confirmed cases *</th>
+      <th>Cured/Discharged/Migrated</th>
+      <th>Death</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>24</td>
+      <td>Uttarakhand</td>
+      <td>7</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">.</span><span class="n">index</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="c1">#selects all rows and columns with even index</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name of State / UT</th>
+      <th>Total Confirmed cases *</th>
+      <th>Cured/Discharged/Migrated</th>
+      <th>Death</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>Andhra Pradesh</td>
+      <td>19</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Bihar</td>
+      <td>11</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Chhattisgarh</td>
+      <td>7</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Goa</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>Haryana</td>
+      <td>33</td>
+      <td>17</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Jammu and Kashmir</td>
+      <td>31</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>Kerala</td>
+      <td>194</td>
+      <td>19</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>Madhya Pradesh</td>
+      <td>33</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>Manipur</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>Odisha</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>Punjab</td>
+      <td>38</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>Tamil Nadu</td>
+      <td>50</td>
+      <td>4</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>Uttarakhand</td>
+      <td>7</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>West Bengal</td>
+      <td>19</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="plotting-a-dataframe">Plotting a DataFrame</h3>
+
+<p>We can also plot a DataFrame in the graph which uses Matplotlib library to plot graph. This can be used to plot simple graphs without needing to write plot code.</p>
+
+<p>It plot graphs of graph type specified</p>
+
+<p>Following types of graphs are valid in pandas:</p>
+
+<ol>
+  <li>
+    <p>bar or barh for bar plots</p>
+  </li>
+  <li>
+    <p>hist for histogram</p>
+  </li>
+  <li>
+    <p>box for boxplot</p>
+  </li>
+  <li>
+    <p>kde or density for density plots</p>
+  </li>
+  <li>
+    <p>area for area plots</p>
+  </li>
+  <li>
+    <p>scatter for scatter plots</p>
+  </li>
+  <li>
+    <p>hexbin for hexagonal bin plots</p>
+  </li>
+  <li>
+    <p>pie for pie plots</p>
+  </li>
+</ol>
+
+<p>syntax: <em>data.plot(kind=’graph_type’)</em></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span><span class="s">'Name of State / UT'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'Total Confirmed cases *'</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="s">'bar'</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code><span class="nt">&lt;matplotlib.axes._subplots.AxesSubplot</span> <span class="na">at</span> <span class="err">0</span><span class="na">x2272464b148</span><span class="nt">&gt;</span>
+</code></pre></div></div>
+
+<p><img src="https://storage.googleapis.com/tarun-bisht.appspot.com/blogs/pandas_bar_graph3dd3074ff7cb5424" alt="png" /></p>
+
+<h3 id="concatenating-dataframe-with-another">Concatenating DataFrame with another</h3>
+
+<p>We can concatenate DataFrame using pd.concat method</p>
+
+<p>syntax: <em>pd.concat([dataframe1,dataframe2,….],axis= 0 or 1)</em></p>
+
+<p>pass list of DataFrame to which are needed to concatenate and axis from where to concatenate</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre><span class="n">data1</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Enrollment No.'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
+        <span class="s">'Score'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1500</span><span class="p">,</span><span class="mi">1520</span><span class="p">,</span><span class="mi">1525</span><span class="p">,</span><span class="mi">1523</span><span class="p">,</span><span class="mi">1515</span><span class="p">,</span><span class="mi">1540</span><span class="p">,</span><span class="mi">1545</span><span class="p">,</span><span class="mi">1560</span><span class="p">,</span><span class="mi">1555</span><span class="p">,</span><span class="mi">1565</span><span class="p">]</span>
+       <span class="p">}</span>
+<span class="n">data2</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Class'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+        <span class="s">'Place'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+       <span class="p">}</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data1</span><span class="p">)</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df1</span><span class="p">,</span><span class="n">df2</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Enrollment No.</th>
+      <th>Score</th>
+      <th>Class</th>
+      <th>Place</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1</td>
+      <td>1500</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>2</td>
+      <td>1520</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>3</td>
+      <td>1525</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>4</td>
+      <td>1523</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>5</td>
+      <td>1515</td>
+      <td>1</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3 id="checking-null-values-in-column">Checking null values in column</h3>
+
+<p>pd.isna function is used to check for missing values like NaN or blank etc.</p>
+
+<p>syntax: <em>pd.isna(data[column_name])</em></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">pd</span><span class="p">.</span><span class="n">isna</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'Death'</span><span class="p">])</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>0     False
+1     False
+2     False
+3     False
+4     False
+5     False
+6     False
+7     False
+8     False
+9     False
+10    False
+11    False
+12    False
+13    False
+14    False
+15    False
+16    False
+17    False
+18    False
+19    False
+20    False
+21    False
+22    False
+23    False
+24    False
+25    False
+26    False
+Name: Death, dtype: bool
+</code></pre></div></div>
+
+<p>So thats what you needed to get started for everyday data science work. There are lot of other features but these can be learned as you progress your journey.
+All the Best !!!</p>
+
+<p><a href="https://github.com/tarun-bisht/blogs-notebooks/tree/master/numpy-crash-course">IPython Notebook Link</a></p>
+
+<h3 id="references">References</h3>
+
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/reference/index.html">pandas docs</a></p>
+
+		</div>
+		<div class="post-tags">
+			<ul>
+				
+					<li>beginner</li>
+				
+					<li>python</li>
+				
+			</ul>
+		</div>
+		
+	</div>
+	<div class="container">
+		
+	</div>
+</section>
+
+    <section class="social">
+    <ul animation="fade-down" animation-time="1s">
+        <li><a target="_blank" href="https://twitter.com/tarunresearches"><i class="fab fa-twitter"></i></a></li>
+        <li><a target="_blank" href="https://www.instagram.com/tarunresearches"><i class="fab fa-instagram"></i></a></li>
+        <li><a target="_blank" href="https://www.linkedin.com/in/tarunbisht"><i class="fab fa-linkedin-in"></i></a></li>
+        <li><a target="_blank" href="https://www.kaggle.com/tarunbisht11"><i class="fab fa-kaggle"></i></a></li>
+        <li><a target="_blank" href="https://github.com/tarun-bisht"><i class="fab fa-github"></i></a></li>
+        <li><a target="_blank" href="https://medium.com/@iamtarunbisht"><i class="fab fa-medium-m"></i></a></li>
+        <li><a target="_blank" href="https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA"><i class="fab fa-youtube"></i></a></li>
+    </ul>
+</section>
+    <footer>
+  <div class="image"></div>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/blogs/"> Blogs</a></li>
+      <li><a href="/projects/">Projects</a></li>
+      <li><a href="/resume/">Resume</a></li>
+      <li><a href="/cv/">Academic CV</a></li>
+      <li><a href="/contact/">Contact</a></li>
+      
+    </ul>
+  </nav>
+  <div class="copyright">
+    Copyright © 2025 All rights reserved
+  </div>
+</footer>
+
+    
+
+<script src="/assets/js/production.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</body>
+</html>

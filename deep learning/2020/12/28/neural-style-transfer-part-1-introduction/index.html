@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="color-scheme" content="dark light">
+
+	<link rel="stylesheet" href="/assets/css/style.css">
+	<script src="/assets/js/dark_mode.min.js"></script>
+	<link rel="icon" href="/assets/images/favicon.ico">
+	<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Neural Style Transfer Part 1 : Introduction | Tarun Bisht</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Neural Style Transfer Part 1 : Introduction" />
+<meta name="author" content="Tarun Bisht" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Neural Style Transfer was first published in the paper “A Neural Algorithm of Artistic Style” by Gatys et al., originally released in 2015. It is an image transformation technique which modifies one image in the style of another image. We take two images of content image and style image, using these two images we generate a third image which has contents from the content image while styling (textures) from style image. If we take any painting as a style image then output generated image has contents painted like style image. This is the first part of neural style transfer series, in this part we will cover the optimization-based style transfer technique proposed by Gatys and its implementation in TensorFlow." />
+<meta property="og:description" content="Neural Style Transfer was first published in the paper “A Neural Algorithm of Artistic Style” by Gatys et al., originally released in 2015. It is an image transformation technique which modifies one image in the style of another image. We take two images of content image and style image, using these two images we generate a third image which has contents from the content image while styling (textures) from style image. If we take any painting as a style image then output generated image has contents painted like style image. This is the first part of neural style transfer series, in this part we will cover the optimization-based style transfer technique proposed by Gatys and its implementation in TensorFlow." />
+<link rel="canonical" href="https://tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/" />
+<meta property="og:url" content="https://tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/" />
+<meta property="og:site_name" content="Tarun Bisht" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-12-28T16:46:50+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Neural Style Transfer Part 1 : Introduction" />
+<meta name="twitter:site" content="@tarunresearches" />
+<meta name="twitter:creator" content="@Tarun Bisht" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"Neural Style Transfer Part 1 : Introduction","dateModified":"2020-12-28T16:46:50+00:00","datePublished":"2020-12-28T16:46:50+00:00","description":"Neural Style Transfer was first published in the paper “A Neural Algorithm of Artistic Style” by Gatys et al., originally released in 2015. It is an image transformation technique which modifies one image in the style of another image. We take two images of content image and style image, using these two images we generate a third image which has contents from the content image while styling (textures) from style image. If we take any painting as a style image then output generated image has contents painted like style image. This is the first part of neural style transfer series, in this part we will cover the optimization-based style transfer technique proposed by Gatys and its implementation in TensorFlow.","url":"https://tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/deep%20learning/2020/12/28/neural-style-transfer-part-1-introduction/"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+	
+</head>
+<body>
+    
+    <section class="writing-header">
+	<div class="header">
+		<nav>
+	<div class="logo"></div>
+	<div class="menu-btn">
+		<div class="line1"></div>
+		<div class="line2"></div>
+		<div class="line3"></div>
+	</div>
+    <ul class="menu">
+        <li><a href="/"> Home</a></li>
+        <li><a href="/about/"> About</a></li>
+        <li><a href="/blogs/"> Blogs</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/cv/">CV</a></li>
+        <li><a href="/resume/">Resume</a></li>
+        <li><a href="/contact/"> Contact</a></li>
+        <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
+	</ul>
+</nav>
+	</div>
+</section>
+
+<section class="writing-body">
+	<div class="container">
+    	<div class="markdown-html">
+			<h1 class="headline">Neural Style Transfer Part 1 : Introduction</h1>
+            <p>Neural Style Transfer was first published in the paper “A Neural Algorithm of Artistic Style” by Gatys et al., originally released in 2015. It is an image transformation technique which modifies one image in the style of another image.</p>
+
+<p>If these line do not convince you then see the images below,</p>
+
+<div style="display:flex;padding:0.5rem">
+  <img src="/assets/blogs/style-transfer/content.jpg" alt="content image" width="346px" height="346px" />
+  <img src="/assets/blogs/style-transfer/style.jpg" alt="udnie painting style image" width="346px" height="346px" />
+  <img src="/assets/blogs/style-transfer/styled.jpg" alt="styled output image" width="346px" height="346px" />
+</div>
+
+<p>here we have two images one shows the cute friendship of cat and dog while other is udnie painting by Francis Picabia. Using style transfer technique we have modified friendship image in the style of udnie painting, now it looks like an impressive artwork. If this motivates you and wants to know how this works and how to do this with your images then continue reading I am going to explain this.</p>
+
+<p>I am dividing this tutorial into two parts:</p>
+
+<ul>
+  <li>
+    <p>In the first part, we are tackling some theory and implementing Gatys style transfer which was originally released in 2015 by <a href="https://arxiv.org/abs/1508.06576">Gatys et al</a>. But generating an image using this technique takes time which depends on compute power provided. In my system it takes about 10 min for an image because of this we would not like to use this for styling videos.</p>
+  </li>
+  <li>
+    <p>In the second part, we will implement another variant of style transfer which we can call fast style transfer. It was proposed in <a href="https://arxiv.org/abs/1603.08155">this paper</a> by Justin Johnson. This is hundreds of times faster than gatys style transfer. It is so fast that we can use this in realtime videos too.</p>
+  </li>
+</ul>
+
+<p>We have used convolutional networks for image classifications and detection problems in machine learning many times but this time we are using them for style transfer. Implementing this on my own helps me to evolve in deep learning. I was using keras before and trapped inside using fit method and sequential model for all image tasks. But implementing this helps me to break that trap and deep dive inside model architecture, loss function and training loop. This skill also helps to understand and implement different model architectures on my own from research papers. I hope it will help you too.</p>
+
+<p>Before starting the tutorial note:</p>
+
+<ul>
+  <li><code class="language-html highlighter-rouge">Content Image</code> : The image which we want to stylize.</li>
+  <li><code class="language-html highlighter-rouge">Style Image</code> : The image whose style we want to embed in our content image.</li>
+  <li><code class="language-html highlighter-rouge">Output Image</code> : The output styled image, we will be optimizing this image(more details later) to create a styled image.</li>
+</ul>
+
+<h3 id="steps-to-create-style-transfer">Steps to create style transfer</h3>
+
+<ul>
+  <li>first, we will define our content image and style image using which we will generate an output image</li>
+  <li>we are using a pre-trained model which will provide us feature maps at different layers. Now the question may arise why the need of these activations? In style transfer, we want the content of content image and style(textures) of style image in our output image. There is no direct way to calculate content and style of an image, Since convolutional feature maps capture a good representation of features of images we will use these feature maps from Conv net to calculate them(the process of calculating this is explained later in the post).</li>
+  <li>we extract feature maps for style, content and output image, and use these maps to calculate a loss value(loss function explained later)</li>
+  <li>The loss we calculated is then used to optimize our output image and create the styled image.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">content_img_path</span> <span class="o">=</span> <span class="s">"starry_nights.jpg"</span>
+<span class="n">style_img_path</span> <span class="o">=</span> <span class="s">"vassily_kandinsky.jpg"</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>We start by defining the path to our style and content images. We are using starry image painting as a content image and Vassily Kandinsky painting as style.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="n">tf</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.applications</span> <span class="kn">import</span> <span class="n">vgg19</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.models</span> <span class="kn">import</span> <span class="n">load_model</span><span class="p">,</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">IPython.display</span> <span class="k">as</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Next, we import all required modules which we will use:</p>
+
+<ul>
+  <li><code class="language-html highlighter-rouge">numpy</code> : for arrays manipulation</li>
+  <li><code class="language-html highlighter-rouge">tensorflow</code> : for tensor operations</li>
+  <li><code class="language-html highlighter-rouge">tensorflow.keras</code> : high-level neural network library for tensorflow for creating neural networks</li>
+  <li><code class="language-html highlighter-rouge">pillow</code> : for converting an image to numpy array and numpy array to image, saving out output image.</li>
+  <li><code class="language-html highlighter-rouge">time</code> : for calculating the time of each iteration</li>
+  <li><code class="language-html highlighter-rouge">Ipython.display</code> : for displaying images in notebook</li>
+  <li><code class="language-html highlighter-rouge">tqdm</code>: for graphical counters</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">load_image</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span><span class="n">max_dim</span><span class="o">=</span><span class="mi">512</span><span class="p">):</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="nb">open</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="p">.</span><span class="n">convert</span><span class="p">(</span><span class="s">"RGB"</span><span class="p">)</span>
+    <span class="n">img</span><span class="p">.</span><span class="n">thumbnail</span><span class="p">([</span><span class="n">max_dim</span><span class="p">,</span><span class="n">max_dim</span><span class="p">])</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">img</span> <span class="o">/</span> <span class="mf">255.0</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">img</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function</p>
+
+<ul>
+  <li>loads image from the path</li>
+  <li>convert it into RGB format</li>
+  <li>resize it with max dimension specified while maintaining aspect ratio</li>
+  <li>converting an image to numpy array and creating a batch of a single image since neural networks expects the input to be in batches.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">deprocess_image</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="mi">255</span><span class="o">*</span><span class="n">img</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>This function will scale image pixels from range [0, 1] to range [0, 255]</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">array_to_img</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">deprocessing</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">deprocessing</span><span class="p">:</span>
+        <span class="n">array</span><span class="o">=</span><span class="n">deprocess_image</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="p">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">array</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">3</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">array</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span>
+        <span class="n">array</span><span class="o">=</span><span class="n">array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">Image</span><span class="p">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function will convert an array to an image. if deprocessing is true it will first deprocess vgg preprocessing and then convert array to image</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">show_image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">deprocessing</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="n">image</span><span class="o">=</span><span class="n">array_to_img</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">deprocessing</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">.</span><span class="n">display</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function will show image in the notebook by first converting the array to image</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">content_image</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span><span class="n">content_img_path</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">content_image</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">show_image</span><span class="p">(</span><span class="n">content_image</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>(1, 300, 454, 3)
+</code></pre></div></div>
+
+<p><img src="/assets/blogs/style-transfer/output_19_1.png" alt="png" /></p>
+
+<p>Now, let us load our content image and display it.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">style_image</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span><span class="n">style_img_path</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">style_image</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">show_image</span><span class="p">(</span><span class="n">style_image</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>(1, 336, 512, 3)
+</code></pre></div></div>
+
+<p><img src="/assets/blogs/style-transfer/output_21_1.png" alt="png" /></p>
+
+<p>Similarly, load style image and display it.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">stylized_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">layer_names</span><span class="p">):</span>
+    <span class="n">model</span><span class="p">.</span><span class="n">trainable</span><span class="o">=</span><span class="bp">False</span>
+    <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">model</span><span class="p">.</span><span class="n">get_layer</span><span class="p">(</span><span class="n">name</span><span class="p">).</span><span class="n">output</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">layer_names</span><span class="p">]</span>
+    <span class="n">new_model</span><span class="o">=</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">model</span><span class="p">.</span><span class="nb">input</span><span class="p">,</span><span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">new_model</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>the above function creates a stylized model. Since we are not training our model so we set trainable to false. Our stylized model takes input as an image and outputs the activations of layers which we will use to extract content and style from the image.
+This function takes:</p>
+
+<ul>
+  <li>pre-trained model which we will use to extract features from images (we are using vgg pre-trained model as it was used in original implementation).</li>
+  <li>layer names from which we want to extract features</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">vgg</span><span class="o">=</span><span class="n">vgg19</span><span class="p">.</span><span class="n">VGG19</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="s">'imagenet'</span><span class="p">,</span><span class="n">include_top</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">vgg</span><span class="p">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Model: "vgg19"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, None, None, 3)]   0         
+_________________________________________________________________
+block1_conv1 (Conv2D)        (None, None, None, 64)    1792      
+_________________________________________________________________
+block1_conv2 (Conv2D)        (None, None, None, 64)    36928     
+_________________________________________________________________
+block1_pool (MaxPooling2D)   (None, None, None, 64)    0         
+_________________________________________________________________
+block2_conv1 (Conv2D)        (None, None, None, 128)   73856     
+_________________________________________________________________
+block2_conv2 (Conv2D)        (None, None, None, 128)   147584    
+_________________________________________________________________
+block2_pool (MaxPooling2D)   (None, None, None, 128)   0         
+_________________________________________________________________
+block3_conv1 (Conv2D)        (None, None, None, 256)   295168    
+_________________________________________________________________
+block3_conv2 (Conv2D)        (None, None, None, 256)   590080    
+_________________________________________________________________
+block3_conv3 (Conv2D)        (None, None, None, 256)   590080    
+_________________________________________________________________
+block3_conv4 (Conv2D)        (None, None, None, 256)   590080    
+_________________________________________________________________
+block3_pool (MaxPooling2D)   (None, None, None, 256)   0         
+_________________________________________________________________
+block4_conv1 (Conv2D)        (None, None, None, 512)   1180160   
+_________________________________________________________________
+block4_conv2 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block4_conv3 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block4_conv4 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block4_pool (MaxPooling2D)   (None, None, None, 512)   0         
+_________________________________________________________________
+block5_conv1 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_conv2 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_conv3 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_conv4 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_pool (MaxPooling2D)   (None, None, None, 512)   0         
+=================================================================
+Total params: 20,024,384
+Trainable params: 20,024,384
+Non-trainable params: 0
+_________________________________________________________________
+</code></pre></div></div>
+
+<p>Here we initiate pre-trained vgg19 network (vgg network with 19 blocks) without its final classification dense layers as we only need its feature extractor and then we print its model summary.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="c1">## style and content layers
+</span>
+<span class="n">content_layers</span><span class="o">=</span><span class="p">[</span><span class="s">'block5_conv2'</span><span class="p">]</span>
+
+<span class="n">style_layers</span><span class="o">=</span><span class="p">[</span><span class="s">'block1_conv1'</span><span class="p">,</span>
+             <span class="s">'block2_conv1'</span><span class="p">,</span>
+             <span class="s">'block3_conv1'</span><span class="p">,</span>
+             <span class="s">'block4_conv1'</span><span class="p">,</span>
+             <span class="s">'block5_conv1'</span><span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Let’s define layers from which we want to extract features for style and content images. We try to extract the appearance of our style image from all scenarios extracted by conv nets, so we have used multiple blocks of conv layers to capture feature maps at different spatial scales.</p>
+
+<ul>
+  <li>We have used higher conv layer as a content layer because higher convolutional layers have learned complex and high-level features</li>
+  <li>For style layers, we have used various layers at different scales to capture feature maps at different spatial scales.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">content_model</span> <span class="o">=</span> <span class="n">stylized_model</span><span class="p">(</span><span class="n">vgg</span><span class="p">,</span> <span class="n">content_layers</span><span class="p">)</span>
+<span class="n">style_model</span> <span class="o">=</span> <span class="n">stylized_model</span><span class="p">(</span><span class="n">vgg</span><span class="p">,</span> <span class="n">style_layers</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Here we initiate two models with content layers (content_model) and style_layers (style_model) just to check how we are getting outputs from these models.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="n">content_outputs</span> <span class="o">=</span> <span class="n">content_model</span><span class="p">(</span><span class="n">content_image</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">outputs</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">content_layers</span><span class="p">,</span> <span class="n">content_outputs</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">layer_name</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>block5_conv2
+(18, 28, 512)
+</code></pre></div></div>
+
+<p>We get output from a layer which we defined in <code class="language-html highlighter-rouge">content_layers</code> list. The output is a feature map spit out by conv layer (block5_conv2) of shape (18,28,512)</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="n">style_outputs</span> <span class="o">=</span> <span class="n">style_model</span><span class="p">(</span><span class="n">style_image</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span><span class="n">outputs</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">style_layers</span><span class="p">,</span> <span class="n">style_outputs</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">layer_name</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>block1_conv1
+(1, 336, 512, 64)
+block2_conv1
+(1, 168, 256, 128)
+block3_conv1
+(1, 84, 128, 256)
+block4_conv1
+(1, 42, 64, 512)
+block5_conv1
+(1, 21, 32, 512)
+</code></pre></div></div>
+
+<p>Similarly, we can check output feature maps from layers defined in <code class="language-html highlighter-rouge">style_layers</code> list</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">model</span> <span class="o">=</span> <span class="n">stylized_model</span><span class="p">(</span><span class="n">vgg</span><span class="p">,</span> <span class="n">style_layers</span> <span class="o">+</span> <span class="n">content_layers</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Now let’s create a model which we will be used for style transfer. We create a vgg model which outputs all feature maps from the layers defined in <code class="language-html highlighter-rouge">style_layers</code> and <code class="language-html highlighter-rouge">content_layers</code> when an image is passed through it.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">get_output_dict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">*</span><span class="mf">255.0</span>
+    <span class="n">preprocessed_input</span> <span class="o">=</span> <span class="n">vgg19</span><span class="p">.</span><span class="n">preprocess_input</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">style_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">style_layers</span><span class="p">)</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">preprocessed_input</span><span class="p">)</span>
+    <span class="n">style_output</span><span class="p">,</span><span class="n">content_output</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[:</span><span class="n">style_length</span><span class="p">],</span><span class="n">outputs</span><span class="p">[</span><span class="n">style_length</span><span class="p">:]</span>
+    <span class="n">content_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span><span class="n">value</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">content_layers</span><span class="p">,</span><span class="n">content_output</span><span class="p">)}</span>
+    <span class="n">style_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span><span class="n">value</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">style_layers</span><span class="p">,</span><span class="n">style_output</span><span class="p">)}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s">'content'</span><span class="p">:</span><span class="n">content_dict</span><span class="p">,</span><span class="s">'style'</span><span class="p">:</span><span class="n">style_dict</span><span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The above function takes style transfer model and image as input and spits out output feature maps for content and style layers in a python dictionary.</p>
+
+<p>This dictionary has 2 keys:</p>
+
+<ul>
+  <li><em>content</em>: has all feature maps for the image from content_layers</li>
+  <li><em>style</em>: has all feature maps for the image from style_layers</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="code"><pre><span class="n">results</span> <span class="o">=</span> <span class="n">get_output_dict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">style_image</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Content Image output Feature maps: "</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span><span class="n">output</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s">'content'</span><span class="p">].</span><span class="n">items</span><span class="p">()):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">layer_name</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">output</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">layer_name</span><span class="p">,</span><span class="n">output</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s">'style'</span><span class="p">].</span><span class="n">items</span><span class="p">()):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">layer_name</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">output</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Content Image output Feature maps: 
+block5_conv2
+(1, 21, 32, 512)
+block1_conv1
+(1, 336, 512, 64)
+block2_conv1
+(1, 168, 256, 128)
+block3_conv1
+(1, 84, 128, 256)
+block4_conv1
+(1, 42, 64, 512)
+block5_conv1
+(1, 21, 32, 512)
+</code></pre></div></div>
+
+<p>Here we can see how we are getting feature maps as outputs when we pass an image (in our case we have passed <code class="language-html highlighter-rouge">style_image</code> to check how we are getting outputs in a dictionary</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">content_targets</span> <span class="o">=</span> <span class="n">get_output_dict</span><span class="p">[</span><span class="n">model</span><span class="p">,</span><span class="n">content_image</span><span class="p">](</span><span class="s">'content'</span><span class="p">)</span>
+<span class="n">style_targets</span> <span class="o">=</span> <span class="n">get_output_dict</span><span class="p">[</span><span class="n">model</span><span class="p">,</span><span class="n">style_image</span><span class="p">](</span><span class="s">'style'</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>In above lines, we have extracted content feature maps from our content image and style feature maps from style image</p>
+
+<h3 id="loss-functions">Loss Functions</h3>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">content_loss</span><span class="p">(</span><span class="n">placeholder</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="p">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">square</span><span class="p">(</span><span class="n">placeholder</span> <span class="o">-</span> <span class="n">content</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">gram_matrix</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">gram</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">einsum</span><span class="p">(</span><span class="s">'bijc,bijd-&gt;bcd'</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">gram</span><span class="o">/</span><span class="n">tf</span><span class="p">.</span><span class="n">cast</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">tf</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">style_loss</span><span class="p">(</span><span class="n">placeholder</span><span class="p">,</span><span class="n">style</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">gram_matrix</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">gram_matrix</span><span class="p">(</span><span class="n">placeholder</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="p">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="p">.</span><span class="n">square</span><span class="p">(</span><span class="n">s</span><span class="o">-</span><span class="n">p</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The above three functions are used to calculate <em>content loss</em> and <em>style loss</em> from our images.</p>
+
+<ul>
+  <li>
+    <p>Content Loss: It is defined as the mean square error between two images. It denotes, how close pixels of two images are? You have already seen this loss function in regression. If two images are same there mse is zero. We are using <code class="language-html highlighter-rouge">mse</code> because we want to calculate pixel-level closeness of images the more they are close in terms of pixels the more the content of images matches, this way we can check, how close the contents of the content image and output image are?</p>
+  </li>
+  <li>
+    <p>Style loss uses gram matrix to calculate correlation or similarity between feature maps of two images. The dot product tells us by what amount one vector goes in the direction of another, in the more intuitive way it tells similarity between two vectors. The more similar vectors are the less is the angle between them also dot product is greater in this case. For calculating style loss, we are using the gram matrix which is the dot product of all style features with one another. This helps to capture the relationship between feature maps the more the dot product between them the more correlated they are and less the dot product the less correlated they are. This relation capture stats of patterns in activations of convnet which represent the appearance of texture at a high level. Using <code class="language-html highlighter-rouge">mse</code> between gram matrix of two images helps us to find the closeness of features (style and texture) between two images, this way we can check, how the style of one image is similar to another?</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">loss_function</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">content_outputs</span><span class="p">,</span> <span class="n">style_outputs</span><span class="p">,</span> <span class="n">content_weight</span><span class="p">,</span> <span class="n">style_weight</span><span class="p">):</span>
+    <span class="n">final_content</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s">'content'</span><span class="p">]</span>
+    <span class="n">final_style</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s">'style'</span><span class="p">]</span>
+    <span class="n">num_style_layers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">style_layers</span><span class="p">)</span>
+    <span class="n">num_content_layers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">content_layers</span><span class="p">)</span>
+    <span class="c1"># content loss
+</span>    <span class="c1"># adding content loss from all content_layers and taking its average also multiply with some weighting parameter
+</span>    <span class="n">c_loss</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">add_n</span><span class="p">([</span><span class="n">content_loss</span><span class="p">(</span><span class="n">content_outputs</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">final_content</span><span class="p">[</span><span class="n">name</span><span class="p">])</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">final_content</span><span class="p">.</span><span class="n">keys</span><span class="p">()])</span>
+    <span class="n">c_loss</span> <span class="o">*=</span> <span class="n">content_weight</span> <span class="o">/</span> <span class="n">num_content_layers</span>
+    <span class="c1"># style loss
+</span>    <span class="c1"># adding style loss from all style_layers and taking its average also multiply with some weighting parameter
+</span>    <span class="n">s_loss</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">add_n</span><span class="p">([</span><span class="n">style_loss</span><span class="p">(</span><span class="n">style_outputs</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">final_style</span><span class="p">[</span><span class="n">name</span><span class="p">])</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">final_style</span><span class="p">.</span><span class="n">keys</span><span class="p">()])</span>
+<span class="n">s_loss</span><span class="o">*=</span> <span class="n">style_weight</span> <span class="o">/</span> <span class="n">num_style_layers</span>
+    <span class="c1"># adding up both content and style loss
+</span>    <span class="n">loss</span> <span class="o">=</span> <span class="n">c_loss</span> <span class="o">+</span> <span class="n">s_loss</span>
+    <span class="k">return</span> <span class="n">loss</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The above function is our loss function which merges style and content loss of our style image and content image respectively with the style and content loss of our target placeholder image. This placeholder image will be our final styled image which has the content of content image and style of style image.</p>
+
+<p>we are also using some weighting for content and style loss which controls how much style or content we want in our final image. These weights are hyperparameters which can be used to tune the final output image.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">output_image</span> <span class="o">=</span> <span class="n">tf</span><span class="p">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">content_image</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>let’s define our output image which we will optimize using loss defined above to create the final style image. We simply copy contents of the content image into it for faster convergence because the content is already present in the image, this way we get an appealing image in less number of optimization epochs. We can also use a noise image from a normal distribution for this task.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+</pre></td><td class="code"><pre><span class="n">optimizer</span><span class="o">=</span><span class="n">tf</span><span class="p">.</span><span class="n">optimizers</span><span class="p">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">beta_1</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>Above we have defined our optimizer which will be used to optimize output image by decreasing loss value from loss function defined above.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">clip_0_1</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="p">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">image</span><span class="p">,</span><span class="n">clip_value_min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">clip_value_max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>The above function makes sure that our pixels of the image are in the range [0, 1]</p>
+
+<h3 id="optimize-output-image">Optimize output image</h3>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">loss_optimizer</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">content_weight</span><span class="p">,</span> <span class="n">style_weight</span><span class="p">,</span> <span class="n">total_variation_weight</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">tf</span><span class="p">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">tape</span><span class="p">:</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">get_output_dict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_function</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">content_targets</span><span class="p">,</span> <span class="n">style_targets</span><span class="p">,</span> <span class="n">content_weight</span><span class="p">,</span> <span class="n">style_weight</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">+=</span> <span class="n">total_variation_weight</span> <span class="o">*</span> <span class="n">tf</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">total_variation</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="n">tape</span><span class="p">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+    <span class="n">optimizer</span><span class="p">.</span><span class="n">apply_gradients</span><span class="p">([(</span><span class="n">grad</span><span class="p">,</span> <span class="n">image</span><span class="p">)])</span>
+    <span class="n">image</span><span class="p">.</span><span class="n">assign</span><span class="p">(</span><span class="n">clip_0_1</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">loss</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>We have defined our loss optimizer which uses an optimizer to decrease loss value. It takes an image that we want to optimize and an optimizer for optimization as parameters.</p>
+
+<p>The optimization of our loss function(style + content loss) led highly pixelated and noisy image to prevent this we introduced total variation loss. It acts as regularizer which smoothens generated image and ensure spatial continuity(different views of an object are sufficiently similar after one view is learned)</p>
+
+<p>The third parameter is the weight for total variation loss which we can use as a hyperparameter to tune the final image</p>
+
+<p>In this function, we calculate gradients of loss concerning image using <code class="language-html highlighter-rouge">tape.gradient</code>. With these gradients, we optimize our image using <code class="language-html highlighter-rouge">optimizer.apply_gradients</code> method.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">total_variation_weight</span><span class="o">=</span><span class="mf">0.0004</span>
+<span class="n">style_weight</span><span class="o">=</span><span class="mf">1e-2</span>
+<span class="n">content_weight</span><span class="o">=</span><span class="mf">1e4</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p>above we have defined our weights for content, style and total variation loss. We can tune them and check their effects in the final output image. Change them based on your liking.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="code"><pre><span class="n">epochs</span><span class="o">=</span><span class="mi">10</span>
+<span class="n">steps_per_epoch</span><span class="o">=</span><span class="mi">100</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="code"><pre><span class="n">start</span><span class="o">=</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Epoch: </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">steps_per_epoch</span><span class="p">)):</span>
+        <span class="n">curr_loss</span> <span class="o">=</span> <span class="n">loss_optimizer</span><span class="p">(</span><span class="n">output_image</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">content_weight</span><span class="p">,</span> <span class="n">style_weight</span><span class="p">,</span> <span class="n">total_variation_weight</span><span class="p">)</span>
+        <span class="c1"># we can save image in every step here
+</span>        <span class="c1"># current_image = array_to_img(output_image.numpy(), deprocessing=True)
+</span>        <span class="c1"># current_image.save(f'progress/{i}_{j}_paint.jpg')
+</span>    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Loss: </span><span class="si">{</span><span class="n">curr_loss</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="n">end</span><span class="o">=</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Image successfully generated in </span><span class="si">{</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">:.</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="s"> sec"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Epoch: 1
+Loss: [20690518.]
+
+Epoch: 2
+Loss: [11009075.]
+
+Epoch: 3
+Loss: [7396032.5]
+
+Epoch: 4
+Loss: [5733371.5]
+
+Epoch: 5
+Loss: [4823225.]
+
+Epoch: 6
+Loss: [4269706.]
+
+Epoch: 7
+Loss: [3904379.8]
+
+Epoch: 8
+Loss: [3647648.2]
+
+Epoch: 9
+Loss: [3462803.]
+
+Epoch: 10
+Loss: [3317911.2]
+
+Image successfully generated in 806.3 sec
+</code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="code"><pre><span class="n">show_image</span><span class="p">(</span><span class="n">output_image</span><span class="p">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">deprocessing</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">final_image</span> <span class="o">=</span> <span class="n">array_to_img</span><span class="p">(</span><span class="n">output_image</span><span class="p">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">deprocessing</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">final_image</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="s">"kandinsky_starry.jpg"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></figure>
+
+<p><img src="/assets/blogs/style-transfer/output_63_0.png" alt="png" /></p>
+
+<p>This is an interesting part because we are creating a styled image here. we have defined the number of epochs and steps per epochs and for every epoch, we are calculating loss and optimizing our output image using adam optimizer.</p>
+
+<p>Finally, at last, we are saving output image into the disk, now its time to show off this image to your friends. Play with it and share exciting results.</p>
+
+<p>Below is the demo video showing style transfer in action.</p>
+
+<div style="margin:1rem 0;">
+  <a href="http://www.youtube.com/watch?v=weVfBfWVuZw"><img src="http://img.youtube.com/vi/weVfBfWVuZw/0.jpg" alt="Gatys style transfer" /></a>
+</div>
+
+<p>In the next part, we will be using another style transfer technique which will be 100 times faster than this and can be used to style videos too.</p>
+
+<p>Thanks for reading. ✌✌✌</p>
+
+<h3 id="references">References</h3>
+
+<ul>
+  <li><a href="https://livebook.manning.com/book/deep-learning-with-python/chapter-8/76">Tensorflow Tutorials Keras Book</a></li>
+  <li><a href="https://www.tensorflow.org/tutorials/generative/style_transfer">Tensorflow docs</a></li>
+  <li><a href="https://arxiv.org/abs/1508.06576">A Neural Algorithm of Artistic Style</a></li>
+</ul>
+
+<h3 id="important-links">Important links</h3>
+
+<ul>
+  <li><a href="https://github.com/tarun-bisht/fast-style-transfer">Github Repository</a></li>
+  <li><a href="https://github.com/tarun-bisht/blogs-notebooks/blob/master/style-transfer/Neural%20Style%20Transfer%20Part%201.ipynb">Jupyter Notebook</a></li>
+  <li><a href="http://www.youtube.com/watch?v=weVfBfWVuZw">Youtube Video</a></li>
+</ul>
+
+		</div>
+		<div class="post-tags">
+			<ul>
+				
+					<li>python</li>
+				
+					<li>art</li>
+				
+					<li>intermediate</li>
+				
+					<li>tensorflow</li>
+				
+					<li>vgg</li>
+				
+					<li>style-transfer</li>
+				
+			</ul>
+		</div>
+		
+	</div>
+	<div class="container">
+		
+	</div>
+</section>
+
+    <section class="social">
+    <ul animation="fade-down" animation-time="1s">
+        <li><a target="_blank" href="https://twitter.com/tarunresearches"><i class="fab fa-twitter"></i></a></li>
+        <li><a target="_blank" href="https://www.instagram.com/tarunresearches"><i class="fab fa-instagram"></i></a></li>
+        <li><a target="_blank" href="https://www.linkedin.com/in/tarunbisht"><i class="fab fa-linkedin-in"></i></a></li>
+        <li><a target="_blank" href="https://www.kaggle.com/tarunbisht11"><i class="fab fa-kaggle"></i></a></li>
+        <li><a target="_blank" href="https://github.com/tarun-bisht"><i class="fab fa-github"></i></a></li>
+        <li><a target="_blank" href="https://medium.com/@iamtarunbisht"><i class="fab fa-medium-m"></i></a></li>
+        <li><a target="_blank" href="https://www.youtube.com/channel/UCSxE20aTc9IJFF3ZQb1cbLA"><i class="fab fa-youtube"></i></a></li>
+    </ul>
+</section>
+    <footer>
+  <div class="image"></div>
+  <nav>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/blogs/"> Blogs</a></li>
+      <li><a href="/projects/">Projects</a></li>
+      <li><a href="/resume/">Resume</a></li>
+      <li><a href="/cv/">Academic CV</a></li>
+      <li><a href="/contact/">Contact</a></li>
+      
+    </ul>
+  </nav>
+  <div class="copyright">
+    Copyright © 2025 All rights reserved
+  </div>
+</footer>
+
+    
+
+<script src="/assets/js/production.min.js"></script>
+<script src="/assets/js/app.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+</body>
+</html>
