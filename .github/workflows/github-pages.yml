@@ -9,10 +9,10 @@ jobs:
   github-pages:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
       # Use GitHub Actions' cache to shorten build times and decrease load on servers
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile') }}
@@ -20,7 +20,8 @@ jobs:
             ${{ runner.os }}-gems-
             
       # Standard usage
-      - uses:  helaili/jekyll-action@v2
+      - uses: helaili/jekyll-action@v2
         with:
           token: ${{ secrets.JEKYLL_PAT }}
           target_branch: 'gh-pages'
+          
