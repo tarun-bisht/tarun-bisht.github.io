@@ -11,25 +11,26 @@
 	<link rel="stylesheet" href="/assets/css/style.css">
 	<script src="/assets/js/dark_mode.min.js"></script>
 	<link rel="icon" href="/assets/images/favicon.ico">
-	<!-- Begin Jekyll SEO tag v2.7.1 -->
+	<!-- Begin Jekyll SEO tag v2.9.1 -->
 <title>implementing firebase in python using firebase admin sdk | Tarun Bisht</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="implementing firebase in python using firebase admin sdk" />
 <meta name="author" content="Tarun Bisht" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Firebase is a mobile and web application development platform by Google. Firebase platform has approx 18 products ready to be implemented in the project." />
-<meta property="og:description" content="Firebase is a mobile and web application development platform by Google. Firebase platform has approx 18 products ready to be implemented in the project." />
+<meta name="twitter:description" property="og:description" content="Firebase is a mobile and web application development platform by Google. Firebase platform has approx 18 products ready to be implemented in the project." />
 <link rel="canonical" href="https://tarunbisht.com/python/2020/03/22/implementing-firebase-in-python-using-firebase-admin-sdk/" />
 <meta property="og:url" content="https://tarunbisht.com/python/2020/03/22/implementing-firebase-in-python-using-firebase-admin-sdk/" />
 <meta property="og:site_name" content="Tarun Bisht" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-03-22T15:20:50+00:00" />
+<meta property="article:modified_time" content="2020-03-22T15:20:50+00:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="implementing firebase in python using firebase admin sdk" />
+<meta name="twitter:title" content="implementing firebase in python using firebase admin sdk" />
 <meta name="twitter:site" content="@tarunresearches" />
 <meta name="twitter:creator" content="@Tarun Bisht" />
 <script type="application/ld+json">
-{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"implementing firebase in python using firebase admin sdk","dateModified":"2020-03-22T15:20:50+00:00","datePublished":"2020-03-22T15:20:50+00:00","description":"Firebase is a mobile and web application development platform by Google. Firebase platform has approx 18 products ready to be implemented in the project.","url":"https://tarunbisht.com/python/2020/03/22/implementing-firebase-in-python-using-firebase-admin-sdk/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/python/2020/03/22/implementing-firebase-in-python-using-firebase-admin-sdk/"},"@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Tarun Bisht"},"dateModified":"2020-03-22T15:20:50+00:00","datePublished":"2020-03-22T15:20:50+00:00","description":"Firebase is a mobile and web application development platform by Google. Firebase platform has approx 18 products ready to be implemented in the project.","headline":"implementing firebase in python using firebase admin sdk","mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/python/2020/03/22/implementing-firebase-in-python-using-firebase-admin-sdk/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"url":"https://tarunbisht.com/python/2020/03/22/implementing-firebase-in-python-using-firebase-admin-sdk/"}</script>
 <!-- End Jekyll SEO tag -->
 
 	
@@ -51,7 +52,6 @@
         <li><a href="/blogs/"> Blogs</a></li>
         <li><a href="/projects/">Projects</a></li>
         <li><a href="/cv/">CV</a></li>
-        <li><a href="/resume/">Resume</a></li>
         <li><a href="/contact/"> Contact</a></li>
         <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
 	</ul>
@@ -96,7 +96,7 @@
 </ol>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="kn">from</span> <span class="nn">firebase_admin</span> <span class="kn">import</span> <span class="n">credentials</span>
+</pre></td><td class="code"><pre><span class="kn">from</span> <span class="n">firebase_admin</span> <span class="kn">import</span> <span class="n">credentials</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <ol>
@@ -108,13 +108,13 @@
 3
 4
 </pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">create_firebase_app</span><span class="p">():</span>
- <span class="n">cred</span> <span class="o">=</span> <span class="n">credentials</span><span class="p">.</span><span class="n">Certificate</span><span class="p">(</span><span class="s">'PATH OF FIREBASE SERVICE FILE '</span><span class="p">)</span>
- <span class="n">firebase</span><span class="o">=</span><span class="n">firebase_admin</span><span class="p">.</span><span class="n">initialize_app</span><span class="p">(</span><span class="n">cred</span><span class="p">)</span>
+ <span class="n">cred</span> <span class="o">=</span> <span class="n">credentials</span><span class="p">.</span><span class="nc">Certificate</span><span class="p">(</span><span class="sh">'</span><span class="s">PATH OF FIREBASE SERVICE FILE </span><span class="sh">'</span><span class="p">)</span>
+ <span class="n">firebase</span><span class="o">=</span><span class="n">firebase_admin</span><span class="p">.</span><span class="nf">initialize_app</span><span class="p">(</span><span class="n">cred</span><span class="p">)</span>
  <span class="k">return</span> <span class="n">firebase</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">firebase_instance</span><span class="o">=</span><span class="n">create_firebase_app</span><span class="p">()</span>
+</pre></td><td class="code"><pre><span class="n">firebase_instance</span><span class="o">=</span><span class="nf">create_firebase_app</span><span class="p">()</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <h3 id="implementing-firebase-auth">Implementing Firebase Auth</h3>
@@ -126,7 +126,7 @@
 </ol>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="kn">from</span> <span class="nn">firebase_admin</span> <span class="kn">import</span> <span class="n">auth</span>
+</pre></td><td class="code"><pre><span class="kn">from</span> <span class="n">firebase_admin</span> <span class="kn">import</span> <span class="n">auth</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <ol>
@@ -149,18 +149,18 @@
 14
 </pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">username</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="n">email</span><span class="p">,</span><span class="n">password</span><span class="p">):</span>
  <span class="k">try</span><span class="p">:</span>
-  <span class="n">auth</span><span class="p">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span><span class="n">email_verified</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span><span class="n">display_name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
-  <span class="k">return</span> <span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s"> created successfully'</span>
+  <span class="n">auth</span><span class="p">.</span><span class="nf">create_user</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span><span class="n">email_verified</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span><span class="n">display_name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+  <span class="k">return</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s"> created successfully</span><span class="sh">'</span>
  <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-  <span class="k">return</span> <span class="sa">f</span><span class="s">'ERROR: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">'</span>
+  <span class="k">return</span> <span class="sa">f</span><span class="sh">'</span><span class="s">ERROR: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="sh">'</span>
  <span class="c1">#Taking User Info Logic Here( GUI or Input)
-</span> <span class="n">username</span><span class="o">=</span><span class="s">"tarun_11"</span>
- <span class="n">name</span><span class="o">=</span><span class="s">"Tarun"</span>
- <span class="n">password</span><span class="o">=</span><span class="s">"PASSWORD"</span>
- <span class="n">email</span><span class="o">=</span><span class="s">"tarunbisht@company.com"</span>
+</span> <span class="n">username</span><span class="o">=</span><span class="sh">"</span><span class="s">tarun_11</span><span class="sh">"</span>
+ <span class="n">name</span><span class="o">=</span><span class="sh">"</span><span class="s">Tarun</span><span class="sh">"</span>
+ <span class="n">password</span><span class="o">=</span><span class="sh">"</span><span class="s">PASSWORD</span><span class="sh">"</span>
+ <span class="n">email</span><span class="o">=</span><span class="sh">"</span><span class="s">tarunbisht@company.com</span><span class="sh">"</span>
  <span class="c1">#Create User
-</span> <span class="n">status</span><span class="o">=</span><span class="n">create_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
- <span class="k">print</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+</span> <span class="n">status</span><span class="o">=</span><span class="nf">create_user</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+ <span class="nf">print</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <ol>
@@ -177,7 +177,7 @@
 2
 3
 </pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
- <span class="n">user</span> <span class="o">=</span> <span class="n">auth</span><span class="p">.</span><span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+ <span class="n">user</span> <span class="o">=</span> <span class="n">auth</span><span class="p">.</span><span class="nf">get_user</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
  <span class="k">return</span> <span class="n">user</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
@@ -189,7 +189,7 @@
 2
 3
 </pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">get_user</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
- <span class="n">user</span> <span class="o">=</span> <span class="n">auth</span><span class="p">.</span><span class="n">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
+ <span class="n">user</span> <span class="o">=</span> <span class="n">auth</span><span class="p">.</span><span class="nf">get_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
  <span class="k">return</span> <span class="n">user</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
@@ -199,8 +199,8 @@
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
-</pre></td><td class="code"><pre><span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">auth</span><span class="p">.</span><span class="n">list_users</span><span class="p">().</span><span class="n">iterate_all</span><span class="p">():</span>
- <span class="k">print</span><span class="p">(</span><span class="s">'User: '</span> <span class="o">+</span> <span class="n">user</span><span class="p">.</span><span class="n">uid</span><span class="p">)</span>
+</pre></td><td class="code"><pre><span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">auth</span><span class="p">.</span><span class="nf">list_users</span><span class="p">().</span><span class="nf">iterate_all</span><span class="p">():</span>
+ <span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">User: </span><span class="sh">'</span> <span class="o">+</span> <span class="n">user</span><span class="p">.</span><span class="n">uid</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <ol>
@@ -221,14 +221,14 @@
 12
 </pre></td><td class="code"><pre><span class="c1"># need to specify a uid
 </span>
-<span class="n">user</span> <span class="o">=</span> <span class="n">auth</span><span class="p">.</span><span class="n">update_user</span><span class="p">(</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">auth</span><span class="p">.</span><span class="nf">update_user</span><span class="p">(</span>
  <span class="n">uid</span><span class="p">,</span>
- <span class="n">email</span><span class="o">=</span><span class="s">'new_email@company.com'</span><span class="p">,</span>
- <span class="n">phone_number</span><span class="o">=</span><span class="s">'+10000010200'</span><span class="p">,</span>
+ <span class="n">email</span><span class="o">=</span><span class="sh">'</span><span class="s">new_email@company.com</span><span class="sh">'</span><span class="p">,</span>
+ <span class="n">phone_number</span><span class="o">=</span><span class="sh">'</span><span class="s">+10000010200</span><span class="sh">'</span><span class="p">,</span>
  <span class="n">email_verified</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
- <span class="n">password</span><span class="o">=</span><span class="s">'newPassword'</span><span class="p">,</span>
- <span class="n">display_name</span><span class="o">=</span><span class="s">'New Name'</span><span class="p">,</span>
- <span class="n">photo_url</span><span class="o">=</span><span class="s">'URL'</span><span class="p">,</span>
+ <span class="n">password</span><span class="o">=</span><span class="sh">'</span><span class="s">newPassword</span><span class="sh">'</span><span class="p">,</span>
+ <span class="n">display_name</span><span class="o">=</span><span class="sh">'</span><span class="s">New Name</span><span class="sh">'</span><span class="p">,</span>
+ <span class="n">photo_url</span><span class="o">=</span><span class="sh">'</span><span class="s">URL</span><span class="sh">'</span><span class="p">,</span>
  <span class="n">disabled</span><span class="o">=</span><span class="bp">True</span>
  <span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
@@ -238,7 +238,7 @@
 </ol>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">auth</span><span class="p">.</span><span class="n">delete_user</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
+</pre></td><td class="code"><pre><span class="n">auth</span><span class="p">.</span><span class="nf">delete_user</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <h3 id="implementing-firebase-storage">Implementing Firebase Storage</h3>
@@ -250,7 +250,7 @@
 </ol>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="kn">from</span> <span class="nn">firebase_admin</span> <span class="kn">import</span> <span class="n">storage</span>
+</pre></td><td class="code"><pre><span class="kn">from</span> <span class="n">firebase_admin</span> <span class="kn">import</span> <span class="n">storage</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <ol>
@@ -268,15 +268,15 @@
 </pre></td><td class="code"><pre><span class="c1"># Edit Create App function to provide storage bucket address
 </span>
 <span class="k">def</span> <span class="nf">create_firebase_app</span><span class="p">():</span>
- <span class="n">cred</span> <span class="o">=</span> <span class="n">credentials</span><span class="p">.</span><span class="n">Certificate</span><span class="p">(</span><span class="s">'PATH OF FIREBASE SERVICE FILE '</span><span class="p">)</span>
- <span class="n">firebase</span><span class="o">=</span><span class="n">firebase_admin</span><span class="p">.</span><span class="n">initialize_app</span><span class="p">(</span><span class="n">cred</span><span class="p">,</span> <span class="p">{</span>
- <span class="s">'storageBucket'</span><span class="p">:</span> <span class="s">'BUCKET URL FROM FIREBASE STORAGE DASHBOARD'</span>
+ <span class="n">cred</span> <span class="o">=</span> <span class="n">credentials</span><span class="p">.</span><span class="nc">Certificate</span><span class="p">(</span><span class="sh">'</span><span class="s">PATH OF FIREBASE SERVICE FILE </span><span class="sh">'</span><span class="p">)</span>
+ <span class="n">firebase</span><span class="o">=</span><span class="n">firebase_admin</span><span class="p">.</span><span class="nf">initialize_app</span><span class="p">(</span><span class="n">cred</span><span class="p">,</span> <span class="p">{</span>
+ <span class="sh">'</span><span class="s">storageBucket</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">BUCKET URL FROM FIREBASE STORAGE DASHBOARD</span><span class="sh">'</span>
  <span class="p">})</span>
  <span class="k">return</span> <span class="n">firebase</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">firebase_instance</span><span class="o">=</span><span class="n">create_firebase_app</span><span class="p">()</span>
+</pre></td><td class="code"><pre><span class="n">firebase_instance</span><span class="o">=</span><span class="nf">create_firebase_app</span><span class="p">()</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <ol>
@@ -293,28 +293,28 @@
 8
 9
 10
-</pre></td><td class="code"><pre><span class="s">'''
+</pre></td><td class="code"><pre><span class="sh">'''</span><span class="s">
 Arguments:
 file= File to upload
 name=file name by which it is stored in bucket
 format (optional)= Format of file (like jpg,png or pdf etc..)
-'''</span>
-<span class="k">def</span> <span class="nf">upload_file</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="s">"image/webp"</span><span class="p">):</span>
- <span class="n">bucket</span> <span class="o">=</span> <span class="n">storage</span><span class="p">.</span><span class="n">bucket</span><span class="p">()</span>
- <span class="n">blob</span> <span class="o">=</span> <span class="n">bucket</span><span class="p">.</span><span class="n">blob</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
- <span class="n">blob</span><span class="p">.</span><span class="n">upload_from_filename</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="n">content_type</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
+</span><span class="sh">'''</span>
+<span class="k">def</span> <span class="nf">upload_file</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="sh">"</span><span class="s">image/webp</span><span class="sh">"</span><span class="p">):</span>
+ <span class="n">bucket</span> <span class="o">=</span> <span class="n">storage</span><span class="p">.</span><span class="nf">bucket</span><span class="p">()</span>
+ <span class="n">blob</span> <span class="o">=</span> <span class="n">bucket</span><span class="p">.</span><span class="nf">blob</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+ <span class="n">blob</span><span class="p">.</span><span class="nf">upload_from_filename</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="n">content_type</span><span class="o">=</span><span class="nb">format</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="code"><pre><span class="c1"># Uploading a file in root
-</span><span class="n">upload_file</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="s">'image.webp'</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s">'cover.webp'</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="s">"image/webp"</span><span class="p">)</span>
+</span><span class="nf">upload_file</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="sh">'</span><span class="s">image.webp</span><span class="sh">'</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">cover.webp</span><span class="sh">'</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="sh">"</span><span class="s">image/webp</span><span class="sh">"</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="code"><pre><span class="c1"># Uploading a file in a folder
-</span><span class="n">upload_blob</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="s">'image.webp'</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">FOLDER_NAME</span><span class="p">,</span> <span class="s">'cover.webp'</span><span class="p">),</span><span class="nb">format</span><span class="o">=</span><span class="s">"image/webp"</span><span class="p">)</span>
+</span><span class="nf">upload_blob</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="sh">'</span><span class="s">image.webp</span><span class="sh">'</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">FOLDER_NAME</span><span class="p">,</span> <span class="sh">'</span><span class="s">cover.webp</span><span class="sh">'</span><span class="p">),</span><span class="nb">format</span><span class="o">=</span><span class="sh">"</span><span class="s">image/webp</span><span class="sh">"</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <ol>
@@ -336,33 +336,33 @@ format (optional)= Format of file (like jpg,png or pdf etc..)
 13
 14
 15
-</pre></td><td class="code"><pre><span class="s">'''
+</pre></td><td class="code"><pre><span class="sh">'''</span><span class="s">
 Arguments:
 filename= Name of file to delete
 folder_name (optional)= Name of folder inside bucket where specified file resides
-'''</span>
+</span><span class="sh">'''</span>
 <span class="k">def</span> <span class="nf">delete_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="n">folder_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
- <span class="n">bucket</span><span class="o">=</span><span class="n">storage</span><span class="p">.</span><span class="n">bucket</span><span class="p">()</span>
+ <span class="n">bucket</span><span class="o">=</span><span class="n">storage</span><span class="p">.</span><span class="nf">bucket</span><span class="p">()</span>
  <span class="n">deleted</span><span class="o">=</span><span class="bp">None</span>
  <span class="k">if</span> <span class="n">folder_name</span><span class="p">:</span>
-  <span class="n">blob</span><span class="o">=</span><span class="n">bucket</span><span class="p">.</span><span class="n">blob</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_name</span><span class="p">,</span><span class="n">filename</span><span class="p">))</span>
-  <span class="n">deleted</span><span class="o">=</span><span class="n">blob</span><span class="p">.</span><span class="n">delete</span><span class="p">()</span>
+  <span class="n">blob</span><span class="o">=</span><span class="n">bucket</span><span class="p">.</span><span class="nf">blob</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">folder_name</span><span class="p">,</span><span class="n">filename</span><span class="p">))</span>
+  <span class="n">deleted</span><span class="o">=</span><span class="n">blob</span><span class="p">.</span><span class="nf">delete</span><span class="p">()</span>
  <span class="k">else</span><span class="p">:</span>
-  <span class="n">blob</span><span class="o">=</span><span class="n">bucket</span><span class="p">.</span><span class="n">blob</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-  <span class="n">deleted</span><span class="o">=</span><span class="n">blob</span><span class="p">.</span><span class="n">delete</span><span class="p">()</span>
+  <span class="n">blob</span><span class="o">=</span><span class="n">bucket</span><span class="p">.</span><span class="nf">blob</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+  <span class="n">deleted</span><span class="o">=</span><span class="n">blob</span><span class="p">.</span><span class="nf">delete</span><span class="p">()</span>
   <span class="k">return</span> <span class="n">deleted</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="code"><pre><span class="c1"># Deleting a file from root
-</span><span class="n">deleted_file</span><span class="o">=</span><span class="n">delete_file</span><span class="p">(</span><span class="s">'cover.webp'</span><span class="p">)</span>
+</span><span class="n">deleted_file</span><span class="o">=</span><span class="nf">delete_file</span><span class="p">(</span><span class="sh">'</span><span class="s">cover.webp</span><span class="sh">'</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="code"><pre><span class="c1"># Deleting a file from a folder
-</span><span class="n">deleted_file</span> <span class="o">=</span><span class="n">delete_file</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">FOLDER_NAME</span><span class="p">,</span> <span class="s">'cover.webp'</span><span class="p">))</span>
+</span><span class="n">deleted_file</span> <span class="o">=</span><span class="nf">delete_file</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">FOLDER_NAME</span><span class="p">,</span> <span class="sh">'</span><span class="s">cover.webp</span><span class="sh">'</span><span class="p">))</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <ol>
@@ -382,31 +382,31 @@ folder_name (optional)= Name of folder inside bucket where specified file reside
 11
 12
 13
-</pre></td><td class="code"><pre><span class="s">'''
+</pre></td><td class="code"><pre><span class="sh">'''</span><span class="s">
 Arguments:
 filename= Name of file to delete
 folder_name (optional)= Name of folder inside bucket where specified file resides
-'''</span>
+</span><span class="sh">'''</span>
 <span class="k">def</span> <span class="nf">make_file_public</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="n">folder_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
- <span class="n">bucket</span><span class="o">=</span><span class="n">storage</span><span class="p">.</span><span class="n">bucket</span><span class="p">()</span>
+ <span class="n">bucket</span><span class="o">=</span><span class="n">storage</span><span class="p">.</span><span class="nf">bucket</span><span class="p">()</span>
  <span class="k">if</span> <span class="n">folder_name</span><span class="p">:</span>
-  <span class="n">blob</span><span class="o">=</span><span class="n">bucket</span><span class="p">.</span><span class="n">blob</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_name</span><span class="p">,</span><span class="n">filename</span><span class="p">))</span>
-  <span class="n">blob</span><span class="p">.</span><span class="n">make_public</span><span class="p">()</span>
+  <span class="n">blob</span><span class="o">=</span><span class="n">bucket</span><span class="p">.</span><span class="nf">blob</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">folder_name</span><span class="p">,</span><span class="n">filename</span><span class="p">))</span>
+  <span class="n">blob</span><span class="p">.</span><span class="nf">make_public</span><span class="p">()</span>
  <span class="k">else</span><span class="p">:</span>
-  <span class="n">blob</span><span class="o">=</span><span class="n">bucket</span><span class="p">.</span><span class="n">blob</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-  <span class="n">blob</span><span class="p">.</span><span class="n">make_public</span><span class="p">()</span>
+  <span class="n">blob</span><span class="o">=</span><span class="n">bucket</span><span class="p">.</span><span class="nf">blob</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+  <span class="n">blob</span><span class="p">.</span><span class="nf">make_public</span><span class="p">()</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="code"><pre><span class="c1"># Making file public from a folder
-</span><span class="n">make_file_public</span><span class="p">(</span><span class="s">'cover.webp'</span><span class="p">)</span>
+</span><span class="nf">make_file_public</span><span class="p">(</span><span class="sh">'</span><span class="s">cover.webp</span><span class="sh">'</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="code"><pre><span class="c1"># Making file public from root
-</span><span class="n">make_file_public</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">FOLDER_NAME</span><span class="p">,</span> <span class="s">'cover.webp'</span><span class="p">))</span>
+</span><span class="nf">make_file_public</span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">FOLDER_NAME</span><span class="p">,</span> <span class="sh">'</span><span class="s">cover.webp</span><span class="sh">'</span><span class="p">))</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <ol>
@@ -435,27 +435,27 @@ folder_name (optional)= Name of folder inside bucket where specified file reside
 9
 10
 </pre></td><td class="code"><pre><span class="c1"># Signed URL
-</span><span class="s">'''
+</span><span class="sh">'''</span><span class="s">
 Arguments:
 name=Name of file for which url is to generate
 minutes (optional)=Expiry time of url
-'''</span>
+</span><span class="sh">'''</span>
 <span class="k">def</span> <span class="nf">generate_signed_url</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">minutes</span><span class="o">=</span><span class="mi">43800</span><span class="p">):</span>
- <span class="n">bucket</span><span class="o">=</span><span class="n">storage</span><span class="p">.</span><span class="n">bucket</span><span class="p">()</span>
- <span class="n">blob</span><span class="o">=</span><span class="n">bucket</span><span class="p">.</span><span class="n">blob</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
- <span class="k">return</span> <span class="n">blob</span><span class="p">.</span><span class="n">generate_signed_url</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">))</span>
+ <span class="n">bucket</span><span class="o">=</span><span class="n">storage</span><span class="p">.</span><span class="nf">bucket</span><span class="p">()</span>
+ <span class="n">blob</span><span class="o">=</span><span class="n">bucket</span><span class="p">.</span><span class="nf">blob</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+ <span class="k">return</span> <span class="n">blob</span><span class="p">.</span><span class="nf">generate_signed_url</span><span class="p">(</span><span class="nf">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">))</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="code"><pre><span class="c1"># generating signed url for a file in root of bucket
-</span><span class="n">url</span><span class="o">=</span> <span class="n">generate_signed_url</span> <span class="p">(</span><span class="s">'cover.webp'</span><span class="p">)</span>
+</span><span class="n">url</span><span class="o">=</span> <span class="nf">generate_signed_url </span><span class="p">(</span><span class="sh">'</span><span class="s">cover.webp</span><span class="sh">'</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="code"><pre><span class="c1"># generating signed url for file inside a folder
-</span><span class="n">url</span><span class="o">=</span> <span class="n">generate_signed_url</span> <span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">FOLDER_NAME</span><span class="p">,</span> <span class="s">'cover.webp'</span><span class="p">))</span>
+</span><span class="n">url</span><span class="o">=</span> <span class="nf">generate_signed_url </span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">FOLDER_NAME</span><span class="p">,</span> <span class="sh">'</span><span class="s">cover.webp</span><span class="sh">'</span><span class="p">))</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
@@ -468,26 +468,26 @@ minutes (optional)=Expiry time of url
 8
 9
 </pre></td><td class="code"><pre><span class="c1"># Public URL
-</span><span class="s">'''
+</span><span class="sh">'''</span><span class="s">
 Arguments:
 Name=Name of file for which url is to generate
-'''</span>
+</span><span class="sh">'''</span>
 <span class="k">def</span> <span class="nf">generate_public_url</span> <span class="p">(</span><span class="n">name</span><span class="p">):</span>
- <span class="n">bucket</span><span class="o">=</span><span class="n">storage</span><span class="p">.</span><span class="n">bucket</span><span class="p">()</span>
- <span class="n">blob</span><span class="o">=</span><span class="n">bucket</span><span class="p">.</span><span class="n">blob</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+ <span class="n">bucket</span><span class="o">=</span><span class="n">storage</span><span class="p">.</span><span class="nf">bucket</span><span class="p">()</span>
+ <span class="n">blob</span><span class="o">=</span><span class="n">bucket</span><span class="p">.</span><span class="nf">blob</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
  <span class="k">return</span> <span class="n">blob</span><span class="p">.</span><span class="n">public_url</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="code"><pre><span class="c1"># generating public url for a file in root of bucket
-</span><span class="n">url</span><span class="o">=</span> <span class="n">generate_public_url</span> <span class="p">(</span><span class="s">'cover.webp'</span><span class="p">)</span>
+</span><span class="n">url</span><span class="o">=</span> <span class="nf">generate_public_url </span><span class="p">(</span><span class="sh">'</span><span class="s">cover.webp</span><span class="sh">'</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 </pre></td><td class="code"><pre><span class="c1"># generating public url for file inside a folder
-</span><span class="n">url</span><span class="o">=</span> <span class="n">generate_public_url</span> <span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">FOLDER_NAME</span><span class="p">,</span> <span class="s">'cover.webp'</span><span class="p">))</span>
+</span><span class="n">url</span><span class="o">=</span> <span class="nf">generate_public_url </span><span class="p">(</span><span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">FOLDER_NAME</span><span class="p">,</span> <span class="sh">'</span><span class="s">cover.webp</span><span class="sh">'</span><span class="p">))</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <p>This article just provides a configuration of Firebase and basic implementation of some features of Firebase. For more references please refer to Firebase docs.</p>
@@ -544,14 +544,13 @@ Name=Name of file for which url is to generate
       <li><a href="/about/">About</a></li>
       <li><a href="/blogs/"> Blogs</a></li>
       <li><a href="/projects/">Projects</a></li>
-      <li><a href="/resume/">Resume</a></li>
       <li><a href="/cv/">Academic CV</a></li>
       <li><a href="/contact/">Contact</a></li>
       
     </ul>
   </nav>
   <div class="copyright">
-    Copyright © 2025 All rights reserved
+    Copyright © 2026 All rights reserved
   </div>
 </footer>
 

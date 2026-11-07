@@ -11,25 +11,26 @@
 	<link rel="stylesheet" href="/assets/css/style.css">
 	<script src="/assets/js/dark_mode.min.js"></script>
 	<link rel="icon" href="/assets/images/favicon.ico">
-	<!-- Begin Jekyll SEO tag v2.7.1 -->
+	<!-- Begin Jekyll SEO tag v2.9.1 -->
 <title>crash course on pandas library python for everyday data science | Tarun Bisht</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="crash course on pandas library python for everyday data science" />
 <meta name="author" content="Tarun Bisht" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="pandas is a fast, powerful, flexible and easy to use open-source data analysis and manipulation tool, built on top of the python programming language. This post acts as a cheat-sheet for using the pandas library in python for everyday data science. It contains some important functions and submodules of pandas library which are used day to day in data science and machine learning." />
-<meta property="og:description" content="pandas is a fast, powerful, flexible and easy to use open-source data analysis and manipulation tool, built on top of the python programming language. This post acts as a cheat-sheet for using the pandas library in python for everyday data science. It contains some important functions and submodules of pandas library which are used day to day in data science and machine learning." />
+<meta name="twitter:description" property="og:description" content="pandas is a fast, powerful, flexible and easy to use open-source data analysis and manipulation tool, built on top of the python programming language. This post acts as a cheat-sheet for using the pandas library in python for everyday data science. It contains some important functions and submodules of pandas library which are used day to day in data science and machine learning." />
 <link rel="canonical" href="https://tarunbisht.com/crash%20course/2020/04/08/crash-course-on-pandas-library-python-for-everyday-data-science/" />
 <meta property="og:url" content="https://tarunbisht.com/crash%20course/2020/04/08/crash-course-on-pandas-library-python-for-everyday-data-science/" />
 <meta property="og:site_name" content="Tarun Bisht" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-04-08T15:16:50+00:00" />
+<meta property="article:modified_time" content="2020-04-08T15:16:50+00:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="crash course on pandas library python for everyday data science" />
+<meta name="twitter:title" content="crash course on pandas library python for everyday data science" />
 <meta name="twitter:site" content="@tarunresearches" />
 <meta name="twitter:creator" content="@Tarun Bisht" />
 <script type="application/ld+json">
-{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"crash course on pandas library python for everyday data science","dateModified":"2020-04-08T15:16:50+00:00","datePublished":"2020-04-08T15:16:50+00:00","description":"pandas is a fast, powerful, flexible and easy to use open-source data analysis and manipulation tool, built on top of the python programming language. This post acts as a cheat-sheet for using the pandas library in python for everyday data science. It contains some important functions and submodules of pandas library which are used day to day in data science and machine learning.","url":"https://tarunbisht.com/crash%20course/2020/04/08/crash-course-on-pandas-library-python-for-everyday-data-science/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/crash%20course/2020/04/08/crash-course-on-pandas-library-python-for-everyday-data-science/"},"@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Tarun Bisht"},"dateModified":"2020-04-08T15:16:50+00:00","datePublished":"2020-04-08T15:16:50+00:00","description":"pandas is a fast, powerful, flexible and easy to use open-source data analysis and manipulation tool, built on top of the python programming language. This post acts as a cheat-sheet for using the pandas library in python for everyday data science. It contains some important functions and submodules of pandas library which are used day to day in data science and machine learning.","headline":"crash course on pandas library python for everyday data science","mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/crash%20course/2020/04/08/crash-course-on-pandas-library-python-for-everyday-data-science/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"url":"https://tarunbisht.com/crash%20course/2020/04/08/crash-course-on-pandas-library-python-for-everyday-data-science/"}</script>
 <!-- End Jekyll SEO tag -->
 
 	
@@ -51,7 +52,6 @@
         <li><a href="/blogs/"> Blogs</a></li>
         <li><a href="/projects/">Projects</a></li>
         <li><a href="/cv/">CV</a></li>
-        <li><a href="/resume/">Resume</a></li>
         <li><a href="/contact/"> Contact</a></li>
         <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
 	</ul>
@@ -79,13 +79,13 @@
 <p>Create a python project or open an existing project and import pandas using</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">pandas</span>
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="n">pandas</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <p>we can also use an alias pd to use pandas into the project by importing pandas as pd</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="n">pandas</span> <span class="k">as</span> <span class="n">pd</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <h3 id="reading-and-visualizing-csv-files">Reading and Visualizing CSV files</h3>
@@ -93,7 +93,7 @@
 <p><em>data = pd.read_csv(“path_to_csv_file”)</em></p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">"corona.csv"</span><span class="p">)</span>
+</pre></td><td class="code"><pre><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">read_csv</span><span class="p">(</span><span class="sh">"</span><span class="s">corona.csv</span><span class="sh">"</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <p>this will read and load CSV file from memory and creates a pandas DataFrame object.</p>
@@ -103,7 +103,7 @@
 <p>this will help to visualize how loaded data looks. It is stored in the DataFrame object which is pandas way to structure CSV data in the form of tables. ex:</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1">#shows first 5 rows of dataframe</span>
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="nf">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1">#shows first 5 rows of dataframe</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div>
@@ -175,7 +175,7 @@
 <p><em>data.tail(numbers_of_columns)</em></p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="nf">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div>
@@ -265,7 +265,7 @@
 <p>len on the DataFrame object gives out the number of rows in DataFrame.</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></td><td class="code"><pre><span class="nf">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>27
@@ -278,7 +278,7 @@
 <p><em>data[[‘column_1’,’column_2’,’column_3’]]</em></p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre> <span class="n">data</span><span class="p">[</span><span class="s">'Death'</span><span class="p">]</span>
+</pre></td><td class="code"><pre> <span class="n">data</span><span class="p">[</span><span class="sh">'</span><span class="s">Death</span><span class="sh">'</span><span class="p">]</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>0     0
@@ -312,7 +312,7 @@ Name: Death, dtype: int64
 </code></pre></div></div>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">data</span><span class="p">[[</span><span class="s">'Name of State / UT'</span><span class="p">,</span><span class="s">'Death'</span><span class="p">]]</span>
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">[[</span><span class="sh">'</span><span class="s">Name of State / UT</span><span class="sh">'</span><span class="p">,</span><span class="sh">'</span><span class="s">Death</span><span class="sh">'</span><span class="p">]]</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div>
@@ -480,7 +480,7 @@ Name: Death, dtype: int64
 <p>sort and return DataFrame column specified</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s">'Total Confirmed cases *'</span><span class="p">])</span> <span class="c1">#sort and return DataFrame column</span>
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="nf">sort_values</span><span class="p">([</span><span class="sh">'</span><span class="s">Total Confirmed cases *</span><span class="sh">'</span><span class="p">])</span> <span class="c1">#sort and return DataFrame column</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div>
@@ -730,7 +730,7 @@ Name: Death, dtype: int64
 <p>Example:</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'Total Confirmed cases *'</span><span class="p">]</span> <span class="c1">#selects all rows from column Total Confirmed cases</span>
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sh">'</span><span class="s">Total Confirmed cases *</span><span class="sh">'</span><span class="p">]</span> <span class="c1">#selects all rows from column Total Confirmed cases</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>0      19
@@ -764,7 +764,7 @@ Name: Total Confirmed cases *, dtype: int64
 </code></pre></div></div>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s">'Total Confirmed cases *'</span><span class="p">,</span><span class="s">'Death'</span><span class="p">]]</span>
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="sh">'</span><span class="s">Total Confirmed cases *</span><span class="sh">'</span><span class="p">,</span><span class="sh">'</span><span class="s">Death</span><span class="sh">'</span><span class="p">]]</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div>
@@ -930,7 +930,7 @@ Name: Total Confirmed cases *, dtype: int64
 </div>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'Total Confirmed cases *'</span><span class="p">:</span><span class="s">'Death'</span><span class="p">]</span> <span class="c1">#( including death column [refer input type 3])</span>
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sh">'</span><span class="s">Total Confirmed cases *</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">Death</span><span class="sh">'</span><span class="p">]</span> <span class="c1">#( including death column [refer input type 3])</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div>
@@ -1574,7 +1574,7 @@ Name: Total Confirmed cases *, dtype: int64
 <p>Example</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">data</span><span class="p">:</span><span class="n">data</span><span class="p">[</span><span class="s">"Name of State / UT"</span><span class="p">]</span> <span class="o">==</span> <span class="s">'Uttarakhand'</span><span class="p">]</span> <span class="c1">#selects all rows and columns with country India</span>
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">data</span><span class="p">:</span><span class="n">data</span><span class="p">[</span><span class="sh">"</span><span class="s">Name of State / UT</span><span class="sh">"</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">Uttarakhand</span><span class="sh">'</span><span class="p">]</span> <span class="c1">#selects all rows and columns with country India</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div>
@@ -1782,7 +1782,7 @@ Name: Total Confirmed cases *, dtype: int64
 <p>syntax: <em>data.plot(kind=’graph_type’)</em></p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span><span class="s">'Name of State / UT'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">'Total Confirmed cases *'</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="s">'bar'</span><span class="p">)</span>
+</pre></td><td class="code"><pre><span class="n">data</span><span class="p">.</span><span class="nf">plot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span><span class="sh">'</span><span class="s">Name of State / UT</span><span class="sh">'</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="sh">'</span><span class="s">Total Confirmed cases *</span><span class="sh">'</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="sh">'</span><span class="s">bar</span><span class="sh">'</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code><span class="nt">&lt;matplotlib.axes._subplots.AxesSubplot</span> <span class="na">at</span> <span class="err">0</span><span class="na">x2272464b148</span><span class="nt">&gt;</span>
@@ -1809,17 +1809,17 @@ Name: Total Confirmed cases *, dtype: int64
 9
 10
 11
-</pre></td><td class="code"><pre><span class="n">data1</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Enrollment No.'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
-        <span class="s">'Score'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1500</span><span class="p">,</span><span class="mi">1520</span><span class="p">,</span><span class="mi">1525</span><span class="p">,</span><span class="mi">1523</span><span class="p">,</span><span class="mi">1515</span><span class="p">,</span><span class="mi">1540</span><span class="p">,</span><span class="mi">1545</span><span class="p">,</span><span class="mi">1560</span><span class="p">,</span><span class="mi">1555</span><span class="p">,</span><span class="mi">1565</span><span class="p">]</span>
+</pre></td><td class="code"><pre><span class="n">data1</span> <span class="o">=</span> <span class="p">{</span><span class="sh">'</span><span class="s">Enrollment No.</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
+        <span class="sh">'</span><span class="s">Score</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1500</span><span class="p">,</span><span class="mi">1520</span><span class="p">,</span><span class="mi">1525</span><span class="p">,</span><span class="mi">1523</span><span class="p">,</span><span class="mi">1515</span><span class="p">,</span><span class="mi">1540</span><span class="p">,</span><span class="mi">1545</span><span class="p">,</span><span class="mi">1560</span><span class="p">,</span><span class="mi">1555</span><span class="p">,</span><span class="mi">1565</span><span class="p">]</span>
        <span class="p">}</span>
-<span class="n">data2</span> <span class="o">=</span> <span class="p">{</span><span class="s">'Class'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
-        <span class="s">'Place'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">data2</span> <span class="o">=</span> <span class="p">{</span><span class="sh">'</span><span class="s">Class</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+        <span class="sh">'</span><span class="s">Place</span><span class="sh">'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
        <span class="p">}</span>
-<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data1</span><span class="p">)</span>
-<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nc">DataFrame</span><span class="p">(</span><span class="n">data1</span><span class="p">)</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nc">DataFrame</span><span class="p">(</span><span class="n">data2</span><span class="p">)</span>
 
-<span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df1</span><span class="p">,</span><span class="n">df2</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">df</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="nf">concat</span><span class="p">([</span><span class="n">df1</span><span class="p">,</span><span class="n">df2</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df</span><span class="p">.</span><span class="nf">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div>
@@ -1893,7 +1893,7 @@ Name: Total Confirmed cases *, dtype: int64
 <p>syntax: <em>pd.isna(data[column_name])</em></p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">pd</span><span class="p">.</span><span class="n">isna</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'Death'</span><span class="p">])</span>
+</pre></td><td class="code"><pre><span class="n">pd</span><span class="p">.</span><span class="nf">isna</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="sh">'</span><span class="s">Death</span><span class="sh">'</span><span class="p">])</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>0     False
@@ -1971,14 +1971,13 @@ All the Best !!!</p>
       <li><a href="/about/">About</a></li>
       <li><a href="/blogs/"> Blogs</a></li>
       <li><a href="/projects/">Projects</a></li>
-      <li><a href="/resume/">Resume</a></li>
       <li><a href="/cv/">Academic CV</a></li>
       <li><a href="/contact/">Contact</a></li>
       
     </ul>
   </nav>
   <div class="copyright">
-    Copyright © 2025 All rights reserved
+    Copyright © 2026 All rights reserved
   </div>
 </footer>
 

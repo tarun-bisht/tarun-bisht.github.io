@@ -11,25 +11,26 @@
 	<link rel="stylesheet" href="/assets/css/style.css">
 	<script src="/assets/js/dark_mode.min.js"></script>
 	<link rel="icon" href="/assets/images/favicon.ico">
-	<!-- Begin Jekyll SEO tag v2.7.1 -->
+	<!-- Begin Jekyll SEO tag v2.9.1 -->
 <title>building intuition for recurrent neural network | Tarun Bisht</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="building intuition for recurrent neural network" />
 <meta name="author" content="Tarun Bisht" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="So one of the most difficult topics to understand is Recurrent Neural networks and LSTMs. When I jumped from traditional neural networks to recurrent neural networks to recurrent networks for the first time I could not build intuition about it. Scraping internet finding blog posts and videos reading as much I can and do not get inside feeling that I got it Ya!. Then I tried to follow Richard Feynman’s approach of learning to learn it and this blog post is the result of it. As I was reviewing my notes I found this topic and I thought the better place for this is in a blog instead of my rough and bad writing and decided to make it live." />
-<meta property="og:description" content="So one of the most difficult topics to understand is Recurrent Neural networks and LSTMs. When I jumped from traditional neural networks to recurrent neural networks to recurrent networks for the first time I could not build intuition about it. Scraping internet finding blog posts and videos reading as much I can and do not get inside feeling that I got it Ya!. Then I tried to follow Richard Feynman’s approach of learning to learn it and this blog post is the result of it. As I was reviewing my notes I found this topic and I thought the better place for this is in a blog instead of my rough and bad writing and decided to make it live." />
+<meta name="description" content="So one of the most difficult topics to understand is Recurrent Neural networks and LSTMs. When I jumped from traditional neural networks to recurrent neural networks to recurrent networks for the first time I could not build intuition about it. Scraping internet finding blog posts and videos reading as much I can and do not get inside feeling that I got it Ya!. Then I tried to follow Richard Feynman’s approach of learning to learn it and this blog post is the result of it. As I was reviewing my notes I found this topic and I thought the better…" />
+<meta name="twitter:description" property="og:description" content="So one of the most difficult topics to understand is Recurrent Neural networks and LSTMs. When I jumped from traditional neural networks to recurrent neural networks to recurrent networks for the first time I could not build intuition about it. Scraping internet finding blog posts and videos reading as much I can and do not get inside feeling that I got it Ya!. Then I tried to follow Richard Feynman’s approach of learning to learn it and this blog post is the result of it. As I was reviewing my notes I found this topic and I thought the better…" />
 <link rel="canonical" href="https://tarunbisht.com/deep%20learning/2019/09/17/building-intuition-for-recurrent-neural-network-rnn/" />
 <meta property="og:url" content="https://tarunbisht.com/deep%20learning/2019/09/17/building-intuition-for-recurrent-neural-network-rnn/" />
 <meta property="og:site_name" content="Tarun Bisht" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-17T16:37:50+00:00" />
+<meta property="article:modified_time" content="2019-09-17T16:37:50+00:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="building intuition for recurrent neural network" />
+<meta name="twitter:title" content="building intuition for recurrent neural network" />
 <meta name="twitter:site" content="@tarunresearches" />
 <meta name="twitter:creator" content="@Tarun Bisht" />
 <script type="application/ld+json">
-{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"building intuition for recurrent neural network","dateModified":"2019-09-17T16:37:50+00:00","datePublished":"2019-09-17T16:37:50+00:00","description":"So one of the most difficult topics to understand is Recurrent Neural networks and LSTMs. When I jumped from traditional neural networks to recurrent neural networks to recurrent networks for the first time I could not build intuition about it. Scraping internet finding blog posts and videos reading as much I can and do not get inside feeling that I got it Ya!. Then I tried to follow Richard Feynman’s approach of learning to learn it and this blog post is the result of it. As I was reviewing my notes I found this topic and I thought the better place for this is in a blog instead of my rough and bad writing and decided to make it live.","url":"https://tarunbisht.com/deep%20learning/2019/09/17/building-intuition-for-recurrent-neural-network-rnn/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/deep%20learning/2019/09/17/building-intuition-for-recurrent-neural-network-rnn/"},"@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Tarun Bisht"},"dateModified":"2019-09-17T16:37:50+00:00","datePublished":"2019-09-17T16:37:50+00:00","description":"So one of the most difficult topics to understand is Recurrent Neural networks and LSTMs. When I jumped from traditional neural networks to recurrent neural networks to recurrent networks for the first time I could not build intuition about it. Scraping internet finding blog posts and videos reading as much I can and do not get inside feeling that I got it Ya!. Then I tried to follow Richard Feynman’s approach of learning to learn it and this blog post is the result of it. As I was reviewing my notes I found this topic and I thought the better…","headline":"building intuition for recurrent neural network","mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/deep%20learning/2019/09/17/building-intuition-for-recurrent-neural-network-rnn/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"url":"https://tarunbisht.com/deep%20learning/2019/09/17/building-intuition-for-recurrent-neural-network-rnn/"}</script>
 <!-- End Jekyll SEO tag -->
 
 	
@@ -51,7 +52,6 @@
         <li><a href="/blogs/"> Blogs</a></li>
         <li><a href="/projects/">Projects</a></li>
         <li><a href="/cv/">CV</a></li>
-        <li><a href="/resume/">Resume</a></li>
         <li><a href="/contact/"> Contact</a></li>
         <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
 	</ul>
@@ -185,14 +185,13 @@ Let us start understanding Recurrent neural networks with questions and examples
       <li><a href="/about/">About</a></li>
       <li><a href="/blogs/"> Blogs</a></li>
       <li><a href="/projects/">Projects</a></li>
-      <li><a href="/resume/">Resume</a></li>
       <li><a href="/cv/">Academic CV</a></li>
       <li><a href="/contact/">Contact</a></li>
       
     </ul>
   </nav>
   <div class="copyright">
-    Copyright © 2025 All rights reserved
+    Copyright © 2026 All rights reserved
   </div>
 </footer>
 

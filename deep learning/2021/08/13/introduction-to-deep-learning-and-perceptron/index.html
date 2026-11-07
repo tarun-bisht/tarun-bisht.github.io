@@ -11,25 +11,26 @@
 	<link rel="stylesheet" href="/assets/css/style.css">
 	<script src="/assets/js/dark_mode.min.js"></script>
 	<link rel="icon" href="/assets/images/favicon.ico">
-	<!-- Begin Jekyll SEO tag v2.7.1 -->
+	<!-- Begin Jekyll SEO tag v2.9.1 -->
 <title>introduction to deep learning and perceptron | Tarun Bisht</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="introduction to deep learning and perceptron" />
 <meta name="author" content="Tarun Bisht" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Deep Learning is subset of machine learning which on its own subset of Artificial Intelligence, that has seen boom after 2012 with the increase in amount of data and compute (especially with introduction of GPU for deep learning). Now these networks are part of our daily life. Google searches, Google translate, ChatGPT, Image processing etc. are few examples that uses deep learning in their backend. Like machine learning we learn rules from data, instead of hand code rules to program we make algorithm learn those rule. In this post we will introduce deep learning and explore perceptron along with its implementation. We will also derive perceptron mistake bound and deduce perceptron convergence theorem." />
-<meta property="og:description" content="Deep Learning is subset of machine learning which on its own subset of Artificial Intelligence, that has seen boom after 2012 with the increase in amount of data and compute (especially with introduction of GPU for deep learning). Now these networks are part of our daily life. Google searches, Google translate, ChatGPT, Image processing etc. are few examples that uses deep learning in their backend. Like machine learning we learn rules from data, instead of hand code rules to program we make algorithm learn those rule. In this post we will introduce deep learning and explore perceptron along with its implementation. We will also derive perceptron mistake bound and deduce perceptron convergence theorem." />
+<meta name="description" content="Deep Learning is subset of machine learning which on its own subset of Artificial Intelligence, that has seen boom after 2012 with the increase in amount of data and compute (especially with introduction of GPU for deep learning). Now these networks are part of our daily life. Google searches, Google translate, ChatGPT, Image processing etc. are few examples that uses deep learning in their backend. Like machine learning we learn rules from data, instead of hand code rules to program we make algorithm learn those rule. In this post we will introduce deep learning and explore perceptron along with its…" />
+<meta name="twitter:description" property="og:description" content="Deep Learning is subset of machine learning which on its own subset of Artificial Intelligence, that has seen boom after 2012 with the increase in amount of data and compute (especially with introduction of GPU for deep learning). Now these networks are part of our daily life. Google searches, Google translate, ChatGPT, Image processing etc. are few examples that uses deep learning in their backend. Like machine learning we learn rules from data, instead of hand code rules to program we make algorithm learn those rule. In this post we will introduce deep learning and explore perceptron along with its…" />
 <link rel="canonical" href="https://tarunbisht.com/deep%20learning/2021/08/13/introduction-to-deep-learning-and-perceptron/" />
 <meta property="og:url" content="https://tarunbisht.com/deep%20learning/2021/08/13/introduction-to-deep-learning-and-perceptron/" />
 <meta property="og:site_name" content="Tarun Bisht" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-08-13T08:12:00+00:00" />
+<meta property="article:modified_time" content="2021-08-13T08:12:00+00:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="introduction to deep learning and perceptron" />
+<meta name="twitter:title" content="introduction to deep learning and perceptron" />
 <meta name="twitter:site" content="@tarunresearches" />
 <meta name="twitter:creator" content="@Tarun Bisht" />
 <script type="application/ld+json">
-{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"introduction to deep learning and perceptron","dateModified":"2021-08-13T08:12:00+00:00","datePublished":"2021-08-13T08:12:00+00:00","description":"Deep Learning is subset of machine learning which on its own subset of Artificial Intelligence, that has seen boom after 2012 with the increase in amount of data and compute (especially with introduction of GPU for deep learning). Now these networks are part of our daily life. Google searches, Google translate, ChatGPT, Image processing etc. are few examples that uses deep learning in their backend. Like machine learning we learn rules from data, instead of hand code rules to program we make algorithm learn those rule. In this post we will introduce deep learning and explore perceptron along with its implementation. We will also derive perceptron mistake bound and deduce perceptron convergence theorem.","url":"https://tarunbisht.com/deep%20learning/2021/08/13/introduction-to-deep-learning-and-perceptron/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/deep%20learning/2021/08/13/introduction-to-deep-learning-and-perceptron/"},"@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Tarun Bisht"},"dateModified":"2021-08-13T08:12:00+00:00","datePublished":"2021-08-13T08:12:00+00:00","description":"Deep Learning is subset of machine learning which on its own subset of Artificial Intelligence, that has seen boom after 2012 with the increase in amount of data and compute (especially with introduction of GPU for deep learning). Now these networks are part of our daily life. Google searches, Google translate, ChatGPT, Image processing etc. are few examples that uses deep learning in their backend. Like machine learning we learn rules from data, instead of hand code rules to program we make algorithm learn those rule. In this post we will introduce deep learning and explore perceptron along with its…","headline":"introduction to deep learning and perceptron","mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/deep%20learning/2021/08/13/introduction-to-deep-learning-and-perceptron/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"url":"https://tarunbisht.com/deep%20learning/2021/08/13/introduction-to-deep-learning-and-perceptron/"}</script>
 <!-- End Jekyll SEO tag -->
 
 	
@@ -51,7 +52,6 @@
         <li><a href="/blogs/"> Blogs</a></li>
         <li><a href="/projects/">Projects</a></li>
         <li><a href="/cv/">CV</a></li>
-        <li><a href="/resume/">Resume</a></li>
         <li><a href="/contact/"> Contact</a></li>
         <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
 	</ul>
@@ -199,9 +199,9 @@
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 3
-</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
-<span class="kn">import</span> <span class="nn">random</span>
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="n">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="n">random</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
@@ -209,7 +209,7 @@
 3
 </pre></td><td class="code"><pre><span class="c1"># seed random number generator of numpy for reproducibility
 </span>
-<span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="nf">seed</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <h4 id="data-generation">Data Generation</h4>
@@ -242,16 +242,16 @@
 
 <span class="c1"># features
 </span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="n">identity_matrix</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="nf">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="n">identity_matrix</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
 
 <span class="c1"># label all points as +1
 </span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">size</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">array</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">size</span><span class="p">)</span>
 
 <span class="c1"># full data with label +1
 </span>
-<span class="n">d1</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">d1</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">d1</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="nf">expand_dims</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">d1</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>(10, 3)
@@ -286,17 +286,17 @@
 
 <span class="c1"># features
 </span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="n">identity_matrix</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="nf">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="n">identity_matrix</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
 
 <span class="c1"># labels all points as -1
 </span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>\<span class="o">*</span><span class="n">size</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>\<span class="o">*</span><span class="n">size</span><span class="p">)</span>
 
 <span class="c1"># full data with label -1
 </span>
-<span class="n">d2</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="nf">expand_dims</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">d2</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">d2</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>(10, 3)
@@ -317,13 +317,13 @@
 </span>
 <span class="c1"># concatenate data into d
 </span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">concatenate</span><span class="p">([</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="c1"># shuffle data
 </span>
-<span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="nf">shuffle</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>(20, 3)
@@ -344,15 +344,15 @@
 </pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">plot_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
 <span class="n">features</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">"plasma"</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s">"#111"</span><span class="p">)</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Plotting Data"</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s">"fontsize"</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="sh">"</span><span class="s">plasma</span><span class="sh">"</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="sh">"</span><span class="s">#111</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">title</span><span class="p">(</span><span class="sh">"</span><span class="s">Plotting Data</span><span class="sh">"</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="sh">"</span><span class="s">fontsize</span><span class="sh">"</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">plot_data</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</pre></td><td class="code"><pre><span class="nf">plot_data</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <p><img src="/assets/blogs/perceptron/output_13_0.png" alt="png" /></p>
@@ -373,8 +373,8 @@
 2
 3
 </pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">perceptron_prediction</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span> <span class="c1"># compute the prediction for the example x using weight w
-</span><span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-<span class="k">return</span> <span class="n">activation</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</span><span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">dot</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="k">return</span> <span class="nf">activation</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <h4 id="perceptron-update-rule-1">Perceptron update rule</h4>
@@ -425,36 +425,36 @@
 26
 27
 </pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">train_perceptron</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="c1"># Initialize weights
-</span><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">))</span> <span class="c1"># we can also initialize with random weights # w = np.random.normal(size=(3, ))
+</span><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">))</span> <span class="c1"># we can also initialize with random weights # w = np.random.normal(size=(3, ))
 </span><span class="n">epochs</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">num_mistakes</span> <span class="o">=</span> <span class="mi">99</span>
 <span class="n">max_epochs</span> <span class="o">=</span> <span class="mi">50</span>
 
 <span class="k">while</span> <span class="n">num_mistakes</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">epochs</span><span class="o">&lt;</span><span class="n">max_epochs</span><span class="p">:</span>
 <span class="n">num_mistakes</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span> <span class="c1"># retrieve the feature vector x from data set D
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span> <span class="c1"># retrieve the feature vector x from data set D
 </span><span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
       <span class="c1"># Append an additional constant feature 1 to x
-</span>      <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+</span>      <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
 
-      <span class="n">y_hat</span> <span class="o">=</span> <span class="n">perceptron_prediction</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+      <span class="n">y_hat</span> <span class="o">=</span> <span class="nf">perceptron_prediction</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
       <span class="c1"># retrieve the label y for x from data set D
 </span>      <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-      <span class="n">w</span><span class="p">,</span> <span class="n">is_mistake</span> <span class="o">=</span> <span class="n">perceptron_update_weights</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
+      <span class="n">w</span><span class="p">,</span> <span class="n">is_mistake</span> <span class="o">=</span> <span class="nf">perceptron_update_weights</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
 
       <span class="k">if</span> <span class="n">is_mistake</span><span class="p">:</span>
         <span class="n">num_mistakes</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Epoch </span><span class="si">{</span><span class="n">epochs</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s"> completed, Number of mistakes: </span><span class="si">{</span><span class="n">num_mistakes</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Epoch </span><span class="si">{</span><span class="n">epochs</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s"> completed, Number of mistakes: </span><span class="si">{</span><span class="n">num_mistakes</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
     <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="o">+</span><span class="mi">1</span>
 
 <span class="k">return</span> <span class="n">w</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">w_final</span> <span class="o">=</span> <span class="n">train_perceptron</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+</pre></td><td class="code"><pre><span class="n">w_final</span> <span class="o">=</span> <span class="nf">train_perceptron</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Epoch 1 completed, Number of mistakes: 5
@@ -475,13 +475,13 @@ Epoch 5 completed, Number of mistakes: 0
 7
 8
 </pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">plot_line</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-<span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="nf">gca</span><span class="p">()</span>
 
 <span class="c1"># get x limits
 </span>
-<span class="n">x_vals</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">axes</span><span class="p">.</span><span class="n">get_xlim</span><span class="p">())</span>
+<span class="n">x_vals</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">array</span><span class="p">(</span><span class="n">axes</span><span class="p">.</span><span class="nf">get_xlim</span><span class="p">())</span>
 <span class="n">y_vals</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> \<span class="o">*</span> <span class="n">x_vals</span><span class="p">)</span><span class="o">/</span><span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="s">'r--'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">plot</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">,</span> <span class="sh">'</span><span class="s">r--</span><span class="sh">'</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
@@ -497,17 +497,17 @@ Epoch 5 completed, Number of mistakes: 0
 </pre></td><td class="code"><pre><span class="k">def</span> <span class="nf">plot_data_with_separator</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
 <span class="n">features</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">"plasma"</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s">"#111"</span><span class="p">)</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">xlim</span><span class="p">([</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">].</span><span class="nb">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">].</span><span class="nb">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">ylim</span><span class="p">([</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">].</span><span class="nb">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">].</span><span class="nb">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-<span class="n">plot_line</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Plotting decision boundary"</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s">"fontsize"</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="sh">"</span><span class="s">plasma</span><span class="sh">"</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="sh">"</span><span class="s">#111</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">xlim</span><span class="p">([</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">].</span><span class="nf">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">].</span><span class="nf">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">ylim</span><span class="p">([</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">].</span><span class="nf">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">].</span><span class="nf">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="nf">plot_line</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">title</span><span class="p">(</span><span class="sh">"</span><span class="s">Plotting decision boundary</span><span class="sh">"</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="sh">"</span><span class="s">fontsize</span><span class="sh">"</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">show</span><span class="p">()</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">plot_data_with_separator</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">w_final</span><span class="p">)</span>
+</pre></td><td class="code"><pre><span class="nf">plot_data_with_separator</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">w_final</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <p><img src="/assets/blogs/perceptron/output_31_0.png" alt="png" /></p>
@@ -520,8 +520,8 @@ Epoch 5 completed, Number of mistakes: 0
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
-</pre></td><td class="code"><pre><span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+</pre></td><td class="code"><pre><span class="kn">from</span> <span class="n">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span>
+<span class="kn">from</span> <span class="n">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
@@ -566,30 +566,30 @@ Epoch 5 completed, Number of mistakes: 0
 40
 41
 42
-</pre></td><td class="code"><pre><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
+</pre></td><td class="code"><pre><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">d</span>
 <span class="n">epochs</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">features</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">ax</span><span class="p">.</span><span class="n">grid</span><span class="p">()</span>
-<span class="n">ax</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">"plasma"</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s">"#111"</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">].</span><span class="nb">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">].</span><span class="nb">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-<span class="n">ax</span><span class="p">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">].</span><span class="nb">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">].</span><span class="nb">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-<span class="n">line</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="p">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="s">'r'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">"Plot Data"</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s">"fontsize"</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
-<span class="n">x_vals</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">ax</span><span class="p">.</span><span class="n">get_xlim</span><span class="p">())</span>
-<span class="n">plt</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="nf">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">.</span><span class="nf">grid</span><span class="p">()</span>
+<span class="n">ax</span><span class="p">.</span><span class="nf">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="sh">"</span><span class="s">plasma</span><span class="sh">"</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="sh">"</span><span class="s">#111</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="nf">set_xlim</span><span class="p">([</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">].</span><span class="nf">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">features</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">].</span><span class="nf">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">ax</span><span class="p">.</span><span class="nf">set_ylim</span><span class="p">([</span><span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">].</span><span class="nf">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">features</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">].</span><span class="nf">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">line</span><span class="p">,</span> <span class="o">=</span> <span class="n">ax</span><span class="p">.</span><span class="nf">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="sh">'</span><span class="s">r</span><span class="sh">'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">.</span><span class="nf">set_title</span><span class="p">(</span><span class="sh">"</span><span class="s">Plot Data</span><span class="sh">"</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="sh">"</span><span class="s">fontsize</span><span class="sh">"</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
+<span class="n">x_vals</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">array</span><span class="p">(</span><span class="n">ax</span><span class="p">.</span><span class="nf">get_xlim</span><span class="p">())</span>
+<span class="n">plt</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">animation</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
 <span class="k">global</span> <span class="n">weights</span>
-<span class="n">ax</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s">"Plotting decision boundary, dataset iteration: </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s">"</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s">"fontsize"</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
+<span class="n">ax</span><span class="p">.</span><span class="nf">set_title</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Plotting decision boundary, dataset iteration: </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="sh">"</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="sh">"</span><span class="s">fontsize</span><span class="sh">"</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
 <span class="k">if</span> <span class="n">weights</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># for solving divide by zero error
 </span><span class="n">y_vals</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="o">*</span><span class="n">vals</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
 <span class="n">y_vals</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> \<span class="o">*</span> <span class="n">x_vals</span><span class="p">)</span><span class="o">/</span><span class="n">weights</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">line</span><span class="p">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">)</span>
+<span class="n">line</span><span class="p">.</span><span class="nf">set_data</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="n">y_vals</span><span class="p">)</span>
 
     <span class="c1"># retrieve the feature vector x from data set D
 </span>
@@ -597,15 +597,15 @@ Epoch 5 completed, Number of mistakes: 0
 
     <span class="c1"># Append an additional constant feature 1 to x (Use np.concatenate)
 </span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
 
-    <span class="n">y_hat</span> <span class="o">=</span> <span class="n">perceptron_prediction</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">y_hat</span> <span class="o">=</span> <span class="nf">perceptron_prediction</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
     <span class="c1"># retrieve the label y for x from data set D
 </span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-    <span class="n">weights</span><span class="p">,</span> <span class="n">is_mistake</span> <span class="o">=</span> <span class="n">perceptron_update_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
+    <span class="n">weights</span><span class="p">,</span> <span class="n">is_mistake</span> <span class="o">=</span> <span class="nf">perceptron_update_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
 
 <span class="k">return</span> <span class="n">line</span><span class="p">,</span>
 </pre></td></tr></tbody></table></code></pre></figure>
@@ -615,9 +615,9 @@ Epoch 5 completed, Number of mistakes: 0
 3
 4
 </pre></td><td class="code"><pre><span class="n">epochs</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="k">print</span><span class="p">(</span><span class="s">"Video Epoch "</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
-<span class="n">anim</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="n">to_html5_video</span><span class="p">())</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Video Epoch </span><span class="sh">"</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+<span class="n">anim</span> <span class="o">=</span> <span class="nc">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nf">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="nc">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="nf">to_html5_video</span><span class="p">())</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Video Epoch 1
@@ -630,9 +630,9 @@ Epoch 5 completed, Number of mistakes: 0
 3
 4
 </pre></td><td class="code"><pre><span class="n">epochs</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="k">print</span><span class="p">(</span><span class="s">"Video Epoch "</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
-<span class="n">anim</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="n">to_html5_video</span><span class="p">())</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Video Epoch </span><span class="sh">"</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+<span class="n">anim</span> <span class="o">=</span> <span class="nc">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nf">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="nc">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="nf">to_html5_video</span><span class="p">())</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Video Epoch 2
@@ -645,9 +645,9 @@ Epoch 5 completed, Number of mistakes: 0
 3
 4
 </pre></td><td class="code"><pre><span class="n">epochs</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="k">print</span><span class="p">(</span><span class="s">"Video Epoch "</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
-<span class="n">anim</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="n">to_html5_video</span><span class="p">())</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Video Epoch </span><span class="sh">"</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+<span class="n">anim</span> <span class="o">=</span> <span class="nc">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nf">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="nc">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="nf">to_html5_video</span><span class="p">())</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Video Epoch 3
@@ -660,9 +660,9 @@ Epoch 5 completed, Number of mistakes: 0
 3
 4
 </pre></td><td class="code"><pre><span class="n">epochs</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="k">print</span><span class="p">(</span><span class="s">"Video Epoch "</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
-<span class="n">anim</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="n">to_html5_video</span><span class="p">())</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Video Epoch </span><span class="sh">"</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+<span class="n">anim</span> <span class="o">=</span> <span class="nc">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nf">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="nc">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="nf">to_html5_video</span><span class="p">())</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Video Epoch 4
@@ -675,9 +675,9 @@ Epoch 5 completed, Number of mistakes: 0
 3
 4
 </pre></td><td class="code"><pre><span class="n">epochs</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="k">print</span><span class="p">(</span><span class="s">"Video Epoch "</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
-<span class="n">anim</span> <span class="o">=</span> <span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="n">to_html5_video</span><span class="p">())</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Video Epoch </span><span class="sh">"</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+<span class="n">anim</span> <span class="o">=</span> <span class="nc">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nf">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">interval</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">blit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="nc">HTML</span><span class="p">(</span><span class="n">anim</span><span class="p">.</span><span class="nf">to_html5_video</span><span class="p">())</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <div class="language-html highlighter-rouge"><div class="highlight"><pre class="syntax"><code>Video Epoch 5
@@ -913,14 +913,13 @@ Algorithm will halt after a finite number of iterations.</p>
       <li><a href="/about/">About</a></li>
       <li><a href="/blogs/"> Blogs</a></li>
       <li><a href="/projects/">Projects</a></li>
-      <li><a href="/resume/">Resume</a></li>
       <li><a href="/cv/">Academic CV</a></li>
       <li><a href="/contact/">Contact</a></li>
       
     </ul>
   </nav>
   <div class="copyright">
-    Copyright © 2025 All rights reserved
+    Copyright © 2026 All rights reserved
   </div>
 </footer>
 

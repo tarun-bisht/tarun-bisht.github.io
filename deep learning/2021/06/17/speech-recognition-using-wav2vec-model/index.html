@@ -11,25 +11,26 @@
 	<link rel="stylesheet" href="/assets/css/style.css">
 	<script src="/assets/js/dark_mode.min.js"></script>
 	<link rel="icon" href="/assets/images/favicon.ico">
-	<!-- Begin Jekyll SEO tag v2.7.1 -->
+	<!-- Begin Jekyll SEO tag v2.9.1 -->
 <title>Speech Recognition using wav2vec2 : Speech to Text | Tarun Bisht</title>
-<meta name="generator" content="Jekyll v4.2.0" />
+<meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Speech Recognition using wav2vec2 : Speech to Text" />
 <meta name="author" content="Tarun Bisht" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Speech recognition is a task where, machine listens to speech input, understand it and outputs what it recognise. One such task is speech to text where machine listens to human speech and output transcription of that speech input. Speech recognition has introduced a new way to interact with machines which is a lot more natural for humans. Today, we have seen lots of voice-enabled devices around us, Siri, Google Assistant, Cortana are voice-enabled assistants which we encounter in our daily life. In this post, we will learn and explore wav2vec for speech recognition." />
-<meta property="og:description" content="Speech recognition is a task where, machine listens to speech input, understand it and outputs what it recognise. One such task is speech to text where machine listens to human speech and output transcription of that speech input. Speech recognition has introduced a new way to interact with machines which is a lot more natural for humans. Today, we have seen lots of voice-enabled devices around us, Siri, Google Assistant, Cortana are voice-enabled assistants which we encounter in our daily life. In this post, we will learn and explore wav2vec for speech recognition." />
+<meta name="twitter:description" property="og:description" content="Speech recognition is a task where, machine listens to speech input, understand it and outputs what it recognise. One such task is speech to text where machine listens to human speech and output transcription of that speech input. Speech recognition has introduced a new way to interact with machines which is a lot more natural for humans. Today, we have seen lots of voice-enabled devices around us, Siri, Google Assistant, Cortana are voice-enabled assistants which we encounter in our daily life. In this post, we will learn and explore wav2vec for speech recognition." />
 <link rel="canonical" href="https://tarunbisht.com/deep%20learning/2021/06/17/speech-recognition-using-wav2vec-model/" />
 <meta property="og:url" content="https://tarunbisht.com/deep%20learning/2021/06/17/speech-recognition-using-wav2vec-model/" />
 <meta property="og:site_name" content="Tarun Bisht" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-06-17T16:46:50+00:00" />
+<meta property="article:modified_time" content="2021-06-17T16:46:50+00:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Speech Recognition using wav2vec2 : Speech to Text" />
+<meta name="twitter:title" content="Speech Recognition using wav2vec2 : Speech to Text" />
 <meta name="twitter:site" content="@tarunresearches" />
 <meta name="twitter:creator" content="@Tarun Bisht" />
 <script type="application/ld+json">
-{"author":{"@type":"Person","name":"Tarun Bisht"},"headline":"Speech Recognition using wav2vec2 : Speech to Text","dateModified":"2021-06-17T16:46:50+00:00","datePublished":"2021-06-17T16:46:50+00:00","description":"Speech recognition is a task where, machine listens to speech input, understand it and outputs what it recognise. One such task is speech to text where machine listens to human speech and output transcription of that speech input. Speech recognition has introduced a new way to interact with machines which is a lot more natural for humans. Today, we have seen lots of voice-enabled devices around us, Siri, Google Assistant, Cortana are voice-enabled assistants which we encounter in our daily life. In this post, we will learn and explore wav2vec for speech recognition.","url":"https://tarunbisht.com/deep%20learning/2021/06/17/speech-recognition-using-wav2vec-model/","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/deep%20learning/2021/06/17/speech-recognition-using-wav2vec-model/"},"@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Tarun Bisht"},"dateModified":"2021-06-17T16:46:50+00:00","datePublished":"2021-06-17T16:46:50+00:00","description":"Speech recognition is a task where, machine listens to speech input, understand it and outputs what it recognise. One such task is speech to text where machine listens to human speech and output transcription of that speech input. Speech recognition has introduced a new way to interact with machines which is a lot more natural for humans. Today, we have seen lots of voice-enabled devices around us, Siri, Google Assistant, Cortana are voice-enabled assistants which we encounter in our daily life. In this post, we will learn and explore wav2vec for speech recognition.","headline":"Speech Recognition using wav2vec2 : Speech to Text","mainEntityOfPage":{"@type":"WebPage","@id":"https://tarunbisht.com/deep%20learning/2021/06/17/speech-recognition-using-wav2vec-model/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://tarunbisht.com/assets/images/logo_primary.svg"},"name":"Tarun Bisht"},"url":"https://tarunbisht.com/deep%20learning/2021/06/17/speech-recognition-using-wav2vec-model/"}</script>
 <!-- End Jekyll SEO tag -->
 
 	
@@ -51,7 +52,6 @@
         <li><a href="/blogs/"> Blogs</a></li>
         <li><a href="/projects/">Projects</a></li>
         <li><a href="/cv/">CV</a></li>
-        <li><a href="/resume/">Resume</a></li>
         <li><a href="/contact/"> Contact</a></li>
         <li class="switch"><span></span><input type="checkbox" id="switch"/><label for="switch">Toggle</label></li>
 	</ul>
@@ -164,9 +164,9 @@
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 3
-</pre></td><td class="code"><pre><span class="kn">import</span> <span class="nn">librosa</span>
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">Wav2Vec2ForCTC</span><span class="p">,</span> <span class="n">Wav2Vec2Tokenizer</span>
+</pre></td><td class="code"><pre><span class="kn">import</span> <span class="n">librosa</span>
+<span class="kn">import</span> <span class="n">torch</span>
+<span class="kn">from</span> <span class="n">transformers</span> <span class="kn">import</span> <span class="n">Wav2Vec2ForCTC</span><span class="p">,</span> <span class="n">Wav2Vec2Tokenizer</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <p>Now lets instantiate pretrained wav2vec model and tokenizer, from hugging face repo.</p>
@@ -175,14 +175,14 @@
 2
 3
 </pre></td><td class="code"><pre><span class="c1"># load model and tokenizer
-</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Wav2Vec2Tokenizer</span><span class="p">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s">"facebook/wav2vec2-base-960h"</span><span class="p">)</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">Wav2Vec2ForCTC</span><span class="p">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s">"facebook/wav2vec2-base-960h"</span><span class="p">)</span>
+</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Wav2Vec2Tokenizer</span><span class="p">.</span><span class="nf">from_pretrained</span><span class="p">(</span><span class="sh">"</span><span class="s">facebook/wav2vec2-base-960h</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Wav2Vec2ForCTC</span><span class="p">.</span><span class="nf">from_pretrained</span><span class="p">(</span><span class="sh">"</span><span class="s">facebook/wav2vec2-base-960h</span><span class="sh">"</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <p>Here we load speech data using librosa, make sure load audio with sample rate 16KHz, as pretrained model was trained with the same sample rate.</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
-</pre></td><td class="code"><pre><span class="n">speech</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="n">librosa</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="s">"speech.wav"</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">16000</span><span class="p">)</span>
+</pre></td><td class="code"><pre><span class="n">speech</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="n">librosa</span><span class="p">.</span><span class="nf">load</span><span class="p">(</span><span class="sh">"</span><span class="s">speech.wav</span><span class="sh">"</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">16000</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <p>Now, we will tokenize input speech using tokenizer and pass it to wav2vec model.</p>
@@ -190,9 +190,9 @@
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><table class="rouge-table"><tbody><tr><td class="gutter gl"><pre class="lineno">1
 2
 3
-</pre></td><td class="code"><pre><span class="n">input_values</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">speech</span><span class="p">,</span> <span class="n">return_tensors</span> <span class="o">=</span> <span class="s">'pt'</span><span class="p">).</span><span class="n">input_values</span>
+</pre></td><td class="code"><pre><span class="n">input_values</span> <span class="o">=</span> <span class="nf">tokenizer</span><span class="p">(</span><span class="n">speech</span><span class="p">,</span> <span class="n">return_tensors</span> <span class="o">=</span> <span class="sh">'</span><span class="s">pt</span><span class="sh">'</span><span class="p">).</span><span class="n">input_values</span>
 <span class="c1"># logits (non-normalized predictions)
-</span><span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">input_values</span><span class="p">).</span><span class="n">logits</span>
+</span><span class="n">logits</span> <span class="o">=</span> <span class="nf">model</span><span class="p">(</span><span class="n">input_values</span><span class="p">).</span><span class="n">logits</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <p>Finally, use argmax to get index of highest probability character token and decode using tokenizer decode method.</p>
@@ -201,10 +201,10 @@
 2
 3
 4
-</pre></td><td class="code"><pre><span class="n">predicted_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></td><td class="code"><pre><span class="n">predicted_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">dim</span> <span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 <span class="c1"># decode the audio to generate text
-</span><span class="n">transcriptions</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">predicted_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="k">print</span><span class="p">(</span><span class="n">transcriptions</span><span class="p">)</span>
+</span><span class="n">transcriptions</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="n">predicted_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">transcriptions</span><span class="p">)</span>
 </pre></td></tr></tbody></table></code></pre></figure>
 
 <p>I hope this post explains wav2vec model or point towards right direction to learn about it. Thanks for reading till last.</p>
@@ -269,14 +269,13 @@
       <li><a href="/about/">About</a></li>
       <li><a href="/blogs/"> Blogs</a></li>
       <li><a href="/projects/">Projects</a></li>
-      <li><a href="/resume/">Resume</a></li>
       <li><a href="/cv/">Academic CV</a></li>
       <li><a href="/contact/">Contact</a></li>
       
     </ul>
   </nav>
   <div class="copyright">
-    Copyright © 2025 All rights reserved
+    Copyright © 2026 All rights reserved
   </div>
 </footer>
 
